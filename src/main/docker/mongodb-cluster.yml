@@ -1,0 +1,16 @@
+version: '2'
+services:
+    factcheck-mongodb:
+        image: mongo:3.6.3
+        ports:
+            - "27017:27017"
+        command: mongos --configdb factcheck-mongodb-config
+    factcheck-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    factcheck-mongodb-config:
+        image: mongo:3.6.3
+        container_name: factcheck-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
