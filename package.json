@@ -1,0 +1,17 @@
+{
+  "name": "factcheck",
+  "version": "0.0.0",
+  "description": "Description for factcheck",
+  "private": true,
+  "license": "UNLICENSED",
+  "cacheDirectories": [
+    "node_modules"
+  ],
+  "devDependencies": {
+    "generator-jhipster-audit-helper": "1.0.3",
+    "generator-jhipster": "5.3.4"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}
