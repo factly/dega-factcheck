@@ -145,9 +145,6 @@ jhipster:
         license:
         license-url:
 
-logging:
-    file: build/factcheck.log
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
