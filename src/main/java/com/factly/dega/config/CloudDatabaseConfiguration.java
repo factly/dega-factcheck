@@ -25,6 +25,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Configuration
 @EnableMongoRepositories("com.factly.dega.repository")
 @Profile(JHipsterConstants.SPRING_PROFILE_CLOUD)
