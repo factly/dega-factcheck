@@ -23,7 +23,7 @@ services:
             file: elasticsearch.yml
             service: factcheck-elasticsearch
     consul:
-        image: consul:1.2.3
+        image: consul:1.3.0
         command: consul agent -dev -ui -client 0.0.0.0
         ports:
             - 8300:8300
@@ -42,7 +42,3 @@ services:
         # as configured in central-server-config/git2consul.json
         # Also set SPRING_CLOUD_CONSUL_CONFIG_FORMAT=files on your apps
         #    - CONFIG_MODE=git
-    keycloak:
-        extends:
-            file: keycloak.yml
-            service: keycloak

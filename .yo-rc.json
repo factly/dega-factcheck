@@ -4,7 +4,7 @@
       "packageName": "com.factly.dega",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "5.5.0",
+    "jhipsterVersion": "5.6.0",
     "applicationType": "microservice",
     "baseName": "factcheck",
     "packageName": "com.factly.dega",
