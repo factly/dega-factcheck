@@ -1,3 +1,5 @@
+import { IClaim } from 'app/shared/model/factcheck/claim.model';
+
 export interface IRating {
   id?: string;
   name?: string;
@@ -5,6 +7,7 @@ export interface IRating {
   iconURL?: string;
   isDefault?: boolean;
   clientId?: string;
+  claims?: IClaim[];
 }
 
 export class Rating implements IRating {
@@ -14,7 +17,8 @@ export class Rating implements IRating {
     public numericValue?: number,
     public iconURL?: string,
     public isDefault?: boolean,
-    public clientId?: string
+    public clientId?: string,
+    public claims?: IClaim[]
   ) {
     this.isDefault = this.isDefault || false;
   }

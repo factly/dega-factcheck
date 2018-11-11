@@ -8,10 +8,18 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Claim and its DTO ClaimDTO.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {RatingMapper.class, ClaimantMapper.class})
 public interface ClaimMapper extends EntityMapper<ClaimDTO, Claim> {
 
+    @Mapping(source = "rating.id", target = "ratingId")
+    @Mapping(source = "rating.name", target = "ratingName")
+    @Mapping(source = "claimant.id", target = "claimantId")
+    @Mapping(source = "claimant.name", target = "claimantName")
+    ClaimDTO toDto(Claim claim);
 
+    @Mapping(source = "ratingId", target = "rating")
+    @Mapping(source = "claimantId", target = "claimant")
+    Claim toEntity(ClaimDTO claimDTO);
 
     default Claim fromId(String id) {
         if (id == null) {

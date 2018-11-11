@@ -1,5 +1,6 @@
 package com.factly.dega.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -55,6 +56,16 @@ public class Claim implements Serializable {
     @NotNull
     @Field("client_id")
     private String clientId;
+
+    @DBRef
+    @Field("rating")
+    @JsonIgnoreProperties("claims")
+    private Rating rating;
+
+    @DBRef
+    @Field("claimant")
+    @JsonIgnoreProperties("claims")
+    private Claimant claimant;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -180,6 +191,32 @@ public class Claim implements Serializable {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public Claim rating(Rating rating) {
+        this.rating = rating;
+        return this;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public Claimant getClaimant() {
+        return claimant;
+    }
+
+    public Claim claimant(Claimant claimant) {
+        this.claimant = claimant;
+        return this;
+    }
+
+    public void setClaimant(Claimant claimant) {
+        this.claimant = claimant;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

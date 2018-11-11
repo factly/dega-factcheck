@@ -3,6 +3,8 @@ package com.factly.dega.web.rest;
 import com.factly.dega.FactcheckApp;
 
 import com.factly.dega.domain.Claim;
+import com.factly.dega.domain.Rating;
+import com.factly.dega.domain.Claimant;
 import com.factly.dega.repository.ClaimRepository;
 import com.factly.dega.repository.search.ClaimSearchRepository;
 import com.factly.dega.service.ClaimService;
@@ -133,6 +135,14 @@ public class ClaimResourceIntTest {
             .review(DEFAULT_REVIEW)
             .reviewTagLine(DEFAULT_REVIEW_TAG_LINE)
             .clientId(DEFAULT_CLIENT_ID);
+        // Add required entity
+        Rating rating = RatingResourceIntTest.createEntity();
+        rating.setId("fixed-id-for-tests");
+        claim.setRating(rating);
+        // Add required entity
+        Claimant claimant = ClaimantResourceIntTest.createEntity();
+        claimant.setId("fixed-id-for-tests");
+        claim.setClaimant(claimant);
         return claim;
     }
 

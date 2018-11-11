@@ -12,6 +12,8 @@ import org.mapstruct.*;
 public interface ClaimantMapper extends EntityMapper<ClaimantDTO, Claimant> {
 
 
+    @Mapping(target = "claims", ignore = true)
+    Claimant toEntity(ClaimantDTO claimantDTO);
 
     default Claimant fromId(String id) {
         if (id == null) {

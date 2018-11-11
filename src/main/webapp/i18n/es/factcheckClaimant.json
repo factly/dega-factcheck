@@ -1,0 +1,27 @@
+{
+  "factcheckApp": {
+    "factcheckClaimant": {
+      "home": {
+        "title": "Claimants",
+        "createLabel": "Crear nuevo Claimant",
+        "createOrEditLabel": "Crear o editar Claimant",
+        "search": "Search for Claimant"
+      },
+      "created": "Un nuevo Claimant ha sido creado con el identificador {{ param }}",
+      "updated": "Un Claimant ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Claimant ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Claimant {{ id }}?"
+      },
+      "detail": {
+        "title": "Claimant"
+      },
+      "name": "Name",
+      "tagLine": "Tag Line",
+      "description": "Description",
+      "imageURL": "Image URL",
+      "clientId": "Client Id",
+      "claim": "Claim"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "factcheckApp": {
+    "factcheckClaim": {
+      "home": {
+        "title": "Claims",
+        "createLabel": "नया Claim बनाएँ",
+        "createOrEditLabel": "Claim बनाएँ या संपादित करें",
+        "search": "Claim खोजें"
+      },
+      "created": "एक नया Claim [identifier: {{ param }}] तैयार है",
+      "updated": "एक Claim [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Claim [identifier: {{ param }}] हटा दिया है",
+      "delete": {
+        "question": "Claim [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Claim"
+      },
+      "claim": "Claim",
+      "description": "Description",
+      "claimDate": "Claim Date",
+      "claimSource": "Claim Source",
+      "checkedDate": "Checked Date",
+      "reviewSources": "Review Sources",
+      "review": "Review",
+      "reviewTagLine": "Review Tag Line",
+      "clientId": "Client Id",
+      "rating": "Rating",
+      "claimant": "Claimant"
+    }
+  }
+}

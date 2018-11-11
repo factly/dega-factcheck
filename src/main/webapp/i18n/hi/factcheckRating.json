@@ -20,7 +20,8 @@
       "numericValue": "Numeric Value",
       "iconURL": "Icon URL",
       "isDefault": "Is Default",
-      "clientId": "Client Id"
+      "clientId": "Client Id",
+      "claim": "Claim"
     }
   }
 }

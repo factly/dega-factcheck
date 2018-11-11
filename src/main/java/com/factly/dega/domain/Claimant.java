@@ -1,5 +1,6 @@
 package com.factly.dega.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -7,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -38,6 +41,9 @@ public class Claimant implements Serializable {
     @Field("client_id")
     private String clientId;
 
+    @DBRef
+    @Field("claim")
+    private Set<Claim> claims = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -110,6 +116,31 @@ public class Claimant implements Serializable {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public Set<Claim> getClaims() {
+        return claims;
+    }
+
+    public Claimant claims(Set<Claim> claims) {
+        this.claims = claims;
+        return this;
+    }
+
+    public Claimant addClaim(Claim claim) {
+        this.claims.add(claim);
+        claim.setClaimant(this);
+        return this;
+    }
+
+    public Claimant removeClaim(Claim claim) {
+        this.claims.remove(claim);
+        claim.setClaimant(null);
+        return this;
+    }
+
+    public void setClaims(Set<Claim> claims) {
+        this.claims = claims;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

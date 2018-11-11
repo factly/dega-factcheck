@@ -37,6 +37,14 @@ public class ClaimDTO implements Serializable {
     @NotNull
     private String clientId;
 
+    private String ratingId;
+
+    private String ratingName;
+
+    private String claimantId;
+
+    private String claimantName;
+
     public String getId() {
         return id;
     }
@@ -117,6 +125,38 @@ public class ClaimDTO implements Serializable {
         this.clientId = clientId;
     }
 
+    public String getRatingId() {
+        return ratingId;
+    }
+
+    public void setRatingId(String ratingId) {
+        this.ratingId = ratingId;
+    }
+
+    public String getRatingName() {
+        return ratingName;
+    }
+
+    public void setRatingName(String ratingName) {
+        this.ratingName = ratingName;
+    }
+
+    public String getClaimantId() {
+        return claimantId;
+    }
+
+    public void setClaimantId(String claimantId) {
+        this.claimantId = claimantId;
+    }
+
+    public String getClaimantName() {
+        return claimantName;
+    }
+
+    public void setClaimantName(String claimantName) {
+        this.claimantName = claimantName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -151,6 +191,10 @@ public class ClaimDTO implements Serializable {
             ", review='" + getReview() + "'" +
             ", reviewTagLine='" + getReviewTagLine() + "'" +
             ", clientId='" + getClientId() + "'" +
+            ", rating=" + getRatingId() +
+            ", rating='" + getRatingName() + "'" +
+            ", claimant=" + getClaimantId() +
+            ", claimant='" + getClaimantName() + "'" +
             "}";
     }
 }

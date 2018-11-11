@@ -1,7 +1,26 @@
 {
     "fluentMethods": true,
     "clientRootFolder": "factcheck",
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "rating",
+            "otherEntityName": "rating",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "claimant",
+            "otherEntityName": "claimant",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "name"
+        }
+    ],
     "fields": [
         {
             "fieldName": "claim",

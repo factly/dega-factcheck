@@ -1,7 +1,14 @@
 {
     "fluentMethods": true,
     "clientRootFolder": "factcheck",
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "claim",
+            "otherEntityName": "claim",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "claimant"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",

@@ -12,6 +12,8 @@ import org.mapstruct.*;
 public interface RatingMapper extends EntityMapper<RatingDTO, Rating> {
 
 
+    @Mapping(target = "claims", ignore = true)
+    Rating toEntity(RatingDTO ratingDTO);
 
     default Rating fromId(String id) {
         if (id == null) {
