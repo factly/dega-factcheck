@@ -46,6 +46,17 @@
                         </small>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaimant.slug" for="field_slug">Slug</label>
+                    <input type="text" class="form-control" name="slug" id="field_slug"
+                        [(ngModel)]="claimant.slug" required/>
+                    <div [hidden]="!(editForm.controls.slug?.dirty && editForm.controls.slug?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.slug?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
 
             </div>
             <div>

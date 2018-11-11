@@ -110,6 +110,7 @@ class ClaimGatlingTest extends Simulation {
                 , "review":"SAMPLE_TEXT"
                 , "reviewTagLine":"SAMPLE_TEXT"
                 , "clientId":"SAMPLE_TEXT"
+                , "slug":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_claim_url"))).exitHereIfFailed

@@ -43,6 +43,10 @@ public class Rating implements Serializable {
     @Field("client_id")
     private String clientId;
 
+    @NotNull
+    @Field("slug")
+    private String slug;
+
     @DBRef
     @Field("claim")
     private Set<Claim> claims = new HashSet<>();
@@ -120,6 +124,19 @@ public class Rating implements Serializable {
         this.clientId = clientId;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public Rating slug(String slug) {
+        this.slug = slug;
+        return this;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public Set<Claim> getClaims() {
         return claims;
     }
@@ -175,6 +192,7 @@ public class Rating implements Serializable {
             ", iconURL='" + getIconURL() + "'" +
             ", isDefault='" + isIsDefault() + "'" +
             ", clientId='" + getClientId() + "'" +
+            ", slug='" + getSlug() + "'" +
             "}";
     }
 }

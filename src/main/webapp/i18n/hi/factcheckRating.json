@@ -21,6 +21,7 @@
       "iconURL": "Icon URL",
       "isDefault": "Is Default",
       "clientId": "Client Id",
+      "slug": "Slug",
       "claim": "Claim"
     }
   }

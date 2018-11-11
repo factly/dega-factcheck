@@ -61,6 +61,9 @@ public class ClaimantResourceIntTest {
     private static final String DEFAULT_CLIENT_ID = "AAAAAAAAAA";
     private static final String UPDATED_CLIENT_ID = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SLUG = "AAAAAAAAAA";
+    private static final String UPDATED_SLUG = "BBBBBBBBBB";
+
     @Autowired
     private ClaimantRepository claimantRepository;
 
@@ -114,7 +117,8 @@ public class ClaimantResourceIntTest {
             .tagLine(DEFAULT_TAG_LINE)
             .description(DEFAULT_DESCRIPTION)
             .imageURL(DEFAULT_IMAGE_URL)
-            .clientId(DEFAULT_CLIENT_ID);
+            .clientId(DEFAULT_CLIENT_ID)
+            .slug(DEFAULT_SLUG);
         return claimant;
     }
 
@@ -144,6 +148,7 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testClaimant.getImageURL()).isEqualTo(DEFAULT_IMAGE_URL);
         assertThat(testClaimant.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
+        assertThat(testClaimant.getSlug()).isEqualTo(DEFAULT_SLUG);
 
         // Validate the Claimant in Elasticsearch
         verify(mockClaimantSearchRepository, times(1)).save(testClaimant);
@@ -208,6 +213,24 @@ public class ClaimantResourceIntTest {
     }
 
     @Test
+    public void checkSlugIsRequired() throws Exception {
+        int databaseSizeBeforeTest = claimantRepository.findAll().size();
+        // set the field null
+        claimant.setSlug(null);
+
+        // Create the Claimant, which fails.
+        ClaimantDTO claimantDTO = claimantMapper.toDto(claimant);
+
+        restClaimantMockMvc.perform(post("/api/claimants")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Claimant> claimantList = claimantRepository.findAll();
+        assertThat(claimantList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllClaimants() throws Exception {
         // Initialize the database
         claimantRepository.save(claimant);
@@ -221,7 +244,8 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.[*].tagLine").value(hasItem(DEFAULT_TAG_LINE.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].imageURL").value(hasItem(DEFAULT_IMAGE_URL.toString())))
-            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())));
+            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
     }
     
     @Test
@@ -238,7 +262,8 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.tagLine").value(DEFAULT_TAG_LINE.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.imageURL").value(DEFAULT_IMAGE_URL.toString()))
-            .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()));
+            .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()));
     }
 
     @Test
@@ -262,7 +287,8 @@ public class ClaimantResourceIntTest {
             .tagLine(UPDATED_TAG_LINE)
             .description(UPDATED_DESCRIPTION)
             .imageURL(UPDATED_IMAGE_URL)
-            .clientId(UPDATED_CLIENT_ID);
+            .clientId(UPDATED_CLIENT_ID)
+            .slug(UPDATED_SLUG);
         ClaimantDTO claimantDTO = claimantMapper.toDto(updatedClaimant);
 
         restClaimantMockMvc.perform(put("/api/claimants")
@@ -279,6 +305,7 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testClaimant.getImageURL()).isEqualTo(UPDATED_IMAGE_URL);
         assertThat(testClaimant.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
+        assertThat(testClaimant.getSlug()).isEqualTo(UPDATED_SLUG);
 
         // Validate the Claimant in Elasticsearch
         verify(mockClaimantSearchRepository, times(1)).save(testClaimant);
@@ -340,7 +367,8 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.[*].tagLine").value(hasItem(DEFAULT_TAG_LINE.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].imageURL").value(hasItem(DEFAULT_IMAGE_URL.toString())))
-            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())));
+            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
     }
 
     @Test

@@ -21,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(RatingService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA');
+      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', async () => {
@@ -59,7 +59,8 @@ describe('Service Tests', () => {
             numericValue: 1,
             iconURL: 'BBBBBB',
             isDefault: true,
-            clientId: 'BBBBBB'
+            clientId: 'BBBBBB',
+            slug: 'BBBBBB'
           },
           elemDefault
         );
@@ -80,7 +81,8 @@ describe('Service Tests', () => {
             numericValue: 1,
             iconURL: 'BBBBBB',
             isDefault: true,
-            clientId: 'BBBBBB'
+            clientId: 'BBBBBB',
+            slug: 'BBBBBB'
           },
           elemDefault
         );

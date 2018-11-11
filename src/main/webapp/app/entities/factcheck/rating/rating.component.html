@@ -35,6 +35,7 @@
             <th jhiSortBy="iconURL"><span jhiTranslate="factcheckApp.factcheckRating.iconURL">Icon URL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="isDefault"><span jhiTranslate="factcheckApp.factcheckRating.isDefault">Is Default</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="clientId"><span jhiTranslate="factcheckApp.factcheckRating.clientId">Client Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="slug"><span jhiTranslate="factcheckApp.factcheckRating.slug">Slug</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -46,6 +47,7 @@
                 <td>{{rating.iconURL}}</td>
                 <td>{{rating.isDefault}}</td>
                 <td>{{rating.clientId}}</td>
+                <td>{{rating.slug}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

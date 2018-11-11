@@ -77,6 +77,9 @@ public class ClaimResourceIntTest {
     private static final String DEFAULT_CLIENT_ID = "AAAAAAAAAA";
     private static final String UPDATED_CLIENT_ID = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SLUG = "AAAAAAAAAA";
+    private static final String UPDATED_SLUG = "BBBBBBBBBB";
+
     @Autowired
     private ClaimRepository claimRepository;
 
@@ -134,7 +137,8 @@ public class ClaimResourceIntTest {
             .reviewSources(DEFAULT_REVIEW_SOURCES)
             .review(DEFAULT_REVIEW)
             .reviewTagLine(DEFAULT_REVIEW_TAG_LINE)
-            .clientId(DEFAULT_CLIENT_ID);
+            .clientId(DEFAULT_CLIENT_ID)
+            .slug(DEFAULT_SLUG);
         // Add required entity
         Rating rating = RatingResourceIntTest.createEntity();
         rating.setId("fixed-id-for-tests");
@@ -176,6 +180,7 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getReview()).isEqualTo(DEFAULT_REVIEW);
         assertThat(testClaim.getReviewTagLine()).isEqualTo(DEFAULT_REVIEW_TAG_LINE);
         assertThat(testClaim.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
+        assertThat(testClaim.getSlug()).isEqualTo(DEFAULT_SLUG);
 
         // Validate the Claim in Elasticsearch
         verify(mockClaimSearchRepository, times(1)).save(testClaim);
@@ -330,6 +335,24 @@ public class ClaimResourceIntTest {
     }
 
     @Test
+    public void checkSlugIsRequired() throws Exception {
+        int databaseSizeBeforeTest = claimRepository.findAll().size();
+        // set the field null
+        claim.setSlug(null);
+
+        // Create the Claim, which fails.
+        ClaimDTO claimDTO = claimMapper.toDto(claim);
+
+        restClaimMockMvc.perform(post("/api/claims")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Claim> claimList = claimRepository.findAll();
+        assertThat(claimList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllClaims() throws Exception {
         // Initialize the database
         claimRepository.save(claim);
@@ -347,7 +370,8 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.[*].reviewSources").value(hasItem(DEFAULT_REVIEW_SOURCES.toString())))
             .andExpect(jsonPath("$.[*].review").value(hasItem(DEFAULT_REVIEW.toString())))
             .andExpect(jsonPath("$.[*].reviewTagLine").value(hasItem(DEFAULT_REVIEW_TAG_LINE.toString())))
-            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())));
+            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
     }
     
     @Test
@@ -368,7 +392,8 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.reviewSources").value(DEFAULT_REVIEW_SOURCES.toString()))
             .andExpect(jsonPath("$.review").value(DEFAULT_REVIEW.toString()))
             .andExpect(jsonPath("$.reviewTagLine").value(DEFAULT_REVIEW_TAG_LINE.toString()))
-            .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()));
+            .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()));
     }
 
     @Test
@@ -396,7 +421,8 @@ public class ClaimResourceIntTest {
             .reviewSources(UPDATED_REVIEW_SOURCES)
             .review(UPDATED_REVIEW)
             .reviewTagLine(UPDATED_REVIEW_TAG_LINE)
-            .clientId(UPDATED_CLIENT_ID);
+            .clientId(UPDATED_CLIENT_ID)
+            .slug(UPDATED_SLUG);
         ClaimDTO claimDTO = claimMapper.toDto(updatedClaim);
 
         restClaimMockMvc.perform(put("/api/claims")
@@ -417,6 +443,7 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getReview()).isEqualTo(UPDATED_REVIEW);
         assertThat(testClaim.getReviewTagLine()).isEqualTo(UPDATED_REVIEW_TAG_LINE);
         assertThat(testClaim.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
+        assertThat(testClaim.getSlug()).isEqualTo(UPDATED_SLUG);
 
         // Validate the Claim in Elasticsearch
         verify(mockClaimSearchRepository, times(1)).save(testClaim);
@@ -482,7 +509,8 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.[*].reviewSources").value(hasItem(DEFAULT_REVIEW_SOURCES.toString())))
             .andExpect(jsonPath("$.[*].review").value(hasItem(DEFAULT_REVIEW.toString())))
             .andExpect(jsonPath("$.[*].reviewTagLine").value(hasItem(DEFAULT_REVIEW_TAG_LINE.toString())))
-            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())));
+            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
     }
 
     @Test

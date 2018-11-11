@@ -41,6 +41,10 @@ public class Claimant implements Serializable {
     @Field("client_id")
     private String clientId;
 
+    @NotNull
+    @Field("slug")
+    private String slug;
+
     @DBRef
     @Field("claim")
     private Set<Claim> claims = new HashSet<>();
@@ -118,6 +122,19 @@ public class Claimant implements Serializable {
         this.clientId = clientId;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public Claimant slug(String slug) {
+        this.slug = slug;
+        return this;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public Set<Claim> getClaims() {
         return claims;
     }
@@ -173,6 +190,7 @@ public class Claimant implements Serializable {
             ", description='" + getDescription() + "'" +
             ", imageURL='" + getImageURL() + "'" +
             ", clientId='" + getClientId() + "'" +
+            ", slug='" + getSlug() + "'" +
             "}";
     }
 }

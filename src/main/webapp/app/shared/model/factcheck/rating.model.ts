@@ -7,6 +7,7 @@ export interface IRating {
   iconURL?: string;
   isDefault?: boolean;
   clientId?: string;
+  slug?: string;
   claims?: IClaim[];
 }
 
@@ -18,6 +19,7 @@ export class Rating implements IRating {
     public iconURL?: string,
     public isDefault?: boolean,
     public clientId?: string,
+    public slug?: string,
     public claims?: IClaim[]
   ) {
     this.isDefault = this.isDefault || false;

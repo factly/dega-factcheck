@@ -25,6 +25,7 @@
       "review": "Review",
       "reviewTagLine": "Review Tag Line",
       "clientId": "Client Id",
+      "slug": "Slug",
       "rating": "Rating",
       "claimant": "Claimant"
     }

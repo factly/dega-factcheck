@@ -37,6 +37,9 @@ public class ClaimDTO implements Serializable {
     @NotNull
     private String clientId;
 
+    @NotNull
+    private String slug;
+
     private String ratingId;
 
     private String ratingName;
@@ -125,6 +128,14 @@ public class ClaimDTO implements Serializable {
         this.clientId = clientId;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public String getRatingId() {
         return ratingId;
     }
@@ -191,6 +202,7 @@ public class ClaimDTO implements Serializable {
             ", review='" + getReview() + "'" +
             ", reviewTagLine='" + getReviewTagLine() + "'" +
             ", clientId='" + getClientId() + "'" +
+            ", slug='" + getSlug() + "'" +
             ", rating=" + getRatingId() +
             ", rating='" + getRatingName() + "'" +
             ", claimant=" + getClaimantId() +

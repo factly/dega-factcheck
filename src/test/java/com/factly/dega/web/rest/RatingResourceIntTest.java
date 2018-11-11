@@ -61,6 +61,9 @@ public class RatingResourceIntTest {
     private static final String DEFAULT_CLIENT_ID = "AAAAAAAAAA";
     private static final String UPDATED_CLIENT_ID = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SLUG = "AAAAAAAAAA";
+    private static final String UPDATED_SLUG = "BBBBBBBBBB";
+
     @Autowired
     private RatingRepository ratingRepository;
 
@@ -114,7 +117,8 @@ public class RatingResourceIntTest {
             .numericValue(DEFAULT_NUMERIC_VALUE)
             .iconURL(DEFAULT_ICON_URL)
             .isDefault(DEFAULT_IS_DEFAULT)
-            .clientId(DEFAULT_CLIENT_ID);
+            .clientId(DEFAULT_CLIENT_ID)
+            .slug(DEFAULT_SLUG);
         return rating;
     }
 
@@ -144,6 +148,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.getIconURL()).isEqualTo(DEFAULT_ICON_URL);
         assertThat(testRating.isIsDefault()).isEqualTo(DEFAULT_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
+        assertThat(testRating.getSlug()).isEqualTo(DEFAULT_SLUG);
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -226,6 +231,24 @@ public class RatingResourceIntTest {
     }
 
     @Test
+    public void checkSlugIsRequired() throws Exception {
+        int databaseSizeBeforeTest = ratingRepository.findAll().size();
+        // set the field null
+        rating.setSlug(null);
+
+        // Create the Rating, which fails.
+        RatingDTO ratingDTO = ratingMapper.toDto(rating);
+
+        restRatingMockMvc.perform(post("/api/ratings")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Rating> ratingList = ratingRepository.findAll();
+        assertThat(ratingList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllRatings() throws Exception {
         // Initialize the database
         ratingRepository.save(rating);
@@ -239,7 +262,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].numericValue").value(hasItem(DEFAULT_NUMERIC_VALUE)))
             .andExpect(jsonPath("$.[*].iconURL").value(hasItem(DEFAULT_ICON_URL.toString())))
             .andExpect(jsonPath("$.[*].isDefault").value(hasItem(DEFAULT_IS_DEFAULT.booleanValue())))
-            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())));
+            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
     }
     
     @Test
@@ -256,7 +280,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.numericValue").value(DEFAULT_NUMERIC_VALUE))
             .andExpect(jsonPath("$.iconURL").value(DEFAULT_ICON_URL.toString()))
             .andExpect(jsonPath("$.isDefault").value(DEFAULT_IS_DEFAULT.booleanValue()))
-            .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()));
+            .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()));
     }
 
     @Test
@@ -280,7 +305,8 @@ public class RatingResourceIntTest {
             .numericValue(UPDATED_NUMERIC_VALUE)
             .iconURL(UPDATED_ICON_URL)
             .isDefault(UPDATED_IS_DEFAULT)
-            .clientId(UPDATED_CLIENT_ID);
+            .clientId(UPDATED_CLIENT_ID)
+            .slug(UPDATED_SLUG);
         RatingDTO ratingDTO = ratingMapper.toDto(updatedRating);
 
         restRatingMockMvc.perform(put("/api/ratings")
@@ -297,6 +323,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.getIconURL()).isEqualTo(UPDATED_ICON_URL);
         assertThat(testRating.isIsDefault()).isEqualTo(UPDATED_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
+        assertThat(testRating.getSlug()).isEqualTo(UPDATED_SLUG);
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -358,7 +385,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].numericValue").value(hasItem(DEFAULT_NUMERIC_VALUE)))
             .andExpect(jsonPath("$.[*].iconURL").value(hasItem(DEFAULT_ICON_URL.toString())))
             .andExpect(jsonPath("$.[*].isDefault").value(hasItem(DEFAULT_IS_DEFAULT.booleanValue())))
-            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())));
+            .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
     }
 
     @Test

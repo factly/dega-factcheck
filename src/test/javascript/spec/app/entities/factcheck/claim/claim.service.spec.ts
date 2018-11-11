@@ -25,7 +25,19 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Claim('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', currentDate, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Claim(
+        'ID',
+        'AAAAAAA',
+        'AAAAAAA',
+        currentDate,
+        'AAAAAAA',
+        currentDate,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA'
+      );
     });
 
     describe('Service methods', async () => {
@@ -81,7 +93,8 @@ describe('Service Tests', () => {
             reviewSources: 'BBBBBB',
             review: 'BBBBBB',
             reviewTagLine: 'BBBBBB',
-            clientId: 'BBBBBB'
+            clientId: 'BBBBBB',
+            slug: 'BBBBBB'
           },
           elemDefault
         );
@@ -112,7 +125,8 @@ describe('Service Tests', () => {
             reviewSources: 'BBBBBB',
             review: 'BBBBBB',
             reviewTagLine: 'BBBBBB',
-            clientId: 'BBBBBB'
+            clientId: 'BBBBBB',
+            slug: 'BBBBBB'
           },
           elemDefault
         );

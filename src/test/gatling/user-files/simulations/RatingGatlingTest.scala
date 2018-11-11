@@ -106,6 +106,7 @@ class RatingGatlingTest extends Simulation {
                 , "iconURL":"SAMPLE_TEXT"
                 , "isDefault":null
                 , "clientId":"SAMPLE_TEXT"
+                , "slug":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_rating_url"))).exitHereIfFailed

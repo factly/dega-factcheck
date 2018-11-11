@@ -106,6 +106,7 @@ class ClaimantGatlingTest extends Simulation {
                 , "description":"SAMPLE_TEXT"
                 , "imageURL":"SAMPLE_TEXT"
                 , "clientId":"SAMPLE_TEXT"
+                , "slug":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_claimant_url"))).exitHereIfFailed

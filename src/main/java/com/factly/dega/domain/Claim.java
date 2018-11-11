@@ -57,6 +57,10 @@ public class Claim implements Serializable {
     @Field("client_id")
     private String clientId;
 
+    @NotNull
+    @Field("slug")
+    private String slug;
+
     @DBRef
     @Field("rating")
     @JsonIgnoreProperties("claims")
@@ -193,6 +197,19 @@ public class Claim implements Serializable {
         this.clientId = clientId;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public Claim slug(String slug) {
+        this.slug = slug;
+        return this;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public Rating getRating() {
         return rating;
     }
@@ -253,6 +270,7 @@ public class Claim implements Serializable {
             ", review='" + getReview() + "'" +
             ", reviewTagLine='" + getReviewTagLine() + "'" +
             ", clientId='" + getClientId() + "'" +
+            ", slug='" + getSlug() + "'" +
             "}";
     }
 }

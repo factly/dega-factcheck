@@ -7,6 +7,7 @@ export interface IClaimant {
   description?: string;
   imageURL?: string;
   clientId?: string;
+  slug?: string;
   claims?: IClaim[];
 }
 
@@ -18,6 +19,7 @@ export class Claimant implements IClaimant {
     public description?: string,
     public imageURL?: string,
     public clientId?: string,
+    public slug?: string,
     public claims?: IClaim[]
   ) {}
 }

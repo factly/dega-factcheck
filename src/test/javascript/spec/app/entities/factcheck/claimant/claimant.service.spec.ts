@@ -21,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(ClaimantService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Claimant('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Claimant('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', async () => {
@@ -59,7 +59,8 @@ describe('Service Tests', () => {
             tagLine: 'BBBBBB',
             description: 'BBBBBB',
             imageURL: 'BBBBBB',
-            clientId: 'BBBBBB'
+            clientId: 'BBBBBB',
+            slug: 'BBBBBB'
           },
           elemDefault
         );
@@ -80,7 +81,8 @@ describe('Service Tests', () => {
             tagLine: 'BBBBBB',
             description: 'BBBBBB',
             imageURL: 'BBBBBB',
-            clientId: 'BBBBBB'
+            clientId: 'BBBBBB',
+            slug: 'BBBBBB'
           },
           elemDefault
         );
