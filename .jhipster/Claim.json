@@ -1,0 +1,71 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "factcheck",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "claim",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "claimDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "claimSource",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "checkedDate",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "reviewSources",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "review",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "reviewTagLine",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "clientId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "dto": "mapstruct",
+    "searchEngine": "elasticsearch",
+    "service": "serviceImpl",
+    "entityTableName": "claim",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination",
+    "microserviceName": "factcheck"
+}
