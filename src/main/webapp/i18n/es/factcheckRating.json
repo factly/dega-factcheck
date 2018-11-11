@@ -1,0 +1,26 @@
+{
+  "factcheckApp": {
+    "factcheckRating": {
+      "home": {
+        "title": "Ratings",
+        "createLabel": "Crear nuevo Rating",
+        "createOrEditLabel": "Crear o editar Rating",
+        "search": "Search for Rating"
+      },
+      "created": "Un nuevo Rating ha sido creado con el identificador {{ param }}",
+      "updated": "Un Rating ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Rating ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Rating {{ id }}?"
+      },
+      "detail": {
+        "title": "Rating"
+      },
+      "name": "Name",
+      "numericValue": "Numeric Value",
+      "iconURL": "Icon URL",
+      "isDefault": "Is Default",
+      "clientId": "Client Id"
+    }
+  }
+}

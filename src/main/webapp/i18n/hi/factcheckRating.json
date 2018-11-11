@@ -1,0 +1,26 @@
+{
+  "factcheckApp": {
+    "factcheckRating": {
+      "home": {
+        "title": "Ratings",
+        "createLabel": "नया Rating बनाएँ",
+        "createOrEditLabel": "Rating बनाएँ या संपादित करें",
+        "search": "Rating खोजें"
+      },
+      "created": "एक नया Rating [identifier: {{ param }}] तैयार है",
+      "updated": "एक Rating [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Rating [identifier: {{ param }}] हटा दिया है",
+      "delete": {
+        "question": "Rating [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Rating"
+      },
+      "name": "Name",
+      "numericValue": "Numeric Value",
+      "iconURL": "Icon URL",
+      "isDefault": "Is Default",
+      "clientId": "Client Id"
+    }
+  }
+}
