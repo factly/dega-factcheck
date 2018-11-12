@@ -1,0 +1,30 @@
+[
+{ 
+    "_id" : ObjectId("5be9b6a2ebcaa11c20789313"), 
+    "claim" : "I am super human", 
+    "description" : "There is no description required. I am super human", 
+    "claim_source" : "http://google.com", 
+    "checked_date" : ISODate("2018-11-13T06:00:00.000+0000"), 
+    "review_sources" : "http://google.com", 
+    "review" : "This is the review description", 
+    "client_id" : "factly", 
+    "slug" : "i-am-super-human", 
+    "rating" : DBRef("rating", ObjectId("5be7ae03ebcaa14a29f82607")), 
+    "claimant" : DBRef("claimant", ObjectId("5be84297ebcaa1587d683fe7")), 
+    "_class" : "com.factly.dega.domain.Claim"
+},
+{ 
+    "_id" : ObjectId("5be9b72be8fbaeb86b0bff83"), 
+    "claim" : "I am super beautiful", 
+    "description" : "There is no description required. I am super beautiful", 
+    "claim_source" : "http://google.com", 
+    "checked_date" : ISODate("2018-11-13T06:00:00.000+0000"), 
+    "review_sources" : "http://google.com", 
+    "review" : "This is the review description", 
+    "client_id" : "factly", 
+    "slug" : "i-am-super-beautiful", 
+    "rating" : DBRef("rating", ObjectId("5be7ae03ebcaa14a29f82607")), 
+    "claimant" : DBRef("claimant", ObjectId("5be84297ebcaa1587d683fe7")), 
+    "_class" : "com.factly.dega.domain.Claim"
+}
+]
