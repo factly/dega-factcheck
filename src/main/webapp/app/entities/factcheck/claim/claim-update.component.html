@@ -1,0 +1,158 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-claim-heading" jhiTranslate="factcheckApp.factcheckClaim.home.createOrEditLabel">Create or edit a Claim</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!claim.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="claim.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.claim" for="field_claim">Claim</label>
+                    <input type="text" class="form-control" name="claim" id="field_claim"
+                        [(ngModel)]="claim.claim" required/>
+                    <div [hidden]="!(editForm.controls.claim?.dirty && editForm.controls.claim?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.claim?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.description" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="claim.description" required/>
+                    <div [hidden]="!(editForm.controls.description?.dirty && editForm.controls.description?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.description?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.claimDate" for="field_claimDate">Claim Date</label>
+                    <div class="input-group">
+                        <input id="field_claimDate" type="text" class="form-control" name="claimDate" ngbDatepicker  #claimDateDp="ngbDatepicker" [(ngModel)]="claim.claimDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="claimDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.claimSource" for="field_claimSource">Claim Source</label>
+                    <input type="text" class="form-control" name="claimSource" id="field_claimSource"
+                        [(ngModel)]="claim.claimSource" required/>
+                    <div [hidden]="!(editForm.controls.claimSource?.dirty && editForm.controls.claimSource?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.claimSource?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.checkedDate" for="field_checkedDate">Checked Date</label>
+                    <div class="input-group">
+                        <input id="field_checkedDate" type="text" class="form-control" name="checkedDate" ngbDatepicker  #checkedDateDp="ngbDatepicker" [(ngModel)]="claim.checkedDate"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="checkedDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.checkedDate?.dirty && editForm.controls.checkedDate?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.checkedDate?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.reviewSources" for="field_reviewSources">Review Sources</label>
+                    <input type="text" class="form-control" name="reviewSources" id="field_reviewSources"
+                        [(ngModel)]="claim.reviewSources" required/>
+                    <div [hidden]="!(editForm.controls.reviewSources?.dirty && editForm.controls.reviewSources?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.reviewSources?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.review" for="field_review">Review</label>
+                    <input type="text" class="form-control" name="review" id="field_review"
+                        [(ngModel)]="claim.review" required/>
+                    <div [hidden]="!(editForm.controls.review?.dirty && editForm.controls.review?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.review?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.reviewTagLine" for="field_reviewTagLine">Review Tag Line</label>
+                    <input type="text" class="form-control" name="reviewTagLine" id="field_reviewTagLine"
+                        [(ngModel)]="claim.reviewTagLine" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.clientId" for="field_clientId">Client Id</label>
+                    <input type="text" class="form-control" name="clientId" id="field_clientId"
+                        [(ngModel)]="claim.clientId" required/>
+                    <div [hidden]="!(editForm.controls.clientId?.dirty && editForm.controls.clientId?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.clientId?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.slug" for="field_slug">Slug</label>
+                    <input type="text" class="form-control" name="slug" id="field_slug"
+                        [(ngModel)]="claim.slug" required/>
+                    <div [hidden]="!(editForm.controls.slug?.dirty && editForm.controls.slug?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.slug?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.rating" for="field_rating">Rating</label>
+                    <select class="form-control" id="field_rating" name="rating" [(ngModel)]="claim.ratingId"  required>
+                        <option *ngIf="!editForm.value.rating" [ngValue]="null" selected></option>
+                        <option [ngValue]="ratingOption.id" *ngFor="let ratingOption of ratings; trackBy: trackRatingById">{{ratingOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.rating?.dirty && editForm.controls.rating?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.rating?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="factcheckApp.factcheckClaim.claimant" for="field_claimant">Claimant</label>
+                    <select class="form-control" id="field_claimant" name="claimant" [(ngModel)]="claim.claimantId"  required>
+                        <option *ngIf="!editForm.value.claimant" [ngValue]="null" selected></option>
+                        <option [ngValue]="claimantOption.id" *ngFor="let claimantOption of claimants; trackBy: trackClaimantById">{{claimantOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.claimant?.dirty && editForm.controls.claimant?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.claimant?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

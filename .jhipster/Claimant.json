@@ -1,0 +1,54 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "factcheck",
+    "relationships": [
+        {
+            "relationshipName": "claim",
+            "otherEntityName": "claim",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "claimant"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "tagLine",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "imageURL",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "clientId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "slug",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "dto": "mapstruct",
+    "searchEngine": "elasticsearch",
+    "service": "serviceImpl",
+    "entityTableName": "claimant",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination",
+    "microserviceName": "factcheck"
+}

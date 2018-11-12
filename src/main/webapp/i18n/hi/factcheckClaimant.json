@@ -1,0 +1,28 @@
+{
+  "factcheckApp": {
+    "factcheckClaimant": {
+      "home": {
+        "title": "Claimants",
+        "createLabel": "नया Claimant बनाएँ",
+        "createOrEditLabel": "Claimant बनाएँ या संपादित करें",
+        "search": "Claimant खोजें"
+      },
+      "created": "एक नया Claimant [identifier: {{ param }}] तैयार है",
+      "updated": "एक Claimant [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Claimant [identifier: {{ param }}] हटा दिया है",
+      "delete": {
+        "question": "Claimant [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Claimant"
+      },
+      "name": "Name",
+      "tagLine": "Tag Line",
+      "description": "Description",
+      "imageURL": "Image URL",
+      "clientId": "Client Id",
+      "slug": "Slug",
+      "claim": "Claim"
+    }
+  }
+}

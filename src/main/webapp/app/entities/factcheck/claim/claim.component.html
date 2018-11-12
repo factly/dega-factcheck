@@ -1,0 +1,107 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="factcheckApp.factcheckClaim.home.title">Claims</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-claim" [routerLink]="['/claim/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="factcheckApp.factcheckClaim.home.createLabel">
+            Create new Claim
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'factcheckApp.factcheckClaim.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="claims">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="claim"><span jhiTranslate="factcheckApp.factcheckClaim.claim">Claim</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span jhiTranslate="factcheckApp.factcheckClaim.description">Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="claimDate"><span jhiTranslate="factcheckApp.factcheckClaim.claimDate">Claim Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="claimSource"><span jhiTranslate="factcheckApp.factcheckClaim.claimSource">Claim Source</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="checkedDate"><span jhiTranslate="factcheckApp.factcheckClaim.checkedDate">Checked Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="reviewSources"><span jhiTranslate="factcheckApp.factcheckClaim.reviewSources">Review Sources</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="review"><span jhiTranslate="factcheckApp.factcheckClaim.review">Review</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="reviewTagLine"><span jhiTranslate="factcheckApp.factcheckClaim.reviewTagLine">Review Tag Line</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="clientId"><span jhiTranslate="factcheckApp.factcheckClaim.clientId">Client Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="slug"><span jhiTranslate="factcheckApp.factcheckClaim.slug">Slug</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="ratingName"><span jhiTranslate="factcheckApp.factcheckClaim.rating">Rating</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="claimantName"><span jhiTranslate="factcheckApp.factcheckClaim.claimant">Claimant</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let claim of claims ;trackBy: trackId">
+                <td><a [routerLink]="['/claim', claim.id, 'view' ]">{{claim.id}}</a></td>
+                <td>{{claim.claim}}</td>
+                <td>{{claim.description}}</td>
+                <td>{{claim.claimDate | date:'mediumDate'}}</td>
+                <td>{{claim.claimSource}}</td>
+                <td>{{claim.checkedDate | date:'mediumDate'}}</td>
+                <td>{{claim.reviewSources}}</td>
+                <td>{{claim.review}}</td>
+                <td>{{claim.reviewTagLine}}</td>
+                <td>{{claim.clientId}}</td>
+                <td>{{claim.slug}}</td>
+                <td>
+                    <div *ngIf="claim.ratingId">
+                        <a [routerLink]="['../rating', claim.ratingId , 'view' ]" >{{claim.ratingName}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="claim.claimantId">
+                        <a [routerLink]="['../claimant', claim.claimantId , 'view' ]" >{{claim.claimantName}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/claim', claim.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/claim', claim.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'claim/'+ claim.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="claims && claims.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

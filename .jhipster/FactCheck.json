@@ -1,0 +1,114 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "factcheck",
+    "relationships": [
+        {
+            "relationshipName": "claim",
+            "otherEntityName": "claim",
+            "relationshipType": "many-to-many",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "claim",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "factCheck"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "clientId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "introduction",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "summary",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "excerpt",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "publishedDate",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "publishedDateGMT",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "lastUpdatedDate",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "lastUpdatedDateGMT",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "featured",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "sticky",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "updates",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "slug",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "password",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "featuredMedia",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "subTitle",
+            "fieldType": "String"
+        }
+    ],
+    "dto": "mapstruct",
+    "searchEngine": "elasticsearch",
+    "service": "serviceImpl",
+    "entityTableName": "fact_check",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination",
+    "microserviceName": "factcheck"
+}
