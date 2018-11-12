@@ -1,14 +1,14 @@
 // load rating data
-print('Loading organizations data.');
-loadSeedData(db.organizations, JSON.parse(cat('collections/test/rating.json')));
+print('Loading rating data.');
+loadSeedData(db.rating, JSON.parse(cat('collections/test/rating.json')));
 
 // load claimant data
-print('Loading organizations data.');
-loadSeedData(db.categories, JSON.parse(cat('collections/test/claimant.json')));
+print('Loading claimant data.');
+loadSeedData(db.claimant, JSON.parse(cat('collections/test/claimant.json')));
 
 // load claim data
-print('Loading organizations data.');
-loadSeedData(db.categories, JSON.parse(cat('collections/test/claim.json')));
+print('Loading category data.');
+loadSeedData(db.category, JSON.parse(cat('collections/test/claim.json')));
 
 // .. so on
 
