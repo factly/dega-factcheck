@@ -1,6 +1,5 @@
 [
-{ 
-    "_id" : ObjectId("5be77fc2ebcaa135aab5bc9f"), 
+{
     "name" : "False", 
     "numeric_value" : NumberInt(1), 
     "is_default" : true, 
@@ -11,8 +10,7 @@
     ], 
     "_class" : "com.factly.dega.domain.Rating"
 },
-{ 
-    "_id" : ObjectId("5be77fccebcaa135aab5bca2"), 
+{
     "name" : "Misleading", 
     "numeric_value" : NumberInt(2), 
     "is_default" : true, 
@@ -23,8 +21,7 @@
     ], 
     "_class" : "com.factly.dega.domain.Rating"
 },
-{ 
-    "_id" : ObjectId("5be7ab74ebcaa14a29f82601"), 
+{
     "name" : "Unverified", 
     "numeric_value" : NumberInt(3), 
     "is_default" : true, 
@@ -35,8 +32,7 @@
     ], 
     "_class" : "com.factly.dega.domain.Rating"
 },
-{ 
-    "_id" : ObjectId("5be7ad9cebcaa14a29f82604"), 
+{
     "name" : "Partly True", 
     "numeric_value" : NumberInt(4), 
     "is_default" : true, 
@@ -47,8 +43,7 @@
     ], 
     "_class" : "com.factly.dega.domain.Rating"
 },
-{ 
-    "_id" : ObjectId("5be7ae03ebcaa14a29f82607"), 
+{
     "name" : "True", 
     "numeric_value" : NumberInt(5), 
     "is_default" : true, 
