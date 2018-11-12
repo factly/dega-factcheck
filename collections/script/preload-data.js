@@ -1,3 +1,9 @@
+function loadSeedData(collection, json) {
+    for (var i = 0; i < json.length; i++) {
+        collection.insert(json[i]);
+    }
+}
+
 // load rating data
 print('Loading rating data.');
 loadSeedData(db.rating, JSON.parse(cat('collections/test/rating.json')));
@@ -11,7 +17,3 @@ print('Loading category data.');
 loadSeedData(db.category, JSON.parse(cat('collections/test/claim.json')));
 
 // .. so on
-
-function loadSeedData(collection, json) {
-    json.forEach(doc => collection.insert(doc));
-}
