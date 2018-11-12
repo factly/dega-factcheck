@@ -1,5 +1,6 @@
 package com.factly.dega.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -9,6 +10,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -70,6 +73,11 @@ public class Claim implements Serializable {
     @Field("claimant")
     @JsonIgnoreProperties("claims")
     private Claimant claimant;
+
+    @DBRef
+    @Field("factChecks")
+    @JsonIgnore
+    private Set<FactCheck> factChecks = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -234,6 +242,31 @@ public class Claim implements Serializable {
 
     public void setClaimant(Claimant claimant) {
         this.claimant = claimant;
+    }
+
+    public Set<FactCheck> getFactChecks() {
+        return factChecks;
+    }
+
+    public Claim factChecks(Set<FactCheck> factChecks) {
+        this.factChecks = factChecks;
+        return this;
+    }
+
+    public Claim addFactCheck(FactCheck factCheck) {
+        this.factChecks.add(factCheck);
+        factCheck.getClaims().add(this);
+        return this;
+    }
+
+    public Claim removeFactCheck(FactCheck factCheck) {
+        this.factChecks.remove(factCheck);
+        factCheck.getClaims().remove(this);
+        return this;
+    }
+
+    public void setFactChecks(Set<FactCheck> factChecks) {
+        this.factChecks = factChecks;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

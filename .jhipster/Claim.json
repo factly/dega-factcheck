@@ -19,6 +19,13 @@
                 "required"
             ],
             "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "factCheck",
+            "otherEntityName": "factCheck",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "claim"
         }
     ],
     "fields": [

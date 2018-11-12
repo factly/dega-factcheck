@@ -19,6 +19,7 @@ public interface ClaimMapper extends EntityMapper<ClaimDTO, Claim> {
 
     @Mapping(source = "ratingId", target = "rating")
     @Mapping(source = "claimantId", target = "claimant")
+    @Mapping(target = "factChecks", ignore = true)
     Claim toEntity(ClaimDTO claimDTO);
 
     default Claim fromId(String id) {

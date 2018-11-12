@@ -27,7 +27,8 @@
       "clientId": "Client Id",
       "slug": "Slug",
       "rating": "Rating",
-      "claimant": "Claimant"
+      "claimant": "Claimant",
+      "factCheck": "Fact Check"
     }
   }
 }
