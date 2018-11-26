@@ -36,6 +36,7 @@
             <th jhiSortBy="imageURL"><span jhiTranslate="factcheckApp.factcheckClaimant.imageURL">Image URL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="clientId"><span jhiTranslate="factcheckApp.factcheckClaimant.clientId">Client Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="slug"><span jhiTranslate="factcheckApp.factcheckClaimant.slug">Slug</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdDate"><span jhiTranslate="factcheckApp.factcheckClaimant.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -48,6 +49,7 @@
                 <td>{{claimant.imageURL}}</td>
                 <td>{{claimant.clientId}}</td>
                 <td>{{claimant.slug}}</td>
+                <td>{{claimant.createdDate | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
