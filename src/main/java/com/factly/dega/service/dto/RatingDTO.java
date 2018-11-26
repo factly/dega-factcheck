@@ -1,5 +1,6 @@
 package com.factly.dega.service.dto;
 
+import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,6 +28,9 @@ public class RatingDTO implements Serializable {
 
     @NotNull
     private String slug;
+
+    @NotNull
+    private ZonedDateTime createdDate;
 
     public String getId() {
         return id;
@@ -84,6 +88,14 @@ public class RatingDTO implements Serializable {
         this.slug = slug;
     }
 
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -115,6 +127,7 @@ public class RatingDTO implements Serializable {
             ", isDefault='" + isIsDefault() + "'" +
             ", clientId='" + getClientId() + "'" +
             ", slug='" + getSlug() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             "}";
     }
 }

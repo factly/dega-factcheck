@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { IRating } from 'app/shared/model/factcheck/rating.model';
 import { RatingService } from './rating.service';
@@ -13,6 +15,7 @@ import { RatingService } from './rating.service';
 export class RatingUpdateComponent implements OnInit {
   rating: IRating;
   isSaving: boolean;
+  createdDate: string;
 
   constructor(private ratingService: RatingService, private activatedRoute: ActivatedRoute) {}
 
@@ -20,6 +23,7 @@ export class RatingUpdateComponent implements OnInit {
     this.isSaving = false;
     this.activatedRoute.data.subscribe(({ rating }) => {
       this.rating = rating;
+      this.createdDate = this.rating.createdDate != null ? this.rating.createdDate.format(DATE_TIME_FORMAT) : null;
     });
   }
 
@@ -29,6 +33,7 @@ export class RatingUpdateComponent implements OnInit {
 
   save() {
     this.isSaving = true;
+    this.rating.createdDate = this.createdDate != null ? moment(this.createdDate, DATE_TIME_FORMAT) : null;
     if (this.rating.id !== undefined) {
       this.subscribeToSaveResponse(this.ratingService.update(this.rating));
     } else {

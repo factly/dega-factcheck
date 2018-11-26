@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { IClaim } from 'app/shared/model/factcheck/claim.model';
 
 export interface IRating {
@@ -8,6 +9,7 @@ export interface IRating {
   isDefault?: boolean;
   clientId?: string;
   slug?: string;
+  createdDate?: Moment;
   claims?: IClaim[];
 }
 
@@ -20,6 +22,7 @@ export class Rating implements IRating {
     public isDefault?: boolean,
     public clientId?: string,
     public slug?: string,
+    public createdDate?: Moment,
     public claims?: IClaim[]
   ) {
     this.isDefault = this.isDefault || false;
