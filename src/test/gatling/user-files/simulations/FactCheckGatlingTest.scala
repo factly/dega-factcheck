@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the FactCheck entity.
+ * Performance test for the Factcheck entity.
  */
-class FactCheckGatlingTest extends Simulation {
+class FactcheckGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -45,7 +45,7 @@ class FactCheckGatlingTest extends Simulation {
         "Upgrade-Insecure-Requests" -> "1"
     )
 
-    val scn = scenario("Test the FactCheck entity")
+    val scn = scenario("Test the Factcheck entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -91,13 +91,13 @@ class FactCheckGatlingTest extends Simulation {
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all factChecks")
-            .get("/factcheck/api/fact-checks")
+            exec(http("Get all factchecks")
+            .get("/factcheck/api/factchecks")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new factCheck")
-            .post("/factcheck/api/fact-checks")
+            .exec(http("Create new factcheck")
+            .post("/factcheck/api/factchecks")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
                 "id":null
@@ -107,9 +107,7 @@ class FactCheckGatlingTest extends Simulation {
                 , "summary":"SAMPLE_TEXT"
                 , "excerpt":"SAMPLE_TEXT"
                 , "publishedDate":"2020-01-01T00:00:00.000Z"
-                , "publishedDateGMT":"2020-01-01T00:00:00.000Z"
                 , "lastUpdatedDate":"2020-01-01T00:00:00.000Z"
-                , "lastUpdatedDateGMT":"2020-01-01T00:00:00.000Z"
                 , "featured":null
                 , "sticky":null
                 , "updates":"SAMPLE_TEXT"
@@ -117,18 +115,19 @@ class FactCheckGatlingTest extends Simulation {
                 , "password":"SAMPLE_TEXT"
                 , "featuredMedia":"SAMPLE_TEXT"
                 , "subTitle":"SAMPLE_TEXT"
+                , "createdDate":"2020-01-01T00:00:00.000Z"
                 }""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_factCheck_url"))).exitHereIfFailed
+            .check(headerRegex("Location", "(.*)").saveAs("new_factcheck_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created factCheck")
-                .get("/factcheck${new_factCheck_url}")
+                exec(http("Get created factcheck")
+                .get("/factcheck${new_factcheck_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created factCheck")
-            .delete("/factcheck${new_factCheck_url}")
+            .exec(http("Delete created factcheck")
+            .delete("/factcheck${new_factcheck_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }

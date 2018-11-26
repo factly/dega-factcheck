@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.Objects;
 
 /**
- * A DTO for the FactCheck entity.
+ * A DTO for the Factcheck entity.
  */
-public class FactCheckDTO implements Serializable {
+public class FactcheckDTO implements Serializable {
 
     private String id;
 
@@ -31,13 +31,7 @@ public class FactCheckDTO implements Serializable {
     private ZonedDateTime publishedDate;
 
     @NotNull
-    private ZonedDateTime publishedDateGMT;
-
-    @NotNull
     private ZonedDateTime lastUpdatedDate;
-
-    @NotNull
-    private ZonedDateTime lastUpdatedDateGMT;
 
     private Boolean featured;
 
@@ -53,6 +47,9 @@ public class FactCheckDTO implements Serializable {
     private String featuredMedia;
 
     private String subTitle;
+
+    @NotNull
+    private ZonedDateTime createdDate;
 
     private Set<ClaimDTO> claims = new HashSet<>();
 
@@ -112,28 +109,12 @@ public class FactCheckDTO implements Serializable {
         this.publishedDate = publishedDate;
     }
 
-    public ZonedDateTime getPublishedDateGMT() {
-        return publishedDateGMT;
-    }
-
-    public void setPublishedDateGMT(ZonedDateTime publishedDateGMT) {
-        this.publishedDateGMT = publishedDateGMT;
-    }
-
     public ZonedDateTime getLastUpdatedDate() {
         return lastUpdatedDate;
     }
 
     public void setLastUpdatedDate(ZonedDateTime lastUpdatedDate) {
         this.lastUpdatedDate = lastUpdatedDate;
-    }
-
-    public ZonedDateTime getLastUpdatedDateGMT() {
-        return lastUpdatedDateGMT;
-    }
-
-    public void setLastUpdatedDateGMT(ZonedDateTime lastUpdatedDateGMT) {
-        this.lastUpdatedDateGMT = lastUpdatedDateGMT;
     }
 
     public Boolean isFeatured() {
@@ -192,6 +173,14 @@ public class FactCheckDTO implements Serializable {
         this.subTitle = subTitle;
     }
 
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public Set<ClaimDTO> getClaims() {
         return claims;
     }
@@ -209,11 +198,11 @@ public class FactCheckDTO implements Serializable {
             return false;
         }
 
-        FactCheckDTO factCheckDTO = (FactCheckDTO) o;
-        if (factCheckDTO.getId() == null || getId() == null) {
+        FactcheckDTO factcheckDTO = (FactcheckDTO) o;
+        if (factcheckDTO.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), factCheckDTO.getId());
+        return Objects.equals(getId(), factcheckDTO.getId());
     }
 
     @Override
@@ -223,7 +212,7 @@ public class FactCheckDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "FactCheckDTO{" +
+        return "FactcheckDTO{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", clientId='" + getClientId() + "'" +
@@ -231,9 +220,7 @@ public class FactCheckDTO implements Serializable {
             ", summary='" + getSummary() + "'" +
             ", excerpt='" + getExcerpt() + "'" +
             ", publishedDate='" + getPublishedDate() + "'" +
-            ", publishedDateGMT='" + getPublishedDateGMT() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
-            ", lastUpdatedDateGMT='" + getLastUpdatedDateGMT() + "'" +
             ", featured='" + isFeatured() + "'" +
             ", sticky='" + isSticky() + "'" +
             ", updates='" + getUpdates() + "'" +
@@ -241,6 +228,7 @@ public class FactCheckDTO implements Serializable {
             ", password='" + getPassword() + "'" +
             ", featuredMedia='" + getFeaturedMedia() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             "}";
     }
 }

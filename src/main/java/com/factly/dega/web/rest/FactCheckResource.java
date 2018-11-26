@@ -1,11 +1,11 @@
 package com.factly.dega.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.factly.dega.service.FactCheckService;
+import com.factly.dega.service.FactcheckService;
 import com.factly.dega.web.rest.errors.BadRequestAlertException;
 import com.factly.dega.web.rest.util.HeaderUtil;
 import com.factly.dega.web.rest.util.PaginationUtil;
-import com.factly.dega.service.dto.FactCheckDTO;
+import com.factly.dega.service.dto.FactcheckDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,127 +27,127 @@ import java.util.stream.StreamSupport;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
- * REST controller for managing FactCheck.
+ * REST controller for managing Factcheck.
  */
 @RestController
 @RequestMapping("/api")
-public class FactCheckResource {
+public class FactcheckResource {
 
-    private final Logger log = LoggerFactory.getLogger(FactCheckResource.class);
+    private final Logger log = LoggerFactory.getLogger(FactcheckResource.class);
 
-    private static final String ENTITY_NAME = "factcheckFactCheck";
+    private static final String ENTITY_NAME = "factcheckFactcheck";
 
-    private final FactCheckService factCheckService;
+    private final FactcheckService factcheckService;
 
-    public FactCheckResource(FactCheckService factCheckService) {
-        this.factCheckService = factCheckService;
+    public FactcheckResource(FactcheckService factcheckService) {
+        this.factcheckService = factcheckService;
     }
 
     /**
-     * POST  /fact-checks : Create a new factCheck.
+     * POST  /factchecks : Create a new factcheck.
      *
-     * @param factCheckDTO the factCheckDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new factCheckDTO, or with status 400 (Bad Request) if the factCheck has already an ID
+     * @param factcheckDTO the factcheckDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new factcheckDTO, or with status 400 (Bad Request) if the factcheck has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/fact-checks")
+    @PostMapping("/factchecks")
     @Timed
-    public ResponseEntity<FactCheckDTO> createFactCheck(@Valid @RequestBody FactCheckDTO factCheckDTO) throws URISyntaxException {
-        log.debug("REST request to save FactCheck : {}", factCheckDTO);
-        if (factCheckDTO.getId() != null) {
-            throw new BadRequestAlertException("A new factCheck cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<FactcheckDTO> createFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO) throws URISyntaxException {
+        log.debug("REST request to save Factcheck : {}", factcheckDTO);
+        if (factcheckDTO.getId() != null) {
+            throw new BadRequestAlertException("A new factcheck cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        FactCheckDTO result = factCheckService.save(factCheckDTO);
-        return ResponseEntity.created(new URI("/api/fact-checks/" + result.getId()))
+        FactcheckDTO result = factcheckService.save(factcheckDTO);
+        return ResponseEntity.created(new URI("/api/factchecks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /fact-checks : Updates an existing factCheck.
+     * PUT  /factchecks : Updates an existing factcheck.
      *
-     * @param factCheckDTO the factCheckDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated factCheckDTO,
-     * or with status 400 (Bad Request) if the factCheckDTO is not valid,
-     * or with status 500 (Internal Server Error) if the factCheckDTO couldn't be updated
+     * @param factcheckDTO the factcheckDTO to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated factcheckDTO,
+     * or with status 400 (Bad Request) if the factcheckDTO is not valid,
+     * or with status 500 (Internal Server Error) if the factcheckDTO couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/fact-checks")
+    @PutMapping("/factchecks")
     @Timed
-    public ResponseEntity<FactCheckDTO> updateFactCheck(@Valid @RequestBody FactCheckDTO factCheckDTO) throws URISyntaxException {
-        log.debug("REST request to update FactCheck : {}", factCheckDTO);
-        if (factCheckDTO.getId() == null) {
+    public ResponseEntity<FactcheckDTO> updateFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO) throws URISyntaxException {
+        log.debug("REST request to update Factcheck : {}", factcheckDTO);
+        if (factcheckDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        FactCheckDTO result = factCheckService.save(factCheckDTO);
+        FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, factCheckDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, factcheckDTO.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /fact-checks : get all the factChecks.
+     * GET  /factchecks : get all the factchecks.
      *
      * @param pageable the pagination information
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
-     * @return the ResponseEntity with status 200 (OK) and the list of factChecks in body
+     * @return the ResponseEntity with status 200 (OK) and the list of factchecks in body
      */
-    @GetMapping("/fact-checks")
+    @GetMapping("/factchecks")
     @Timed
-    public ResponseEntity<List<FactCheckDTO>> getAllFactChecks(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
-        log.debug("REST request to get a page of FactChecks");
-        Page<FactCheckDTO> page;
+    public ResponseEntity<List<FactcheckDTO>> getAllFactchecks(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+        log.debug("REST request to get a page of Factchecks");
+        Page<FactcheckDTO> page;
         if (eagerload) {
-            page = factCheckService.findAllWithEagerRelationships(pageable);
+            page = factcheckService.findAllWithEagerRelationships(pageable);
         } else {
-            page = factCheckService.findAll(pageable);
+            page = factcheckService.findAll(pageable);
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/fact-checks?eagerload=%b", eagerload));
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/factchecks?eagerload=%b", eagerload));
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
-     * GET  /fact-checks/:id : get the "id" factCheck.
+     * GET  /factchecks/:id : get the "id" factcheck.
      *
-     * @param id the id of the factCheckDTO to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the factCheckDTO, or with status 404 (Not Found)
+     * @param id the id of the factcheckDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the factcheckDTO, or with status 404 (Not Found)
      */
-    @GetMapping("/fact-checks/{id}")
+    @GetMapping("/factchecks/{id}")
     @Timed
-    public ResponseEntity<FactCheckDTO> getFactCheck(@PathVariable String id) {
-        log.debug("REST request to get FactCheck : {}", id);
-        Optional<FactCheckDTO> factCheckDTO = factCheckService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(factCheckDTO);
+    public ResponseEntity<FactcheckDTO> getFactcheck(@PathVariable String id) {
+        log.debug("REST request to get Factcheck : {}", id);
+        Optional<FactcheckDTO> factcheckDTO = factcheckService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(factcheckDTO);
     }
 
     /**
-     * DELETE  /fact-checks/:id : delete the "id" factCheck.
+     * DELETE  /factchecks/:id : delete the "id" factcheck.
      *
-     * @param id the id of the factCheckDTO to delete
+     * @param id the id of the factcheckDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/fact-checks/{id}")
+    @DeleteMapping("/factchecks/{id}")
     @Timed
-    public ResponseEntity<Void> deleteFactCheck(@PathVariable String id) {
-        log.debug("REST request to delete FactCheck : {}", id);
-        factCheckService.delete(id);
+    public ResponseEntity<Void> deleteFactcheck(@PathVariable String id) {
+        log.debug("REST request to delete Factcheck : {}", id);
+        factcheckService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
     }
 
     /**
-     * SEARCH  /_search/fact-checks?query=:query : search for the factCheck corresponding
+     * SEARCH  /_search/factchecks?query=:query : search for the factcheck corresponding
      * to the query.
      *
-     * @param query the query of the factCheck search
+     * @param query the query of the factcheck search
      * @param pageable the pagination information
      * @return the result of the search
      */
-    @GetMapping("/_search/fact-checks")
+    @GetMapping("/_search/factchecks")
     @Timed
-    public ResponseEntity<List<FactCheckDTO>> searchFactChecks(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of FactChecks for query {}", query);
-        Page<FactCheckDTO> page = factCheckService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/fact-checks");
+    public ResponseEntity<List<FactcheckDTO>> searchFactchecks(@RequestParam String query, Pageable pageable) {
+        log.debug("REST request to search for a page of Factchecks for query {}", query);
+        Page<FactcheckDTO> page = factcheckService.search(query, pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/factchecks");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

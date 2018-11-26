@@ -1,6 +1,6 @@
 package com.factly.dega.repository;
 
-import com.factly.dega.domain.FactCheck;
+import com.factly.dega.domain.Factcheck;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Spring Data MongoDB repository for the FactCheck entity.
+ * Spring Data MongoDB repository for the Factcheck entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface FactCheckRepository extends MongoRepository<FactCheck, String> {
+public interface FactcheckRepository extends MongoRepository<Factcheck, String> {
     @Query("{}")
-    Page<FactCheck> findAllWithEagerRelationships(Pageable pageable);
+    Page<Factcheck> findAllWithEagerRelationships(Pageable pageable);
 
     @Query("{}")
-    List<FactCheck> findAllWithEagerRelationships();
+    List<Factcheck> findAllWithEagerRelationships();
 
     @Query("{'id': ?0}")
-    Optional<FactCheck> findOneWithEagerRelationships(String id);
+    Optional<Factcheck> findOneWithEagerRelationships(String id);
 
 }

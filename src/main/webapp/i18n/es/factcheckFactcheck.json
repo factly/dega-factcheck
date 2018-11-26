@@ -1,0 +1,37 @@
+{
+  "factcheckApp": {
+    "factcheckFactcheck": {
+      "home": {
+        "title": "Factchecks",
+        "createLabel": "Crear nuevo Factcheck",
+        "createOrEditLabel": "Crear o editar Factcheck",
+        "search": "Search for Factcheck"
+      },
+      "created": "Un nuevo Factcheck ha sido creado con el identificador {{ param }}",
+      "updated": "Un Factcheck ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Factcheck ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Factcheck {{ id }}?"
+      },
+      "detail": {
+        "title": "Factcheck"
+      },
+      "title": "Title",
+      "clientId": "Client Id",
+      "introduction": "Introduction",
+      "summary": "Summary",
+      "excerpt": "Excerpt",
+      "publishedDate": "Published Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "featured": "Featured",
+      "sticky": "Sticky",
+      "updates": "Updates",
+      "slug": "Slug",
+      "password": "Password",
+      "featuredMedia": "Featured Media",
+      "subTitle": "Sub Title",
+      "createdDate": "Created Date",
+      "claim": "Claim"
+    }
+  }
+}
