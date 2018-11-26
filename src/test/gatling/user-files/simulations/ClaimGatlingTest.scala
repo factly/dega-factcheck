@@ -111,6 +111,7 @@ class ClaimGatlingTest extends Simulation {
                 , "reviewTagLine":"SAMPLE_TEXT"
                 , "clientId":"SAMPLE_TEXT"
                 , "slug":"SAMPLE_TEXT"
+                , "createdDate":"2020-01-01T00:00:00.000Z"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_claim_url"))).exitHereIfFailed

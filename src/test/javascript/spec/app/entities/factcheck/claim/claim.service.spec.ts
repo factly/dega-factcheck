@@ -5,7 +5,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ClaimService } from 'app/entities/factcheck/claim/claim.service';
 import { IClaim, Claim } from 'app/shared/model/factcheck/claim.model';
 
@@ -36,7 +36,8 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
-        'AAAAAAA'
+        'AAAAAAA',
+        currentDate
       );
     });
 
@@ -45,7 +46,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             claimDate: currentDate.format(DATE_FORMAT),
-            checkedDate: currentDate.format(DATE_FORMAT)
+            checkedDate: currentDate.format(DATE_FORMAT),
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -63,14 +65,16 @@ describe('Service Tests', () => {
           {
             id: 'ID',
             claimDate: currentDate.format(DATE_FORMAT),
-            checkedDate: currentDate.format(DATE_FORMAT)
+            checkedDate: currentDate.format(DATE_FORMAT),
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
             claimDate: currentDate,
-            checkedDate: currentDate
+            checkedDate: currentDate,
+            createdDate: currentDate
           },
           returnedFromService
         );
@@ -94,7 +98,8 @@ describe('Service Tests', () => {
             review: 'BBBBBB',
             reviewTagLine: 'BBBBBB',
             clientId: 'BBBBBB',
-            slug: 'BBBBBB'
+            slug: 'BBBBBB',
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -102,7 +107,8 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             claimDate: currentDate,
-            checkedDate: currentDate
+            checkedDate: currentDate,
+            createdDate: currentDate
           },
           returnedFromService
         );
@@ -126,14 +132,16 @@ describe('Service Tests', () => {
             review: 'BBBBBB',
             reviewTagLine: 'BBBBBB',
             clientId: 'BBBBBB',
-            slug: 'BBBBBB'
+            slug: 'BBBBBB',
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
             claimDate: currentDate,
-            checkedDate: currentDate
+            checkedDate: currentDate,
+            createdDate: currentDate
           },
           returnedFromService
         );

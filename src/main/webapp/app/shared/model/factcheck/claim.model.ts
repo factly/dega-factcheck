@@ -13,6 +13,7 @@ export interface IClaim {
   reviewTagLine?: string;
   clientId?: string;
   slug?: string;
+  createdDate?: Moment;
   ratingName?: string;
   ratingId?: string;
   claimantName?: string;
@@ -33,6 +34,7 @@ export class Claim implements IClaim {
     public reviewTagLine?: string,
     public clientId?: string,
     public slug?: string,
+    public createdDate?: Moment,
     public ratingName?: string,
     public ratingId?: string,
     public claimantName?: string,
