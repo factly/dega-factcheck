@@ -26,6 +26,7 @@
       "reviewTagLine": "Review Tag Line",
       "clientId": "Client Id",
       "slug": "Slug",
+      "createdDate": "Created Date",
       "rating": "Rating",
       "claimant": "Claimant",
       "factCheck": "Fact Check"

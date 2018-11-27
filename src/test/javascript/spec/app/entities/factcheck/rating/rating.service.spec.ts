@@ -4,6 +4,8 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { RatingService } from 'app/entities/factcheck/rating/rating.service';
 import { IRating, Rating } from 'app/shared/model/factcheck/rating.model';
 
@@ -13,6 +15,7 @@ describe('Service Tests', () => {
     let service: RatingService;
     let httpMock: HttpTestingController;
     let elemDefault: IRating;
+    let currentDate: moment.Moment;
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule]
@@ -20,13 +23,19 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(RatingService);
       httpMock = injector.get(HttpTestingController);
+      currentDate = moment();
 
-      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA', currentDate);
     });
 
     describe('Service methods', async () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
+          },
+          elemDefault
+        );
         service
           .find('123')
           .pipe(take(1))
@@ -39,11 +48,17 @@ describe('Service Tests', () => {
       it('should create a Rating', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 'ID'
+            id: 'ID',
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdDate: currentDate
+          },
+          returnedFromService
+        );
         service
           .create(new Rating(null))
           .pipe(take(1))
@@ -60,12 +75,18 @@ describe('Service Tests', () => {
             iconURL: 'BBBBBB',
             isDefault: true,
             clientId: 'BBBBBB',
-            slug: 'BBBBBB'
+            slug: 'BBBBBB',
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdDate: currentDate
+          },
+          returnedFromService
+        );
         service
           .update(expected)
           .pipe(take(1))
@@ -82,11 +103,17 @@ describe('Service Tests', () => {
             iconURL: 'BBBBBB',
             isDefault: true,
             clientId: 'BBBBBB',
-            slug: 'BBBBBB'
+            slug: 'BBBBBB',
+            createdDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            createdDate: currentDate
+          },
+          returnedFromService
+        );
         service
           .query(expected)
           .pipe(

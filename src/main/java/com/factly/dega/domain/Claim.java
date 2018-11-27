@@ -10,6 +10,7 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -64,14 +65,18 @@ public class Claim implements Serializable {
     @Field("slug")
     private String slug;
 
+    @NotNull
+    @Field("created_date")
+    private ZonedDateTime createdDate;
+
     @DBRef
     @Field("rating")
-    @JsonIgnoreProperties("claims")
+    @JsonIgnoreProperties("")
     private Rating rating;
 
     @DBRef
     @Field("claimant")
-    @JsonIgnoreProperties("claims")
+    @JsonIgnoreProperties("")
     private Claimant claimant;
 
     @DBRef
@@ -218,6 +223,19 @@ public class Claim implements Serializable {
         this.slug = slug;
     }
 
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public Claim createdDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public Rating getRating() {
         return rating;
     }
@@ -304,6 +322,7 @@ public class Claim implements Serializable {
             ", reviewTagLine='" + getReviewTagLine() + "'" +
             ", clientId='" + getClientId() + "'" +
             ", slug='" + getSlug() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             "}";
     }
 }

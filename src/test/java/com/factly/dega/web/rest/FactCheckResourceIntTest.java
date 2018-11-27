@@ -2,13 +2,13 @@ package com.factly.dega.web.rest;
 
 import com.factly.dega.FactcheckApp;
 
-import com.factly.dega.domain.FactCheck;
+import com.factly.dega.domain.Factcheck;
 import com.factly.dega.domain.Claim;
-import com.factly.dega.repository.FactCheckRepository;
-import com.factly.dega.repository.search.FactCheckSearchRepository;
-import com.factly.dega.service.FactCheckService;
-import com.factly.dega.service.dto.FactCheckDTO;
-import com.factly.dega.service.mapper.FactCheckMapper;
+import com.factly.dega.repository.FactcheckRepository;
+import com.factly.dega.repository.search.FactcheckSearchRepository;
+import com.factly.dega.service.FactcheckService;
+import com.factly.dega.service.dto.FactcheckDTO;
+import com.factly.dega.service.mapper.FactcheckMapper;
 import com.factly.dega.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -46,13 +46,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Test class for the FactCheckResource REST controller.
+ * Test class for the FactcheckResource REST controller.
  *
- * @see FactCheckResource
+ * @see FactcheckResource
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FactcheckApp.class)
-public class FactCheckResourceIntTest {
+public class FactcheckResourceIntTest {
 
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
@@ -72,14 +72,8 @@ public class FactCheckResourceIntTest {
     private static final ZonedDateTime DEFAULT_PUBLISHED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_PUBLISHED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final ZonedDateTime DEFAULT_PUBLISHED_DATE_GMT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_PUBLISHED_DATE_GMT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
     private static final ZonedDateTime DEFAULT_LAST_UPDATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_LAST_UPDATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
-    private static final ZonedDateTime DEFAULT_LAST_UPDATED_DATE_GMT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_LAST_UPDATED_DATE_GMT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     private static final Boolean DEFAULT_FEATURED = false;
     private static final Boolean UPDATED_FEATURED = true;
@@ -102,29 +96,32 @@ public class FactCheckResourceIntTest {
     private static final String DEFAULT_SUB_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_SUB_TITLE = "BBBBBBBBBB";
 
+    private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
     @Autowired
-    private FactCheckRepository factCheckRepository;
+    private FactcheckRepository factcheckRepository;
 
     @Mock
-    private FactCheckRepository factCheckRepositoryMock;
+    private FactcheckRepository factcheckRepositoryMock;
 
     @Autowired
-    private FactCheckMapper factCheckMapper;
+    private FactcheckMapper factcheckMapper;
     
 
     @Mock
-    private FactCheckService factCheckServiceMock;
+    private FactcheckService factcheckServiceMock;
 
     @Autowired
-    private FactCheckService factCheckService;
+    private FactcheckService factcheckService;
 
     /**
      * This repository is mocked in the com.factly.dega.repository.search test package.
      *
-     * @see com.factly.dega.repository.search.FactCheckSearchRepositoryMockConfiguration
+     * @see com.factly.dega.repository.search.FactcheckSearchRepositoryMockConfiguration
      */
     @Autowired
-    private FactCheckSearchRepository mockFactCheckSearchRepository;
+    private FactcheckSearchRepository mockFactcheckSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -135,15 +132,15 @@ public class FactCheckResourceIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
-    private MockMvc restFactCheckMockMvc;
+    private MockMvc restFactcheckMockMvc;
 
-    private FactCheck factCheck;
+    private Factcheck factcheck;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final FactCheckResource factCheckResource = new FactCheckResource(factCheckService);
-        this.restFactCheckMockMvc = MockMvcBuilders.standaloneSetup(factCheckResource)
+        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService);
+        this.restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -156,487 +153,462 @@ public class FactCheckResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static FactCheck createEntity() {
-        FactCheck factCheck = new FactCheck()
+    public static Factcheck createEntity() {
+        Factcheck factcheck = new Factcheck()
             .title(DEFAULT_TITLE)
             .clientId(DEFAULT_CLIENT_ID)
             .introduction(DEFAULT_INTRODUCTION)
             .summary(DEFAULT_SUMMARY)
             .excerpt(DEFAULT_EXCERPT)
             .publishedDate(DEFAULT_PUBLISHED_DATE)
-            .publishedDateGMT(DEFAULT_PUBLISHED_DATE_GMT)
             .lastUpdatedDate(DEFAULT_LAST_UPDATED_DATE)
-            .lastUpdatedDateGMT(DEFAULT_LAST_UPDATED_DATE_GMT)
             .featured(DEFAULT_FEATURED)
             .sticky(DEFAULT_STICKY)
             .updates(DEFAULT_UPDATES)
             .slug(DEFAULT_SLUG)
             .password(DEFAULT_PASSWORD)
             .featuredMedia(DEFAULT_FEATURED_MEDIA)
-            .subTitle(DEFAULT_SUB_TITLE);
+            .subTitle(DEFAULT_SUB_TITLE)
+            .createdDate(DEFAULT_CREATED_DATE);
         // Add required entity
         Claim claim = ClaimResourceIntTest.createEntity();
         claim.setId("fixed-id-for-tests");
-        factCheck.getClaims().add(claim);
-        return factCheck;
+        factcheck.getClaims().add(claim);
+        return factcheck;
     }
 
     @Before
     public void initTest() {
-        factCheckRepository.deleteAll();
-        factCheck = createEntity();
+        factcheckRepository.deleteAll();
+        factcheck = createEntity();
     }
 
     @Test
-    public void createFactCheck() throws Exception {
-        int databaseSizeBeforeCreate = factCheckRepository.findAll().size();
+    public void createFactcheck() throws Exception {
+        int databaseSizeBeforeCreate = factcheckRepository.findAll().size();
 
-        // Create the FactCheck
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        // Create the Factcheck
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isCreated());
 
-        // Validate the FactCheck in the database
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeCreate + 1);
-        FactCheck testFactCheck = factCheckList.get(factCheckList.size() - 1);
-        assertThat(testFactCheck.getTitle()).isEqualTo(DEFAULT_TITLE);
-        assertThat(testFactCheck.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
-        assertThat(testFactCheck.getIntroduction()).isEqualTo(DEFAULT_INTRODUCTION);
-        assertThat(testFactCheck.getSummary()).isEqualTo(DEFAULT_SUMMARY);
-        assertThat(testFactCheck.getExcerpt()).isEqualTo(DEFAULT_EXCERPT);
-        assertThat(testFactCheck.getPublishedDate()).isEqualTo(DEFAULT_PUBLISHED_DATE);
-        assertThat(testFactCheck.getPublishedDateGMT()).isEqualTo(DEFAULT_PUBLISHED_DATE_GMT);
-        assertThat(testFactCheck.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
-        assertThat(testFactCheck.getLastUpdatedDateGMT()).isEqualTo(DEFAULT_LAST_UPDATED_DATE_GMT);
-        assertThat(testFactCheck.isFeatured()).isEqualTo(DEFAULT_FEATURED);
-        assertThat(testFactCheck.isSticky()).isEqualTo(DEFAULT_STICKY);
-        assertThat(testFactCheck.getUpdates()).isEqualTo(DEFAULT_UPDATES);
-        assertThat(testFactCheck.getSlug()).isEqualTo(DEFAULT_SLUG);
-        assertThat(testFactCheck.getPassword()).isEqualTo(DEFAULT_PASSWORD);
-        assertThat(testFactCheck.getFeaturedMedia()).isEqualTo(DEFAULT_FEATURED_MEDIA);
-        assertThat(testFactCheck.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
+        // Validate the Factcheck in the database
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeCreate + 1);
+        Factcheck testFactcheck = factcheckList.get(factcheckList.size() - 1);
+        assertThat(testFactcheck.getTitle()).isEqualTo(DEFAULT_TITLE);
+        assertThat(testFactcheck.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
+        assertThat(testFactcheck.getIntroduction()).isEqualTo(DEFAULT_INTRODUCTION);
+        assertThat(testFactcheck.getSummary()).isEqualTo(DEFAULT_SUMMARY);
+        assertThat(testFactcheck.getExcerpt()).isEqualTo(DEFAULT_EXCERPT);
+        assertThat(testFactcheck.getPublishedDate()).isEqualTo(DEFAULT_PUBLISHED_DATE);
+        assertThat(testFactcheck.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testFactcheck.isFeatured()).isEqualTo(DEFAULT_FEATURED);
+        assertThat(testFactcheck.isSticky()).isEqualTo(DEFAULT_STICKY);
+        assertThat(testFactcheck.getUpdates()).isEqualTo(DEFAULT_UPDATES);
+        assertThat(testFactcheck.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testFactcheck.getPassword()).isEqualTo(DEFAULT_PASSWORD);
+        assertThat(testFactcheck.getFeaturedMedia()).isEqualTo(DEFAULT_FEATURED_MEDIA);
+        assertThat(testFactcheck.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
+        assertThat(testFactcheck.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
 
-        // Validate the FactCheck in Elasticsearch
-        verify(mockFactCheckSearchRepository, times(1)).save(testFactCheck);
+        // Validate the Factcheck in Elasticsearch
+        verify(mockFactcheckSearchRepository, times(1)).save(testFactcheck);
     }
 
     @Test
-    public void createFactCheckWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = factCheckRepository.findAll().size();
+    public void createFactcheckWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = factcheckRepository.findAll().size();
 
-        // Create the FactCheck with an existing ID
-        factCheck.setId("existing_id");
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck with an existing ID
+        factcheck.setId("existing_id");
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        // Validate the FactCheck in the database
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeCreate);
+        // Validate the Factcheck in the database
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeCreate);
 
-        // Validate the FactCheck in Elasticsearch
-        verify(mockFactCheckSearchRepository, times(0)).save(factCheck);
+        // Validate the Factcheck in Elasticsearch
+        verify(mockFactcheckSearchRepository, times(0)).save(factcheck);
     }
 
     @Test
     public void checkTitleIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
-        factCheck.setTitle(null);
+        factcheck.setTitle(null);
 
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     public void checkClientIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
-        factCheck.setClientId(null);
+        factcheck.setClientId(null);
 
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     public void checkSummaryIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
-        factCheck.setSummary(null);
+        factcheck.setSummary(null);
 
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     public void checkPublishedDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
-        factCheck.setPublishedDate(null);
+        factcheck.setPublishedDate(null);
 
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    public void checkPublishedDateGMTIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
-        // set the field null
-        factCheck.setPublishedDateGMT(null);
-
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
-
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     public void checkLastUpdatedDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
-        factCheck.setLastUpdatedDate(null);
+        factcheck.setLastUpdatedDate(null);
 
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    public void checkLastUpdatedDateGMTIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
-        // set the field null
-        factCheck.setLastUpdatedDateGMT(null);
-
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
-
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     public void checkSlugIsRequired() throws Exception {
-        int databaseSizeBeforeTest = factCheckRepository.findAll().size();
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
-        factCheck.setSlug(null);
+        factcheck.setSlug(null);
 
-        // Create the FactCheck, which fails.
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
-        restFactCheckMockMvc.perform(post("/api/fact-checks")
+        restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeTest);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
-    public void getAllFactChecks() throws Exception {
-        // Initialize the database
-        factCheckRepository.save(factCheck);
+    public void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = factcheckRepository.findAll().size();
+        // set the field null
+        factcheck.setCreatedDate(null);
 
-        // Get all the factCheckList
-        restFactCheckMockMvc.perform(get("/api/fact-checks?sort=id,desc"))
+        // Create the Factcheck, which fails.
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+
+        restFactcheckMockMvc.perform(post("/api/factchecks")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    public void getAllFactchecks() throws Exception {
+        // Initialize the database
+        factcheckRepository.save(factcheck);
+
+        // Get all the factcheckList
+        restFactcheckMockMvc.perform(get("/api/factchecks?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(factCheck.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(factcheck.getId())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].introduction").value(hasItem(DEFAULT_INTRODUCTION.toString())))
             .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY.toString())))
             .andExpect(jsonPath("$.[*].excerpt").value(hasItem(DEFAULT_EXCERPT.toString())))
             .andExpect(jsonPath("$.[*].publishedDate").value(hasItem(sameInstant(DEFAULT_PUBLISHED_DATE))))
-            .andExpect(jsonPath("$.[*].publishedDateGMT").value(hasItem(sameInstant(DEFAULT_PUBLISHED_DATE_GMT))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
-            .andExpect(jsonPath("$.[*].lastUpdatedDateGMT").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE_GMT))))
             .andExpect(jsonPath("$.[*].featured").value(hasItem(DEFAULT_FEATURED.booleanValue())))
             .andExpect(jsonPath("$.[*].sticky").value(hasItem(DEFAULT_STICKY.booleanValue())))
             .andExpect(jsonPath("$.[*].updates").value(hasItem(DEFAULT_UPDATES.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].featuredMedia").value(hasItem(DEFAULT_FEATURED_MEDIA.toString())))
-            .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE.toString())));
+            .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE.toString())))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
     
-    public void getAllFactChecksWithEagerRelationshipsIsEnabled() throws Exception {
-        FactCheckResource factCheckResource = new FactCheckResource(factCheckServiceMock);
-        when(factCheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+    public void getAllFactchecksWithEagerRelationshipsIsEnabled() throws Exception {
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock);
+        when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        MockMvc restFactCheckMockMvc = MockMvcBuilders.standaloneSetup(factCheckResource)
+        MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
 
-        restFactCheckMockMvc.perform(get("/api/fact-checks?eagerload=true"))
+        restFactcheckMockMvc.perform(get("/api/factchecks?eagerload=true"))
         .andExpect(status().isOk());
 
-        verify(factCheckServiceMock, times(1)).findAllWithEagerRelationships(any());
+        verify(factcheckServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
-    public void getAllFactChecksWithEagerRelationshipsIsNotEnabled() throws Exception {
-        FactCheckResource factCheckResource = new FactCheckResource(factCheckServiceMock);
-            when(factCheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-            MockMvc restFactCheckMockMvc = MockMvcBuilders.standaloneSetup(factCheckResource)
+    public void getAllFactchecksWithEagerRelationshipsIsNotEnabled() throws Exception {
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock);
+            when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
 
-        restFactCheckMockMvc.perform(get("/api/fact-checks?eagerload=true"))
+        restFactcheckMockMvc.perform(get("/api/factchecks?eagerload=true"))
         .andExpect(status().isOk());
 
-            verify(factCheckServiceMock, times(1)).findAllWithEagerRelationships(any());
+            verify(factcheckServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
-    public void getFactCheck() throws Exception {
+    public void getFactcheck() throws Exception {
         // Initialize the database
-        factCheckRepository.save(factCheck);
+        factcheckRepository.save(factcheck);
 
-        // Get the factCheck
-        restFactCheckMockMvc.perform(get("/api/fact-checks/{id}", factCheck.getId()))
+        // Get the factcheck
+        restFactcheckMockMvc.perform(get("/api/factchecks/{id}", factcheck.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(factCheck.getId()))
+            .andExpect(jsonPath("$.id").value(factcheck.getId()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
             .andExpect(jsonPath("$.introduction").value(DEFAULT_INTRODUCTION.toString()))
             .andExpect(jsonPath("$.summary").value(DEFAULT_SUMMARY.toString()))
             .andExpect(jsonPath("$.excerpt").value(DEFAULT_EXCERPT.toString()))
             .andExpect(jsonPath("$.publishedDate").value(sameInstant(DEFAULT_PUBLISHED_DATE)))
-            .andExpect(jsonPath("$.publishedDateGMT").value(sameInstant(DEFAULT_PUBLISHED_DATE_GMT)))
             .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
-            .andExpect(jsonPath("$.lastUpdatedDateGMT").value(sameInstant(DEFAULT_LAST_UPDATED_DATE_GMT)))
             .andExpect(jsonPath("$.featured").value(DEFAULT_FEATURED.booleanValue()))
             .andExpect(jsonPath("$.sticky").value(DEFAULT_STICKY.booleanValue()))
             .andExpect(jsonPath("$.updates").value(DEFAULT_UPDATES.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
             .andExpect(jsonPath("$.featuredMedia").value(DEFAULT_FEATURED_MEDIA.toString()))
-            .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE.toString()));
+            .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE.toString()))
+            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)));
     }
 
     @Test
-    public void getNonExistingFactCheck() throws Exception {
-        // Get the factCheck
-        restFactCheckMockMvc.perform(get("/api/fact-checks/{id}", Long.MAX_VALUE))
+    public void getNonExistingFactcheck() throws Exception {
+        // Get the factcheck
+        restFactcheckMockMvc.perform(get("/api/factchecks/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    public void updateFactCheck() throws Exception {
+    public void updateFactcheck() throws Exception {
         // Initialize the database
-        factCheckRepository.save(factCheck);
+        factcheckRepository.save(factcheck);
 
-        int databaseSizeBeforeUpdate = factCheckRepository.findAll().size();
+        int databaseSizeBeforeUpdate = factcheckRepository.findAll().size();
 
-        // Update the factCheck
-        FactCheck updatedFactCheck = factCheckRepository.findById(factCheck.getId()).get();
-        updatedFactCheck
+        // Update the factcheck
+        Factcheck updatedFactcheck = factcheckRepository.findById(factcheck.getId()).get();
+        updatedFactcheck
             .title(UPDATED_TITLE)
             .clientId(UPDATED_CLIENT_ID)
             .introduction(UPDATED_INTRODUCTION)
             .summary(UPDATED_SUMMARY)
             .excerpt(UPDATED_EXCERPT)
             .publishedDate(UPDATED_PUBLISHED_DATE)
-            .publishedDateGMT(UPDATED_PUBLISHED_DATE_GMT)
             .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE)
-            .lastUpdatedDateGMT(UPDATED_LAST_UPDATED_DATE_GMT)
             .featured(UPDATED_FEATURED)
             .sticky(UPDATED_STICKY)
             .updates(UPDATED_UPDATES)
             .slug(UPDATED_SLUG)
             .password(UPDATED_PASSWORD)
             .featuredMedia(UPDATED_FEATURED_MEDIA)
-            .subTitle(UPDATED_SUB_TITLE);
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(updatedFactCheck);
+            .subTitle(UPDATED_SUB_TITLE)
+            .createdDate(UPDATED_CREATED_DATE);
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(updatedFactcheck);
 
-        restFactCheckMockMvc.perform(put("/api/fact-checks")
+        restFactcheckMockMvc.perform(put("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isOk());
 
-        // Validate the FactCheck in the database
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeUpdate);
-        FactCheck testFactCheck = factCheckList.get(factCheckList.size() - 1);
-        assertThat(testFactCheck.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testFactCheck.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
-        assertThat(testFactCheck.getIntroduction()).isEqualTo(UPDATED_INTRODUCTION);
-        assertThat(testFactCheck.getSummary()).isEqualTo(UPDATED_SUMMARY);
-        assertThat(testFactCheck.getExcerpt()).isEqualTo(UPDATED_EXCERPT);
-        assertThat(testFactCheck.getPublishedDate()).isEqualTo(UPDATED_PUBLISHED_DATE);
-        assertThat(testFactCheck.getPublishedDateGMT()).isEqualTo(UPDATED_PUBLISHED_DATE_GMT);
-        assertThat(testFactCheck.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
-        assertThat(testFactCheck.getLastUpdatedDateGMT()).isEqualTo(UPDATED_LAST_UPDATED_DATE_GMT);
-        assertThat(testFactCheck.isFeatured()).isEqualTo(UPDATED_FEATURED);
-        assertThat(testFactCheck.isSticky()).isEqualTo(UPDATED_STICKY);
-        assertThat(testFactCheck.getUpdates()).isEqualTo(UPDATED_UPDATES);
-        assertThat(testFactCheck.getSlug()).isEqualTo(UPDATED_SLUG);
-        assertThat(testFactCheck.getPassword()).isEqualTo(UPDATED_PASSWORD);
-        assertThat(testFactCheck.getFeaturedMedia()).isEqualTo(UPDATED_FEATURED_MEDIA);
-        assertThat(testFactCheck.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
+        // Validate the Factcheck in the database
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeUpdate);
+        Factcheck testFactcheck = factcheckList.get(factcheckList.size() - 1);
+        assertThat(testFactcheck.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testFactcheck.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
+        assertThat(testFactcheck.getIntroduction()).isEqualTo(UPDATED_INTRODUCTION);
+        assertThat(testFactcheck.getSummary()).isEqualTo(UPDATED_SUMMARY);
+        assertThat(testFactcheck.getExcerpt()).isEqualTo(UPDATED_EXCERPT);
+        assertThat(testFactcheck.getPublishedDate()).isEqualTo(UPDATED_PUBLISHED_DATE);
+        assertThat(testFactcheck.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testFactcheck.isFeatured()).isEqualTo(UPDATED_FEATURED);
+        assertThat(testFactcheck.isSticky()).isEqualTo(UPDATED_STICKY);
+        assertThat(testFactcheck.getUpdates()).isEqualTo(UPDATED_UPDATES);
+        assertThat(testFactcheck.getSlug()).isEqualTo(UPDATED_SLUG);
+        assertThat(testFactcheck.getPassword()).isEqualTo(UPDATED_PASSWORD);
+        assertThat(testFactcheck.getFeaturedMedia()).isEqualTo(UPDATED_FEATURED_MEDIA);
+        assertThat(testFactcheck.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
+        assertThat(testFactcheck.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
 
-        // Validate the FactCheck in Elasticsearch
-        verify(mockFactCheckSearchRepository, times(1)).save(testFactCheck);
+        // Validate the Factcheck in Elasticsearch
+        verify(mockFactcheckSearchRepository, times(1)).save(testFactcheck);
     }
 
     @Test
-    public void updateNonExistingFactCheck() throws Exception {
-        int databaseSizeBeforeUpdate = factCheckRepository.findAll().size();
+    public void updateNonExistingFactcheck() throws Exception {
+        int databaseSizeBeforeUpdate = factcheckRepository.findAll().size();
 
-        // Create the FactCheck
-        FactCheckDTO factCheckDTO = factCheckMapper.toDto(factCheck);
+        // Create the Factcheck
+        FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restFactCheckMockMvc.perform(put("/api/fact-checks")
+        restFactcheckMockMvc.perform(put("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(factCheckDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
-        // Validate the FactCheck in the database
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeUpdate);
+        // Validate the Factcheck in the database
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeUpdate);
 
-        // Validate the FactCheck in Elasticsearch
-        verify(mockFactCheckSearchRepository, times(0)).save(factCheck);
+        // Validate the Factcheck in Elasticsearch
+        verify(mockFactcheckSearchRepository, times(0)).save(factcheck);
     }
 
     @Test
-    public void deleteFactCheck() throws Exception {
+    public void deleteFactcheck() throws Exception {
         // Initialize the database
-        factCheckRepository.save(factCheck);
+        factcheckRepository.save(factcheck);
 
-        int databaseSizeBeforeDelete = factCheckRepository.findAll().size();
+        int databaseSizeBeforeDelete = factcheckRepository.findAll().size();
 
-        // Get the factCheck
-        restFactCheckMockMvc.perform(delete("/api/fact-checks/{id}", factCheck.getId())
+        // Get the factcheck
+        restFactcheckMockMvc.perform(delete("/api/factchecks/{id}", factcheck.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<FactCheck> factCheckList = factCheckRepository.findAll();
-        assertThat(factCheckList).hasSize(databaseSizeBeforeDelete - 1);
+        List<Factcheck> factcheckList = factcheckRepository.findAll();
+        assertThat(factcheckList).hasSize(databaseSizeBeforeDelete - 1);
 
-        // Validate the FactCheck in Elasticsearch
-        verify(mockFactCheckSearchRepository, times(1)).deleteById(factCheck.getId());
+        // Validate the Factcheck in Elasticsearch
+        verify(mockFactcheckSearchRepository, times(1)).deleteById(factcheck.getId());
     }
 
     @Test
-    public void searchFactCheck() throws Exception {
+    public void searchFactcheck() throws Exception {
         // Initialize the database
-        factCheckRepository.save(factCheck);
-        when(mockFactCheckSearchRepository.search(queryStringQuery("id:" + factCheck.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(factCheck), PageRequest.of(0, 1), 1));
-        // Search the factCheck
-        restFactCheckMockMvc.perform(get("/api/_search/fact-checks?query=id:" + factCheck.getId()))
+        factcheckRepository.save(factcheck);
+        when(mockFactcheckSearchRepository.search(queryStringQuery("id:" + factcheck.getId()), PageRequest.of(0, 20)))
+            .thenReturn(new PageImpl<>(Collections.singletonList(factcheck), PageRequest.of(0, 1), 1));
+        // Search the factcheck
+        restFactcheckMockMvc.perform(get("/api/_search/factchecks?query=id:" + factcheck.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(factCheck.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(factcheck.getId())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].introduction").value(hasItem(DEFAULT_INTRODUCTION.toString())))
             .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY.toString())))
             .andExpect(jsonPath("$.[*].excerpt").value(hasItem(DEFAULT_EXCERPT.toString())))
             .andExpect(jsonPath("$.[*].publishedDate").value(hasItem(sameInstant(DEFAULT_PUBLISHED_DATE))))
-            .andExpect(jsonPath("$.[*].publishedDateGMT").value(hasItem(sameInstant(DEFAULT_PUBLISHED_DATE_GMT))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
-            .andExpect(jsonPath("$.[*].lastUpdatedDateGMT").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE_GMT))))
             .andExpect(jsonPath("$.[*].featured").value(hasItem(DEFAULT_FEATURED.booleanValue())))
             .andExpect(jsonPath("$.[*].sticky").value(hasItem(DEFAULT_STICKY.booleanValue())))
             .andExpect(jsonPath("$.[*].updates").value(hasItem(DEFAULT_UPDATES.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].featuredMedia").value(hasItem(DEFAULT_FEATURED_MEDIA.toString())))
-            .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE.toString())));
+            .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE.toString())))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
 
     @Test
     public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(FactCheck.class);
-        FactCheck factCheck1 = new FactCheck();
-        factCheck1.setId("id1");
-        FactCheck factCheck2 = new FactCheck();
-        factCheck2.setId(factCheck1.getId());
-        assertThat(factCheck1).isEqualTo(factCheck2);
-        factCheck2.setId("id2");
-        assertThat(factCheck1).isNotEqualTo(factCheck2);
-        factCheck1.setId(null);
-        assertThat(factCheck1).isNotEqualTo(factCheck2);
+        TestUtil.equalsVerifier(Factcheck.class);
+        Factcheck factcheck1 = new Factcheck();
+        factcheck1.setId("id1");
+        Factcheck factcheck2 = new Factcheck();
+        factcheck2.setId(factcheck1.getId());
+        assertThat(factcheck1).isEqualTo(factcheck2);
+        factcheck2.setId("id2");
+        assertThat(factcheck1).isNotEqualTo(factcheck2);
+        factcheck1.setId(null);
+        assertThat(factcheck1).isNotEqualTo(factcheck2);
     }
 
     @Test
     public void dtoEqualsVerifier() throws Exception {
-        TestUtil.equalsVerifier(FactCheckDTO.class);
-        FactCheckDTO factCheckDTO1 = new FactCheckDTO();
-        factCheckDTO1.setId("id1");
-        FactCheckDTO factCheckDTO2 = new FactCheckDTO();
-        assertThat(factCheckDTO1).isNotEqualTo(factCheckDTO2);
-        factCheckDTO2.setId(factCheckDTO1.getId());
-        assertThat(factCheckDTO1).isEqualTo(factCheckDTO2);
-        factCheckDTO2.setId("id2");
-        assertThat(factCheckDTO1).isNotEqualTo(factCheckDTO2);
-        factCheckDTO1.setId(null);
-        assertThat(factCheckDTO1).isNotEqualTo(factCheckDTO2);
+        TestUtil.equalsVerifier(FactcheckDTO.class);
+        FactcheckDTO factcheckDTO1 = new FactcheckDTO();
+        factcheckDTO1.setId("id1");
+        FactcheckDTO factcheckDTO2 = new FactcheckDTO();
+        assertThat(factcheckDTO1).isNotEqualTo(factcheckDTO2);
+        factcheckDTO2.setId(factcheckDTO1.getId());
+        assertThat(factcheckDTO1).isEqualTo(factcheckDTO2);
+        factcheckDTO2.setId("id2");
+        assertThat(factcheckDTO1).isNotEqualTo(factcheckDTO2);
+        factcheckDTO1.setId(null);
+        assertThat(factcheckDTO1).isNotEqualTo(factcheckDTO2);
     }
 }

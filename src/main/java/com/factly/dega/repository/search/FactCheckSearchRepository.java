@@ -1,10 +1,10 @@
 package com.factly.dega.repository.search;
 
-import com.factly.dega.domain.FactCheck;
+import com.factly.dega.domain.Factcheck;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 /**
- * Spring Data Elasticsearch repository for the FactCheck entity.
+ * Spring Data Elasticsearch repository for the Factcheck entity.
  */
-public interface FactCheckSearchRepository extends ElasticsearchRepository<FactCheck, String> {
+public interface FactcheckSearchRepository extends ElasticsearchRepository<Factcheck, String> {
 }

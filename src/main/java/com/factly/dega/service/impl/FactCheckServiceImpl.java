@@ -1,11 +1,11 @@
 package com.factly.dega.service.impl;
 
-import com.factly.dega.service.FactCheckService;
-import com.factly.dega.domain.FactCheck;
-import com.factly.dega.repository.FactCheckRepository;
-import com.factly.dega.repository.search.FactCheckSearchRepository;
-import com.factly.dega.service.dto.FactCheckDTO;
-import com.factly.dega.service.mapper.FactCheckMapper;
+import com.factly.dega.service.FactcheckService;
+import com.factly.dega.domain.Factcheck;
+import com.factly.dega.repository.FactcheckRepository;
+import com.factly.dega.repository.search.FactcheckSearchRepository;
+import com.factly.dega.service.dto.FactcheckDTO;
+import com.factly.dega.service.mapper.FactcheckMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,101 +18,101 @@ import java.util.Optional;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
- * Service Implementation for managing FactCheck.
+ * Service Implementation for managing Factcheck.
  */
 @Service
-public class FactCheckServiceImpl implements FactCheckService {
+public class FactcheckServiceImpl implements FactcheckService {
 
-    private final Logger log = LoggerFactory.getLogger(FactCheckServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(FactcheckServiceImpl.class);
 
-    private final FactCheckRepository factCheckRepository;
+    private final FactcheckRepository factcheckRepository;
 
-    private final FactCheckMapper factCheckMapper;
+    private final FactcheckMapper factcheckMapper;
 
-    private final FactCheckSearchRepository factCheckSearchRepository;
+    private final FactcheckSearchRepository factcheckSearchRepository;
 
-    public FactCheckServiceImpl(FactCheckRepository factCheckRepository, FactCheckMapper factCheckMapper, FactCheckSearchRepository factCheckSearchRepository) {
-        this.factCheckRepository = factCheckRepository;
-        this.factCheckMapper = factCheckMapper;
-        this.factCheckSearchRepository = factCheckSearchRepository;
+    public FactcheckServiceImpl(FactcheckRepository factcheckRepository, FactcheckMapper factcheckMapper, FactcheckSearchRepository factcheckSearchRepository) {
+        this.factcheckRepository = factcheckRepository;
+        this.factcheckMapper = factcheckMapper;
+        this.factcheckSearchRepository = factcheckSearchRepository;
     }
 
     /**
-     * Save a factCheck.
+     * Save a factcheck.
      *
-     * @param factCheckDTO the entity to save
+     * @param factcheckDTO the entity to save
      * @return the persisted entity
      */
     @Override
-    public FactCheckDTO save(FactCheckDTO factCheckDTO) {
-        log.debug("Request to save FactCheck : {}", factCheckDTO);
+    public FactcheckDTO save(FactcheckDTO factcheckDTO) {
+        log.debug("Request to save Factcheck : {}", factcheckDTO);
 
-        FactCheck factCheck = factCheckMapper.toEntity(factCheckDTO);
-        factCheck = factCheckRepository.save(factCheck);
-        FactCheckDTO result = factCheckMapper.toDto(factCheck);
-        factCheckSearchRepository.save(factCheck);
+        Factcheck factcheck = factcheckMapper.toEntity(factcheckDTO);
+        factcheck = factcheckRepository.save(factcheck);
+        FactcheckDTO result = factcheckMapper.toDto(factcheck);
+        factcheckSearchRepository.save(factcheck);
         return result;
     }
 
     /**
-     * Get all the factChecks.
+     * Get all the factchecks.
      *
      * @param pageable the pagination information
      * @return the list of entities
      */
     @Override
-    public Page<FactCheckDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all FactChecks");
-        return factCheckRepository.findAll(pageable)
-            .map(factCheckMapper::toDto);
+    public Page<FactcheckDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Factchecks");
+        return factcheckRepository.findAll(pageable)
+            .map(factcheckMapper::toDto);
     }
 
     /**
-     * Get all the FactCheck with eager load of many-to-many relationships.
+     * Get all the Factcheck with eager load of many-to-many relationships.
      *
      * @return the list of entities
      */
-    public Page<FactCheckDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return factCheckRepository.findAllWithEagerRelationships(pageable).map(factCheckMapper::toDto);
+    public Page<FactcheckDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return factcheckRepository.findAllWithEagerRelationships(pageable).map(factcheckMapper::toDto);
     }
     
 
     /**
-     * Get one factCheck by id.
+     * Get one factcheck by id.
      *
      * @param id the id of the entity
      * @return the entity
      */
     @Override
-    public Optional<FactCheckDTO> findOne(String id) {
-        log.debug("Request to get FactCheck : {}", id);
-        return factCheckRepository.findOneWithEagerRelationships(id)
-            .map(factCheckMapper::toDto);
+    public Optional<FactcheckDTO> findOne(String id) {
+        log.debug("Request to get Factcheck : {}", id);
+        return factcheckRepository.findOneWithEagerRelationships(id)
+            .map(factcheckMapper::toDto);
     }
 
     /**
-     * Delete the factCheck by id.
+     * Delete the factcheck by id.
      *
      * @param id the id of the entity
      */
     @Override
     public void delete(String id) {
-        log.debug("Request to delete FactCheck : {}", id);
-        factCheckRepository.deleteById(id);
-        factCheckSearchRepository.deleteById(id);
+        log.debug("Request to delete Factcheck : {}", id);
+        factcheckRepository.deleteById(id);
+        factcheckSearchRepository.deleteById(id);
     }
 
     /**
-     * Search for the factCheck corresponding to the query.
+     * Search for the factcheck corresponding to the query.
      *
      * @param query the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */
     @Override
-    public Page<FactCheckDTO> search(String query, Pageable pageable) {
-        log.debug("Request to search for a page of FactChecks for query {}", query);
-        return factCheckSearchRepository.search(queryStringQuery(query), pageable)
-            .map(factCheckMapper::toDto);
+    public Page<FactcheckDTO> search(String query, Pageable pageable) {
+        log.debug("Request to search for a page of Factchecks for query {}", query);
+        return factcheckSearchRepository.search(queryStringQuery(query), pageable)
+            .map(factcheckMapper::toDto);
     }
 }

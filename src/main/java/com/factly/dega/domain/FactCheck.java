@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.Objects;
 
 /**
- * A FactCheck.
+ * A Factcheck.
  */
 @Document(collection = "fact_check")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "factcheck")
-public class FactCheck implements Serializable {
+public class Factcheck implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,16 +47,8 @@ public class FactCheck implements Serializable {
     private ZonedDateTime publishedDate;
 
     @NotNull
-    @Field("published_date_gmt")
-    private ZonedDateTime publishedDateGMT;
-
-    @NotNull
     @Field("last_updated_date")
     private ZonedDateTime lastUpdatedDate;
-
-    @NotNull
-    @Field("last_updated_date_gmt")
-    private ZonedDateTime lastUpdatedDateGMT;
 
     @Field("featured")
     private Boolean featured;
@@ -80,6 +72,10 @@ public class FactCheck implements Serializable {
     @Field("sub_title")
     private String subTitle;
 
+    @NotNull
+    @Field("created_date")
+    private ZonedDateTime createdDate;
+
     @DBRef
     @Field("claims")
     private Set<Claim> claims = new HashSet<>();
@@ -97,7 +93,7 @@ public class FactCheck implements Serializable {
         return title;
     }
 
-    public FactCheck title(String title) {
+    public Factcheck title(String title) {
         this.title = title;
         return this;
     }
@@ -110,7 +106,7 @@ public class FactCheck implements Serializable {
         return clientId;
     }
 
-    public FactCheck clientId(String clientId) {
+    public Factcheck clientId(String clientId) {
         this.clientId = clientId;
         return this;
     }
@@ -123,7 +119,7 @@ public class FactCheck implements Serializable {
         return introduction;
     }
 
-    public FactCheck introduction(String introduction) {
+    public Factcheck introduction(String introduction) {
         this.introduction = introduction;
         return this;
     }
@@ -136,7 +132,7 @@ public class FactCheck implements Serializable {
         return summary;
     }
 
-    public FactCheck summary(String summary) {
+    public Factcheck summary(String summary) {
         this.summary = summary;
         return this;
     }
@@ -149,7 +145,7 @@ public class FactCheck implements Serializable {
         return excerpt;
     }
 
-    public FactCheck excerpt(String excerpt) {
+    public Factcheck excerpt(String excerpt) {
         this.excerpt = excerpt;
         return this;
     }
@@ -162,7 +158,7 @@ public class FactCheck implements Serializable {
         return publishedDate;
     }
 
-    public FactCheck publishedDate(ZonedDateTime publishedDate) {
+    public Factcheck publishedDate(ZonedDateTime publishedDate) {
         this.publishedDate = publishedDate;
         return this;
     }
@@ -171,24 +167,11 @@ public class FactCheck implements Serializable {
         this.publishedDate = publishedDate;
     }
 
-    public ZonedDateTime getPublishedDateGMT() {
-        return publishedDateGMT;
-    }
-
-    public FactCheck publishedDateGMT(ZonedDateTime publishedDateGMT) {
-        this.publishedDateGMT = publishedDateGMT;
-        return this;
-    }
-
-    public void setPublishedDateGMT(ZonedDateTime publishedDateGMT) {
-        this.publishedDateGMT = publishedDateGMT;
-    }
-
     public ZonedDateTime getLastUpdatedDate() {
         return lastUpdatedDate;
     }
 
-    public FactCheck lastUpdatedDate(ZonedDateTime lastUpdatedDate) {
+    public Factcheck lastUpdatedDate(ZonedDateTime lastUpdatedDate) {
         this.lastUpdatedDate = lastUpdatedDate;
         return this;
     }
@@ -197,24 +180,11 @@ public class FactCheck implements Serializable {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
-    public ZonedDateTime getLastUpdatedDateGMT() {
-        return lastUpdatedDateGMT;
-    }
-
-    public FactCheck lastUpdatedDateGMT(ZonedDateTime lastUpdatedDateGMT) {
-        this.lastUpdatedDateGMT = lastUpdatedDateGMT;
-        return this;
-    }
-
-    public void setLastUpdatedDateGMT(ZonedDateTime lastUpdatedDateGMT) {
-        this.lastUpdatedDateGMT = lastUpdatedDateGMT;
-    }
-
     public Boolean isFeatured() {
         return featured;
     }
 
-    public FactCheck featured(Boolean featured) {
+    public Factcheck featured(Boolean featured) {
         this.featured = featured;
         return this;
     }
@@ -227,7 +197,7 @@ public class FactCheck implements Serializable {
         return sticky;
     }
 
-    public FactCheck sticky(Boolean sticky) {
+    public Factcheck sticky(Boolean sticky) {
         this.sticky = sticky;
         return this;
     }
@@ -240,7 +210,7 @@ public class FactCheck implements Serializable {
         return updates;
     }
 
-    public FactCheck updates(String updates) {
+    public Factcheck updates(String updates) {
         this.updates = updates;
         return this;
     }
@@ -253,7 +223,7 @@ public class FactCheck implements Serializable {
         return slug;
     }
 
-    public FactCheck slug(String slug) {
+    public Factcheck slug(String slug) {
         this.slug = slug;
         return this;
     }
@@ -266,7 +236,7 @@ public class FactCheck implements Serializable {
         return password;
     }
 
-    public FactCheck password(String password) {
+    public Factcheck password(String password) {
         this.password = password;
         return this;
     }
@@ -279,7 +249,7 @@ public class FactCheck implements Serializable {
         return featuredMedia;
     }
 
-    public FactCheck featuredMedia(String featuredMedia) {
+    public Factcheck featuredMedia(String featuredMedia) {
         this.featuredMedia = featuredMedia;
         return this;
     }
@@ -292,7 +262,7 @@ public class FactCheck implements Serializable {
         return subTitle;
     }
 
-    public FactCheck subTitle(String subTitle) {
+    public Factcheck subTitle(String subTitle) {
         this.subTitle = subTitle;
         return this;
     }
@@ -301,22 +271,35 @@ public class FactCheck implements Serializable {
         this.subTitle = subTitle;
     }
 
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public Factcheck createdDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public Set<Claim> getClaims() {
         return claims;
     }
 
-    public FactCheck claims(Set<Claim> claims) {
+    public Factcheck claims(Set<Claim> claims) {
         this.claims = claims;
         return this;
     }
 
-    public FactCheck addClaim(Claim claim) {
+    public Factcheck addClaim(Claim claim) {
         this.claims.add(claim);
         claim.getFactChecks().add(this);
         return this;
     }
 
-    public FactCheck removeClaim(Claim claim) {
+    public Factcheck removeClaim(Claim claim) {
         this.claims.remove(claim);
         claim.getFactChecks().remove(this);
         return this;
@@ -335,11 +318,11 @@ public class FactCheck implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        FactCheck factCheck = (FactCheck) o;
-        if (factCheck.getId() == null || getId() == null) {
+        Factcheck factcheck = (Factcheck) o;
+        if (factcheck.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), factCheck.getId());
+        return Objects.equals(getId(), factcheck.getId());
     }
 
     @Override
@@ -349,7 +332,7 @@ public class FactCheck implements Serializable {
 
     @Override
     public String toString() {
-        return "FactCheck{" +
+        return "Factcheck{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", clientId='" + getClientId() + "'" +
@@ -357,9 +340,7 @@ public class FactCheck implements Serializable {
             ", summary='" + getSummary() + "'" +
             ", excerpt='" + getExcerpt() + "'" +
             ", publishedDate='" + getPublishedDate() + "'" +
-            ", publishedDateGMT='" + getPublishedDateGMT() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
-            ", lastUpdatedDateGMT='" + getLastUpdatedDateGMT() + "'" +
             ", featured='" + isFeatured() + "'" +
             ", sticky='" + isSticky() + "'" +
             ", updates='" + getUpdates() + "'" +
@@ -367,6 +348,7 @@ public class FactCheck implements Serializable {
             ", password='" + getPassword() + "'" +
             ", featuredMedia='" + getFeaturedMedia() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             "}";
     }
 }

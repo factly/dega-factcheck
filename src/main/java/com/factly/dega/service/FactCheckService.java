@@ -1,6 +1,6 @@
 package com.factly.dega.service;
 
-import com.factly.dega.service.dto.FactCheckDTO;
+import com.factly.dega.service.dto.FactcheckDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,55 +8,55 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 /**
- * Service Interface for managing FactCheck.
+ * Service Interface for managing Factcheck.
  */
-public interface FactCheckService {
+public interface FactcheckService {
 
     /**
-     * Save a factCheck.
+     * Save a factcheck.
      *
-     * @param factCheckDTO the entity to save
+     * @param factcheckDTO the entity to save
      * @return the persisted entity
      */
-    FactCheckDTO save(FactCheckDTO factCheckDTO);
+    FactcheckDTO save(FactcheckDTO factcheckDTO);
 
     /**
-     * Get all the factChecks.
+     * Get all the factchecks.
      *
      * @param pageable the pagination information
      * @return the list of entities
      */
-    Page<FactCheckDTO> findAll(Pageable pageable);
+    Page<FactcheckDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the FactCheck with eager load of many-to-many relationships.
+     * Get all the Factcheck with eager load of many-to-many relationships.
      *
      * @return the list of entities
      */
-    Page<FactCheckDTO> findAllWithEagerRelationships(Pageable pageable);
+    Page<FactcheckDTO> findAllWithEagerRelationships(Pageable pageable);
     
     /**
-     * Get the "id" factCheck.
+     * Get the "id" factcheck.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    Optional<FactCheckDTO> findOne(String id);
+    Optional<FactcheckDTO> findOne(String id);
 
     /**
-     * Delete the "id" factCheck.
+     * Delete the "id" factcheck.
      *
      * @param id the id of the entity
      */
     void delete(String id);
 
     /**
-     * Search for the factCheck corresponding to the query.
+     * Search for the factcheck corresponding to the query.
      *
      * @param query the query of the search
      * 
      * @param pageable the pagination information
      * @return the list of entities
      */
-    Page<FactCheckDTO> search(String query, Pageable pageable);
+    Page<FactcheckDTO> search(String query, Pageable pageable);
 }

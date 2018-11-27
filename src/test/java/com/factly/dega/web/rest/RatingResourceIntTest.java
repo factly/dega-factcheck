@@ -25,10 +25,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
 
+import static com.factly.dega.web.rest.TestUtil.sameInstant;
 import static com.factly.dega.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -63,6 +68,9 @@ public class RatingResourceIntTest {
 
     private static final String DEFAULT_SLUG = "AAAAAAAAAA";
     private static final String UPDATED_SLUG = "BBBBBBBBBB";
+
+    private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private RatingRepository ratingRepository;
@@ -118,7 +126,8 @@ public class RatingResourceIntTest {
             .iconURL(DEFAULT_ICON_URL)
             .isDefault(DEFAULT_IS_DEFAULT)
             .clientId(DEFAULT_CLIENT_ID)
-            .slug(DEFAULT_SLUG);
+            .slug(DEFAULT_SLUG)
+            .createdDate(DEFAULT_CREATED_DATE);
         return rating;
     }
 
@@ -149,6 +158,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.isIsDefault()).isEqualTo(DEFAULT_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testRating.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testRating.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -249,6 +259,24 @@ public class RatingResourceIntTest {
     }
 
     @Test
+    public void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = ratingRepository.findAll().size();
+        // set the field null
+        rating.setCreatedDate(null);
+
+        // Create the Rating, which fails.
+        RatingDTO ratingDTO = ratingMapper.toDto(rating);
+
+        restRatingMockMvc.perform(post("/api/ratings")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Rating> ratingList = ratingRepository.findAll();
+        assertThat(ratingList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllRatings() throws Exception {
         // Initialize the database
         ratingRepository.save(rating);
@@ -263,7 +291,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].iconURL").value(hasItem(DEFAULT_ICON_URL.toString())))
             .andExpect(jsonPath("$.[*].isDefault").value(hasItem(DEFAULT_IS_DEFAULT.booleanValue())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
-            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
     
     @Test
@@ -281,7 +310,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.iconURL").value(DEFAULT_ICON_URL.toString()))
             .andExpect(jsonPath("$.isDefault").value(DEFAULT_IS_DEFAULT.booleanValue()))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
-            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()));
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
+            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)));
     }
 
     @Test
@@ -306,7 +336,8 @@ public class RatingResourceIntTest {
             .iconURL(UPDATED_ICON_URL)
             .isDefault(UPDATED_IS_DEFAULT)
             .clientId(UPDATED_CLIENT_ID)
-            .slug(UPDATED_SLUG);
+            .slug(UPDATED_SLUG)
+            .createdDate(UPDATED_CREATED_DATE);
         RatingDTO ratingDTO = ratingMapper.toDto(updatedRating);
 
         restRatingMockMvc.perform(put("/api/ratings")
@@ -324,6 +355,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.isIsDefault()).isEqualTo(UPDATED_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
         assertThat(testRating.getSlug()).isEqualTo(UPDATED_SLUG);
+        assertThat(testRating.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -386,7 +418,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].iconURL").value(hasItem(DEFAULT_ICON_URL.toString())))
             .andExpect(jsonPath("$.[*].isDefault").value(hasItem(DEFAULT_IS_DEFAULT.booleanValue())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
-            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())));
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
 
     @Test

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IClaim } from 'app/shared/model/factcheck/claim.model';
@@ -29,6 +30,7 @@ export class ClaimUpdateComponent implements OnInit {
   factchecks: IFactCheck[];
   claimDateDp: any;
   checkedDateDp: any;
+  createdDate: string;
 
   constructor(
     private jhiAlertService: JhiAlertService,
@@ -43,6 +45,7 @@ export class ClaimUpdateComponent implements OnInit {
     this.isSaving = false;
     this.activatedRoute.data.subscribe(({ claim }) => {
       this.claim = claim;
+      this.createdDate = this.claim.createdDate != null ? this.claim.createdDate.format(DATE_TIME_FORMAT) : null;
     });
     this.ratingService.query().subscribe(
       (res: HttpResponse<IRating[]>) => {
@@ -70,6 +73,7 @@ export class ClaimUpdateComponent implements OnInit {
 
   save() {
     this.isSaving = true;
+    this.claim.createdDate = this.createdDate != null ? moment(this.createdDate, DATE_TIME_FORMAT) : null;
     if (this.claim.id !== undefined) {
       this.subscribeToSaveResponse(this.claimService.update(this.claim));
     } else {

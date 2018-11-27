@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { IClaim } from 'app/shared/model/factcheck/claim.model';
 
 export interface IClaimant {
@@ -8,6 +9,7 @@ export interface IClaimant {
   imageURL?: string;
   clientId?: string;
   slug?: string;
+  createdDate?: Moment;
   claims?: IClaim[];
 }
 
@@ -20,6 +22,7 @@ export class Claimant implements IClaimant {
     public imageURL?: string,
     public clientId?: string,
     public slug?: string,
+    public createdDate?: Moment,
     public claims?: IClaim[]
   ) {}
 }
