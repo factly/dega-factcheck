@@ -11,7 +11,7 @@
             ],
             "otherEntityField": "claim",
             "ownerSide": true,
-            "otherEntityRelationshipName": "factCheck"
+            "otherEntityRelationshipName": "factcheck"
         }
     ],
     "fields": [

@@ -29,7 +29,7 @@
       "createdDate": "Created Date",
       "rating": "Rating",
       "claimant": "Claimant",
-      "factCheck": "Fact Check"
+      "factcheck": "Fact Check"
     }
   }
 }

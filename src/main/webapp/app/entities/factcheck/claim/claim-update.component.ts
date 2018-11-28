@@ -12,8 +12,8 @@ import { IRating } from 'app/shared/model/factcheck/rating.model';
 import { RatingService } from 'app/entities/factcheck/rating';
 import { IClaimant } from 'app/shared/model/factcheck/claimant.model';
 import { ClaimantService } from 'app/entities/factcheck/claimant';
-import { IFactCheck } from 'app/shared/model/factcheck/fact-check.model';
-import { FactCheckService } from 'app/entities/factcheck/fact-check';
+import { IFactcheck } from 'app/shared/model/factcheck/fact-check.model';
+import { FactcheckService } from 'app/entities/factcheck/fact-check';
 
 @Component({
   selector: 'jhi-claim-update',
@@ -27,7 +27,7 @@ export class ClaimUpdateComponent implements OnInit {
 
   claimants: IClaimant[];
 
-  factchecks: IFactCheck[];
+  factchecks: IFactcheck[];
   claimDateDp: any;
   checkedDateDp: any;
   createdDate: string;
@@ -37,7 +37,7 @@ export class ClaimUpdateComponent implements OnInit {
     private claimService: ClaimService,
     private ratingService: RatingService,
     private claimantService: ClaimantService,
-    private factCheckService: FactCheckService,
+    private factcheckService: FactcheckService,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -59,8 +59,8 @@ export class ClaimUpdateComponent implements OnInit {
       },
       (res: HttpErrorResponse) => this.onError(res.message)
     );
-    this.factCheckService.query().subscribe(
-      (res: HttpResponse<IFactCheck[]>) => {
+    this.factcheckService.query().subscribe(
+      (res: HttpResponse<IFactcheck[]>) => {
         this.factchecks = res.body;
       },
       (res: HttpErrorResponse) => this.onError(res.message)
@@ -106,7 +106,7 @@ export class ClaimUpdateComponent implements OnInit {
     return item.id;
   }
 
-  trackFactCheckById(index: number, item: IFactCheck) {
+  trackFactcheckById(index: number, item: IFactcheck) {
     return item.id;
   }
 

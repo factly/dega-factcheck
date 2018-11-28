@@ -80,9 +80,9 @@ public class Claim implements Serializable {
     private Claimant claimant;
 
     @DBRef
-    @Field("factChecks")
+    @Field("factchecks")
     @JsonIgnore
-    private Set<FactCheck> factChecks = new HashSet<>();
+    private Set<Factcheck> factchecks = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -262,29 +262,29 @@ public class Claim implements Serializable {
         this.claimant = claimant;
     }
 
-    public Set<FactCheck> getFactChecks() {
-        return factChecks;
+    public Set<Factcheck> getFactchecks() {
+        return factchecks;
     }
 
-    public Claim factChecks(Set<FactCheck> factChecks) {
-        this.factChecks = factChecks;
+    public Claim factchecks(Set<Factcheck> factchecks) {
+        this.factchecks = factchecks;
         return this;
     }
 
-    public Claim addFactCheck(FactCheck factCheck) {
-        this.factChecks.add(factCheck);
-        factCheck.getClaims().add(this);
+    public Claim addFactcheck(Factcheck factcheck) {
+        this.factchecks.add(factcheck);
+        factcheck.getClaims().add(this);
         return this;
     }
 
-    public Claim removeFactCheck(FactCheck factCheck) {
-        this.factChecks.remove(factCheck);
-        factCheck.getClaims().remove(this);
+    public Claim removeFactcheck(Factcheck factcheck) {
+        this.factchecks.remove(factcheck);
+        factcheck.getClaims().remove(this);
         return this;
     }
 
-    public void setFactChecks(Set<FactCheck> factChecks) {
-        this.factChecks = factChecks;
+    public void setFactchecks(Set<Factcheck> factchecks) {
+        this.factchecks = factchecks;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

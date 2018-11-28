@@ -21,8 +21,8 @@
             "otherEntityField": "name"
         },
         {
-            "relationshipName": "factCheck",
-            "otherEntityName": "factCheck",
+            "relationshipName": "factcheck",
+            "otherEntityName": "factcheck",
             "relationshipType": "many-to-many",
             "ownerSide": false,
             "otherEntityRelationshipName": "claim"

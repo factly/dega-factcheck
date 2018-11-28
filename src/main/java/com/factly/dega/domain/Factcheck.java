@@ -295,13 +295,13 @@ public class Factcheck implements Serializable {
 
     public Factcheck addClaim(Claim claim) {
         this.claims.add(claim);
-        claim.getFactChecks().add(this);
+        claim.getFactchecks().add(this);
         return this;
     }
 
     public Factcheck removeClaim(Claim claim) {
         this.claims.remove(claim);
-        claim.getFactChecks().remove(this);
+        claim.getFactchecks().remove(this);
         return this;
     }
 
