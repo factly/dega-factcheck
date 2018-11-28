@@ -100,7 +100,7 @@
     "dto": "mapstruct",
     "searchEngine": "elasticsearch",
     "service": "serviceImpl",
-    "entityTableName": "fact_check",
+    "entityTableName": "factcheck",
     "jpaMetamodelFiltering": false,
     "pagination": "pagination",
     "microserviceName": "factcheck"

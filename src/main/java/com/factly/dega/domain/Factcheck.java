@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * A Factcheck.
  */
-@Document(collection = "fact_check")
+@Document(collection = "factcheck")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "factcheck")
 public class Factcheck implements Serializable {
 
