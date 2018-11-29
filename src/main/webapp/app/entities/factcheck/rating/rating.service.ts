@@ -59,7 +59,8 @@ export class RatingService {
 
   protected convertDateFromClient(rating: IRating): IRating {
     const copy: IRating = Object.assign({}, rating, {
-      createdDate: rating.createdDate != null && rating.createdDate.isValid() ? rating.createdDate.toJSON() : null
+      createdDate: rating.createdDate != null && rating.createdDate.isValid() ? rating.createdDate.toJSON() : null,
+      lastUpdatedDate: rating.lastUpdatedDate != null && rating.lastUpdatedDate.isValid() ? rating.lastUpdatedDate.toJSON() : null
     });
     return copy;
   }
@@ -67,6 +68,7 @@ export class RatingService {
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       res.body.createdDate = res.body.createdDate != null ? moment(res.body.createdDate) : null;
+      res.body.lastUpdatedDate = res.body.lastUpdatedDate != null ? moment(res.body.lastUpdatedDate) : null;
     }
     return res;
   }
@@ -75,6 +77,7 @@ export class RatingService {
     if (res.body) {
       res.body.forEach((rating: IRating) => {
         rating.createdDate = rating.createdDate != null ? moment(rating.createdDate) : null;
+        rating.lastUpdatedDate = rating.lastUpdatedDate != null ? moment(rating.lastUpdatedDate) : null;
       });
     }
     return res;
