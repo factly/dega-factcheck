@@ -61,7 +61,8 @@ export class ClaimService {
     const copy: IClaim = Object.assign({}, claim, {
       claimDate: claim.claimDate != null && claim.claimDate.isValid() ? claim.claimDate.format(DATE_FORMAT) : null,
       checkedDate: claim.checkedDate != null && claim.checkedDate.isValid() ? claim.checkedDate.format(DATE_FORMAT) : null,
-      createdDate: claim.createdDate != null && claim.createdDate.isValid() ? claim.createdDate.toJSON() : null
+      createdDate: claim.createdDate != null && claim.createdDate.isValid() ? claim.createdDate.toJSON() : null,
+      lastUpdatedDate: claim.lastUpdatedDate != null && claim.lastUpdatedDate.isValid() ? claim.lastUpdatedDate.toJSON() : null
     });
     return copy;
   }
@@ -71,6 +72,7 @@ export class ClaimService {
       res.body.claimDate = res.body.claimDate != null ? moment(res.body.claimDate) : null;
       res.body.checkedDate = res.body.checkedDate != null ? moment(res.body.checkedDate) : null;
       res.body.createdDate = res.body.createdDate != null ? moment(res.body.createdDate) : null;
+      res.body.lastUpdatedDate = res.body.lastUpdatedDate != null ? moment(res.body.lastUpdatedDate) : null;
     }
     return res;
   }
@@ -81,6 +83,7 @@ export class ClaimService {
         claim.claimDate = claim.claimDate != null ? moment(claim.claimDate) : null;
         claim.checkedDate = claim.checkedDate != null ? moment(claim.checkedDate) : null;
         claim.createdDate = claim.createdDate != null ? moment(claim.createdDate) : null;
+        claim.lastUpdatedDate = claim.lastUpdatedDate != null ? moment(claim.lastUpdatedDate) : null;
       });
     }
     return res;

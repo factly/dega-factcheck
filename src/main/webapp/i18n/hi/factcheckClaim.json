@@ -27,9 +27,10 @@
       "clientId": "Client Id",
       "slug": "Slug",
       "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
       "rating": "Rating",
       "claimant": "Claimant",
-      "factcheck": "Fact Check"
+      "factcheck": "Factcheck"
     }
   }
 }

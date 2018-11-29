@@ -44,6 +44,9 @@ public class ClaimDTO implements Serializable {
     @NotNull
     private ZonedDateTime createdDate;
 
+    @NotNull
+    private ZonedDateTime lastUpdatedDate;
+
     private String ratingId;
 
     private String ratingName;
@@ -148,6 +151,14 @@ public class ClaimDTO implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public ZonedDateTime getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(ZonedDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
     public String getRatingId() {
         return ratingId;
     }
@@ -216,6 +227,7 @@ public class ClaimDTO implements Serializable {
             ", clientId='" + getClientId() + "'" +
             ", slug='" + getSlug() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
+            ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
             ", rating=" + getRatingId() +
             ", rating='" + getRatingName() + "'" +
             ", claimant=" + getClaimantId() +

@@ -69,14 +69,18 @@ public class Claim implements Serializable {
     @Field("created_date")
     private ZonedDateTime createdDate;
 
+    @NotNull
+    @Field("last_updated_date")
+    private ZonedDateTime lastUpdatedDate;
+
     @DBRef
     @Field("rating")
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("claims")
     private Rating rating;
 
     @DBRef
     @Field("claimant")
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("claims")
     private Claimant claimant;
 
     @DBRef
@@ -236,6 +240,19 @@ public class Claim implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public ZonedDateTime getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public Claim lastUpdatedDate(ZonedDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+        return this;
+    }
+
+    public void setLastUpdatedDate(ZonedDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
     public Rating getRating() {
         return rating;
     }
@@ -323,6 +340,7 @@ public class Claim implements Serializable {
             ", clientId='" + getClientId() + "'" +
             ", slug='" + getSlug() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
+            ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
             "}";
     }
 }
