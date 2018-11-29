@@ -16,6 +16,7 @@ export class ClaimantUpdateComponent implements OnInit {
   claimant: IClaimant;
   isSaving: boolean;
   createdDate: string;
+  lastUpdatedDate: string;
 
   constructor(private claimantService: ClaimantService, private activatedRoute: ActivatedRoute) {}
 
@@ -24,6 +25,7 @@ export class ClaimantUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ claimant }) => {
       this.claimant = claimant;
       this.createdDate = this.claimant.createdDate != null ? this.claimant.createdDate.format(DATE_TIME_FORMAT) : null;
+      this.lastUpdatedDate = this.claimant.lastUpdatedDate != null ? this.claimant.lastUpdatedDate.format(DATE_TIME_FORMAT) : null;
     });
   }
 
@@ -34,6 +36,7 @@ export class ClaimantUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     this.claimant.createdDate = this.createdDate != null ? moment(this.createdDate, DATE_TIME_FORMAT) : null;
+    this.claimant.lastUpdatedDate = this.lastUpdatedDate != null ? moment(this.lastUpdatedDate, DATE_TIME_FORMAT) : null;
     if (this.claimant.id !== undefined) {
       this.subscribeToSaveResponse(this.claimantService.update(this.claimant));
     } else {
