@@ -25,14 +25,15 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA', currentDate);
+      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA', currentDate, currentDate);
     });
 
     describe('Service methods', async () => {
       it('should find an element', async () => {
         const returnedFromService = Object.assign(
           {
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -49,13 +50,15 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 'ID',
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            createdDate: currentDate
+            createdDate: currentDate,
+            lastUpdatedDate: currentDate
           },
           returnedFromService
         );
@@ -76,14 +79,16 @@ describe('Service Tests', () => {
             isDefault: true,
             clientId: 'BBBBBB',
             slug: 'BBBBBB',
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            createdDate: currentDate
+            createdDate: currentDate,
+            lastUpdatedDate: currentDate
           },
           returnedFromService
         );
@@ -104,13 +109,15 @@ describe('Service Tests', () => {
             isDefault: true,
             clientId: 'BBBBBB',
             slug: 'BBBBBB',
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            createdDate: currentDate
+            createdDate: currentDate,
+            lastUpdatedDate: currentDate
           },
           returnedFromService
         );

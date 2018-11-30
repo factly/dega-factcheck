@@ -23,6 +23,7 @@
       "clientId": "Client Id",
       "slug": "Slug",
       "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
       "claim": "Claim"
     }
   }

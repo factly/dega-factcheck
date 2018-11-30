@@ -59,7 +59,8 @@ export class ClaimantService {
 
   protected convertDateFromClient(claimant: IClaimant): IClaimant {
     const copy: IClaimant = Object.assign({}, claimant, {
-      createdDate: claimant.createdDate != null && claimant.createdDate.isValid() ? claimant.createdDate.toJSON() : null
+      createdDate: claimant.createdDate != null && claimant.createdDate.isValid() ? claimant.createdDate.toJSON() : null,
+      lastUpdatedDate: claimant.lastUpdatedDate != null && claimant.lastUpdatedDate.isValid() ? claimant.lastUpdatedDate.toJSON() : null
     });
     return copy;
   }
@@ -67,6 +68,7 @@ export class ClaimantService {
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       res.body.createdDate = res.body.createdDate != null ? moment(res.body.createdDate) : null;
+      res.body.lastUpdatedDate = res.body.lastUpdatedDate != null ? moment(res.body.lastUpdatedDate) : null;
     }
     return res;
   }
@@ -75,6 +77,7 @@ export class ClaimantService {
     if (res.body) {
       res.body.forEach((claimant: IClaimant) => {
         claimant.createdDate = claimant.createdDate != null ? moment(claimant.createdDate) : null;
+        claimant.lastUpdatedDate = claimant.lastUpdatedDate != null ? moment(claimant.lastUpdatedDate) : null;
       });
     }
     return res;

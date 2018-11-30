@@ -37,6 +37,7 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
+        currentDate,
         currentDate
       );
     });
@@ -47,7 +48,8 @@ describe('Service Tests', () => {
           {
             claimDate: currentDate.format(DATE_FORMAT),
             checkedDate: currentDate.format(DATE_FORMAT),
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -66,7 +68,8 @@ describe('Service Tests', () => {
             id: 'ID',
             claimDate: currentDate.format(DATE_FORMAT),
             checkedDate: currentDate.format(DATE_FORMAT),
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -74,7 +77,8 @@ describe('Service Tests', () => {
           {
             claimDate: currentDate,
             checkedDate: currentDate,
-            createdDate: currentDate
+            createdDate: currentDate,
+            lastUpdatedDate: currentDate
           },
           returnedFromService
         );
@@ -99,7 +103,8 @@ describe('Service Tests', () => {
             reviewTagLine: 'BBBBBB',
             clientId: 'BBBBBB',
             slug: 'BBBBBB',
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -108,7 +113,8 @@ describe('Service Tests', () => {
           {
             claimDate: currentDate,
             checkedDate: currentDate,
-            createdDate: currentDate
+            createdDate: currentDate,
+            lastUpdatedDate: currentDate
           },
           returnedFromService
         );
@@ -133,7 +139,8 @@ describe('Service Tests', () => {
             reviewTagLine: 'BBBBBB',
             clientId: 'BBBBBB',
             slug: 'BBBBBB',
-            createdDate: currentDate.format(DATE_TIME_FORMAT)
+            createdDate: currentDate.format(DATE_TIME_FORMAT),
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -141,7 +148,8 @@ describe('Service Tests', () => {
           {
             claimDate: currentDate,
             checkedDate: currentDate,
-            createdDate: currentDate
+            createdDate: currentDate,
+            lastUpdatedDate: currentDate
           },
           returnedFromService
         );

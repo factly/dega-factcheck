@@ -72,6 +72,9 @@ public class ClaimantResourceIntTest {
     private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
+    private static final ZonedDateTime DEFAULT_LAST_UPDATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_LAST_UPDATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
     @Autowired
     private ClaimantRepository claimantRepository;
 
@@ -127,7 +130,8 @@ public class ClaimantResourceIntTest {
             .imageURL(DEFAULT_IMAGE_URL)
             .clientId(DEFAULT_CLIENT_ID)
             .slug(DEFAULT_SLUG)
-            .createdDate(DEFAULT_CREATED_DATE);
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastUpdatedDate(DEFAULT_LAST_UPDATED_DATE);
         return claimant;
     }
 
@@ -159,6 +163,7 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testClaimant.getSlug()).isEqualTo(DEFAULT_SLUG);
         assertThat(testClaimant.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testClaimant.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
 
         // Validate the Claimant in Elasticsearch
         verify(mockClaimantSearchRepository, times(1)).save(testClaimant);
@@ -259,6 +264,24 @@ public class ClaimantResourceIntTest {
     }
 
     @Test
+    public void checkLastUpdatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = claimantRepository.findAll().size();
+        // set the field null
+        claimant.setLastUpdatedDate(null);
+
+        // Create the Claimant, which fails.
+        ClaimantDTO claimantDTO = claimantMapper.toDto(claimant);
+
+        restClaimantMockMvc.perform(post("/api/claimants")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Claimant> claimantList = claimantRepository.findAll();
+        assertThat(claimantList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllClaimants() throws Exception {
         // Initialize the database
         claimantRepository.save(claimant);
@@ -274,7 +297,8 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.[*].imageURL").value(hasItem(DEFAULT_IMAGE_URL.toString())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
-            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
     }
     
     @Test
@@ -293,7 +317,8 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.imageURL").value(DEFAULT_IMAGE_URL.toString()))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
-            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)));
+            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
+            .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)));
     }
 
     @Test
@@ -319,7 +344,8 @@ public class ClaimantResourceIntTest {
             .imageURL(UPDATED_IMAGE_URL)
             .clientId(UPDATED_CLIENT_ID)
             .slug(UPDATED_SLUG)
-            .createdDate(UPDATED_CREATED_DATE);
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE);
         ClaimantDTO claimantDTO = claimantMapper.toDto(updatedClaimant);
 
         restClaimantMockMvc.perform(put("/api/claimants")
@@ -338,6 +364,7 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
         assertThat(testClaimant.getSlug()).isEqualTo(UPDATED_SLUG);
         assertThat(testClaimant.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testClaimant.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
 
         // Validate the Claimant in Elasticsearch
         verify(mockClaimantSearchRepository, times(1)).save(testClaimant);
@@ -401,7 +428,8 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.[*].imageURL").value(hasItem(DEFAULT_IMAGE_URL.toString())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
-            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
     }
 
     @Test

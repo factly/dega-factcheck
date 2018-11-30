@@ -10,6 +10,7 @@ export interface IClaimant {
   clientId?: string;
   slug?: string;
   createdDate?: Moment;
+  lastUpdatedDate?: Moment;
   claims?: IClaim[];
 }
 
@@ -23,6 +24,7 @@ export class Claimant implements IClaimant {
     public clientId?: string,
     public slug?: string,
     public createdDate?: Moment,
+    public lastUpdatedDate?: Moment,
     public claims?: IClaim[]
   ) {}
 }

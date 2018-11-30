@@ -87,6 +87,9 @@ public class ClaimResourceIntTest {
     private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
+    private static final ZonedDateTime DEFAULT_LAST_UPDATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_LAST_UPDATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
     @Autowired
     private ClaimRepository claimRepository;
 
@@ -146,7 +149,8 @@ public class ClaimResourceIntTest {
             .reviewTagLine(DEFAULT_REVIEW_TAG_LINE)
             .clientId(DEFAULT_CLIENT_ID)
             .slug(DEFAULT_SLUG)
-            .createdDate(DEFAULT_CREATED_DATE);
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastUpdatedDate(DEFAULT_LAST_UPDATED_DATE);
         // Add required entity
         Rating rating = RatingResourceIntTest.createEntity();
         rating.setId("fixed-id-for-tests");
@@ -190,6 +194,7 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testClaim.getSlug()).isEqualTo(DEFAULT_SLUG);
         assertThat(testClaim.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testClaim.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
 
         // Validate the Claim in Elasticsearch
         verify(mockClaimSearchRepository, times(1)).save(testClaim);
@@ -380,6 +385,24 @@ public class ClaimResourceIntTest {
     }
 
     @Test
+    public void checkLastUpdatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = claimRepository.findAll().size();
+        // set the field null
+        claim.setLastUpdatedDate(null);
+
+        // Create the Claim, which fails.
+        ClaimDTO claimDTO = claimMapper.toDto(claim);
+
+        restClaimMockMvc.perform(post("/api/claims")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Claim> claimList = claimRepository.findAll();
+        assertThat(claimList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllClaims() throws Exception {
         // Initialize the database
         claimRepository.save(claim);
@@ -399,7 +422,8 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.[*].reviewTagLine").value(hasItem(DEFAULT_REVIEW_TAG_LINE.toString())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
-            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
     }
     
     @Test
@@ -422,7 +446,8 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.reviewTagLine").value(DEFAULT_REVIEW_TAG_LINE.toString()))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
-            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)));
+            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
+            .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)));
     }
 
     @Test
@@ -452,7 +477,8 @@ public class ClaimResourceIntTest {
             .reviewTagLine(UPDATED_REVIEW_TAG_LINE)
             .clientId(UPDATED_CLIENT_ID)
             .slug(UPDATED_SLUG)
-            .createdDate(UPDATED_CREATED_DATE);
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE);
         ClaimDTO claimDTO = claimMapper.toDto(updatedClaim);
 
         restClaimMockMvc.perform(put("/api/claims")
@@ -475,6 +501,7 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
         assertThat(testClaim.getSlug()).isEqualTo(UPDATED_SLUG);
         assertThat(testClaim.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testClaim.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
 
         // Validate the Claim in Elasticsearch
         verify(mockClaimSearchRepository, times(1)).save(testClaim);
@@ -542,7 +569,8 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.[*].reviewTagLine").value(hasItem(DEFAULT_REVIEW_TAG_LINE.toString())))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
-            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
     }
 
     @Test

@@ -10,6 +10,7 @@ export interface IRating {
   clientId?: string;
   slug?: string;
   createdDate?: Moment;
+  lastUpdatedDate?: Moment;
   claims?: IClaim[];
 }
 
@@ -23,6 +24,7 @@ export class Rating implements IRating {
     public clientId?: string,
     public slug?: string,
     public createdDate?: Moment,
+    public lastUpdatedDate?: Moment,
     public claims?: IClaim[]
   ) {
     this.isDefault = this.isDefault || false;

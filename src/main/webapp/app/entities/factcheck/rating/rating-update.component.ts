@@ -16,6 +16,7 @@ export class RatingUpdateComponent implements OnInit {
   rating: IRating;
   isSaving: boolean;
   createdDate: string;
+  lastUpdatedDate: string;
 
   constructor(private ratingService: RatingService, private activatedRoute: ActivatedRoute) {}
 
@@ -24,6 +25,7 @@ export class RatingUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ rating }) => {
       this.rating = rating;
       this.createdDate = this.rating.createdDate != null ? this.rating.createdDate.format(DATE_TIME_FORMAT) : null;
+      this.lastUpdatedDate = this.rating.lastUpdatedDate != null ? this.rating.lastUpdatedDate.format(DATE_TIME_FORMAT) : null;
     });
   }
 
@@ -34,6 +36,7 @@ export class RatingUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     this.rating.createdDate = this.createdDate != null ? moment(this.createdDate, DATE_TIME_FORMAT) : null;
+    this.rating.lastUpdatedDate = this.lastUpdatedDate != null ? moment(this.lastUpdatedDate, DATE_TIME_FORMAT) : null;
     if (this.rating.id !== undefined) {
       this.subscribeToSaveResponse(this.ratingService.update(this.rating));
     } else {

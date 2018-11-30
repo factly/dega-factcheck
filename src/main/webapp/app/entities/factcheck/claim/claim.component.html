@@ -41,6 +41,7 @@
             <th jhiSortBy="clientId"><span jhiTranslate="factcheckApp.factcheckClaim.clientId">Client Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="slug"><span jhiTranslate="factcheckApp.factcheckClaim.slug">Slug</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createdDate"><span jhiTranslate="factcheckApp.factcheckClaim.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastUpdatedDate"><span jhiTranslate="factcheckApp.factcheckClaim.lastUpdatedDate">Last Updated Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="ratingName"><span jhiTranslate="factcheckApp.factcheckClaim.rating">Rating</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="claimantName"><span jhiTranslate="factcheckApp.factcheckClaim.claimant">Claimant</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -60,6 +61,7 @@
                 <td>{{claim.clientId}}</td>
                 <td>{{claim.slug}}</td>
                 <td>{{claim.createdDate | date:'medium'}}</td>
+                <td>{{claim.lastUpdatedDate | date:'medium'}}</td>
                 <td>
                     <div *ngIf="claim.ratingId">
                         <a [routerLink]="['../rating', claim.ratingId , 'view' ]" >{{claim.ratingName}}</a>
