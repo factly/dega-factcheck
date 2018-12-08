@@ -16,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -52,11 +54,17 @@ public class ClaimantResource {
      */
     @PostMapping("/claimants")
     @Timed
-    public ResponseEntity<ClaimantDTO> createClaimant(@Valid @RequestBody ClaimantDTO claimantDTO) throws URISyntaxException {
+    public ResponseEntity<ClaimantDTO> createClaimant(@Valid @RequestBody ClaimantDTO claimantDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save Claimant : {}", claimantDTO);
         if (claimantDTO.getId() != null) {
             throw new BadRequestAlertException("A new claimant cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        Object obj = request.getAttribute("ClientID");
+        if (obj != null) {
+            claimantDTO.setClientId((String) obj);
+        }
+        claimantDTO.setCreatedDate(ZonedDateTime.now());
+        claimantDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimantDTO result = claimantService.save(claimantDTO);
         return ResponseEntity.created(new URI("/api/claimants/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -79,6 +87,7 @@ public class ClaimantResource {
         if (claimantDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        claimantDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimantDTO result = claimantService.save(claimantDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, claimantDTO.getId().toString()))
@@ -144,5 +153,25 @@ public class ClaimantResource {
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/claimants");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
+
+    /**
+     * GET  /claimantbyslug/:slug : get the claimant.
+     *
+     * @param slug the slug of the ClaimantDTO
+     * @return Optional<ClaimantDTO> claimant by clientId and slug
+     */
+    @GetMapping("/claimantbyslug/{slug}")
+    @Timed
+    public Optional<ClaimantDTO> getClaimantBySlug(@PathVariable String slug, HttpServletRequest request) {
+        Object obj = request.getAttribute("ClientID");
+        String clientId = null;
+        if (obj != null) {
+            clientId = (String) obj;
+        }
+        log.debug("REST request to get Claimant by clienId : {} and slug : {}", clientId, slug);
+        Optional<ClaimantDTO> claimantDTO = claimantService.findByClientIdAndSlug(clientId, slug);
+        return claimantDTO;
+    }
+
 
 }

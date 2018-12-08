@@ -204,7 +204,7 @@ public class FactcheckResourceIntTest {
         assertThat(testFactcheck.getSummary()).isEqualTo(DEFAULT_SUMMARY);
         assertThat(testFactcheck.getExcerpt()).isEqualTo(DEFAULT_EXCERPT);
         assertThat(testFactcheck.getPublishedDate()).isEqualTo(DEFAULT_PUBLISHED_DATE);
-        assertThat(testFactcheck.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testFactcheck.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
         assertThat(testFactcheck.isFeatured()).isEqualTo(DEFAULT_FEATURED);
         assertThat(testFactcheck.isSticky()).isEqualTo(DEFAULT_STICKY);
         assertThat(testFactcheck.getUpdates()).isEqualTo(DEFAULT_UPDATES);
@@ -212,7 +212,7 @@ public class FactcheckResourceIntTest {
         assertThat(testFactcheck.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testFactcheck.getFeaturedMedia()).isEqualTo(DEFAULT_FEATURED_MEDIA);
         assertThat(testFactcheck.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
-        assertThat(testFactcheck.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testFactcheck.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
 
         // Validate the Factcheck in Elasticsearch
         verify(mockFactcheckSearchRepository, times(1)).save(testFactcheck);
@@ -324,10 +324,10 @@ public class FactcheckResourceIntTest {
         restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Factcheck> factcheckList = factcheckRepository.findAll();
-        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -360,10 +360,10 @@ public class FactcheckResourceIntTest {
         restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Factcheck> factcheckList = factcheckRepository.findAll();
-        assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
+        assertThat(factcheckList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -500,7 +500,7 @@ public class FactcheckResourceIntTest {
         assertThat(testFactcheck.getSummary()).isEqualTo(UPDATED_SUMMARY);
         assertThat(testFactcheck.getExcerpt()).isEqualTo(UPDATED_EXCERPT);
         assertThat(testFactcheck.getPublishedDate()).isEqualTo(UPDATED_PUBLISHED_DATE);
-        assertThat(testFactcheck.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testFactcheck.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
         assertThat(testFactcheck.isFeatured()).isEqualTo(UPDATED_FEATURED);
         assertThat(testFactcheck.isSticky()).isEqualTo(UPDATED_STICKY);
         assertThat(testFactcheck.getUpdates()).isEqualTo(UPDATED_UPDATES);
@@ -508,7 +508,7 @@ public class FactcheckResourceIntTest {
         assertThat(testFactcheck.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testFactcheck.getFeaturedMedia()).isEqualTo(UPDATED_FEATURED_MEDIA);
         assertThat(testFactcheck.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
-        assertThat(testFactcheck.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testFactcheck.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
 
         // Validate the Factcheck in Elasticsearch
         verify(mockFactcheckSearchRepository, times(1)).save(testFactcheck);

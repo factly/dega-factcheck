@@ -21,16 +21,13 @@ public class ClaimantDTO implements Serializable {
 
     private String imageURL;
 
-    @NotNull
     private String clientId;
 
     @NotNull
     private String slug;
 
-    @NotNull
     private ZonedDateTime createdDate;
 
-    @NotNull
     private ZonedDateTime lastUpdatedDate;
 
     public String getId() {

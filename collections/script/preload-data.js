@@ -3,7 +3,6 @@ function loadSeedData(collection, json) {
         collection.insert(json[i]);
     }
 }
-
 // load rating data
 print('Loading rating data.');
 loadSeedData(db.rating, JSON.parse(cat('collections/test/rating.json')));

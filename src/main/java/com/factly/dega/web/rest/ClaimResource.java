@@ -16,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -52,11 +54,17 @@ public class ClaimResource {
      */
     @PostMapping("/claims")
     @Timed
-    public ResponseEntity<ClaimDTO> createClaim(@Valid @RequestBody ClaimDTO claimDTO) throws URISyntaxException {
+    public ResponseEntity<ClaimDTO> createClaim(@Valid @RequestBody ClaimDTO claimDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save Claim : {}", claimDTO);
         if (claimDTO.getId() != null) {
             throw new BadRequestAlertException("A new claim cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        Object obj = request.getAttribute("ClientID");
+        if (obj != null) {
+            claimDTO.setClientId((String) obj);
+        }
+        claimDTO.setCreatedDate(ZonedDateTime.now());
+        claimDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimDTO result = claimService.save(claimDTO);
         return ResponseEntity.created(new URI("/api/claims/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -79,6 +87,7 @@ public class ClaimResource {
         if (claimDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        claimDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimDTO result = claimService.save(claimDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, claimDTO.getId().toString()))
@@ -143,6 +152,25 @@ public class ClaimResource {
         Page<ClaimDTO> page = claimService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/claims");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /claimbyslug/:slug : get the claim.
+     *
+     * @param slug the slug of the ClaimDTO
+     * @return Optional<ClaimDTO> claim by clientId and slug
+     */
+    @GetMapping("/claimbyslug/{slug}")
+    @Timed
+    public Optional<ClaimDTO> getClaimBySlug(@PathVariable String slug, HttpServletRequest request) {
+        Object obj = request.getAttribute("ClientID");
+        String clientId = null;
+        if (obj != null) {
+            clientId = (String) obj;
+        }
+        log.debug("REST request to get Claim by clienId : {} and slug : {}", clientId, slug);
+        Optional<ClaimDTO> claimDTO = claimService.findByClientIdAndSlug(clientId, slug);
+        return claimDTO;
     }
 
 }

@@ -106,4 +106,18 @@ public class RatingServiceImpl implements RatingService {
         return ratingSearchRepository.search(queryStringQuery(query), pageable)
             .map(ratingMapper::toDto);
     }
+
+    /**
+     * Get the rating by clientId and slug.
+     *
+     * @param clientId the clientId of the RatingDTO
+     * @param slug the slug of the RatingDTO
+     * @return Optional<RatingDTO> rating by clientId and slug
+     */
+    @Override
+    public Optional<RatingDTO> findByClientIdAndSlug(String clientId, String slug) {
+        log.debug("Request to get post  by clienId : {} and slug : {}", clientId, slug);
+        return ratingRepository.findByClientIdAndSlug(clientId, slug)
+            .map(ratingMapper::toDto);
+    }
 }

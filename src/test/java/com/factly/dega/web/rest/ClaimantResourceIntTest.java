@@ -162,8 +162,8 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getImageURL()).isEqualTo(DEFAULT_IMAGE_URL);
         assertThat(testClaimant.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testClaimant.getSlug()).isEqualTo(DEFAULT_SLUG);
-        assertThat(testClaimant.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testClaimant.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testClaimant.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
+        assertThat(testClaimant.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
         // Validate the Claimant in Elasticsearch
         verify(mockClaimantSearchRepository, times(1)).save(testClaimant);
@@ -257,10 +257,10 @@ public class ClaimantResourceIntTest {
         restClaimantMockMvc.perform(post("/api/claimants")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Claimant> claimantList = claimantRepository.findAll();
-        assertThat(claimantList).hasSize(databaseSizeBeforeTest);
+        assertThat(claimantList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -275,10 +275,10 @@ public class ClaimantResourceIntTest {
         restClaimantMockMvc.perform(post("/api/claimants")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Claimant> claimantList = claimantRepository.findAll();
-        assertThat(claimantList).hasSize(databaseSizeBeforeTest);
+        assertThat(claimantList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -363,8 +363,8 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getImageURL()).isEqualTo(UPDATED_IMAGE_URL);
         assertThat(testClaimant.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
         assertThat(testClaimant.getSlug()).isEqualTo(UPDATED_SLUG);
-        assertThat(testClaimant.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testClaimant.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testClaimant.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
+        assertThat(testClaimant.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
         // Validate the Claimant in Elasticsearch
         verify(mockClaimantSearchRepository, times(1)).save(testClaimant);

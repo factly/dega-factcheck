@@ -53,4 +53,13 @@ public interface ClaimantService {
      * @return the list of entities
      */
     Page<ClaimantDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get the claimant by clientId and slug.
+     *
+     * @param clientId the clientId of the ClaimantDTO
+     * @param slug the slug of the ClaimantDTO
+     * @return Optional<ClaimantDTO> claimant by clientId and slug
+     */
+    Optional<ClaimantDTO> findByClientIdAndSlug(String clientId, String slug);
 }

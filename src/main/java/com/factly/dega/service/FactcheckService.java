@@ -59,4 +59,13 @@ public interface FactcheckService {
      * @return the list of entities
      */
     Page<FactcheckDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get the factcheck by clientId and slug.
+     *
+     * @param clientId the clientId of the FactcheckDTO
+     * @param slug the slug of the FactcheckDTO
+     * @return Optional<FactcheckDTO> factcheck by clientId and slug
+     */
+    Optional<FactcheckDTO> findByClientIdAndSlug(String clientId, String slug);
 }
