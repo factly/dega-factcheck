@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.json.simple.parser.*;
@@ -38,11 +37,12 @@ public class ClientDetailsAspect {
 
     private final RestTemplate restTemplate;
 
-    private String getUserByEmailUrl = "http://localhost:8082/api/dega-users/email/";//TODO: Get this from YML
+    private String coreServiceUrl;
 
-    public ClientDetailsAspect(Environment env, RestTemplate restTemplate) {
+    public ClientDetailsAspect(Environment env, RestTemplate restTemplate, String coreServiceUrl) {
         this.env = env;
         this.restTemplate = restTemplate;
+        this.coreServiceUrl = coreServiceUrl;
     }
 
     /**
@@ -92,7 +92,7 @@ public class ClientDetailsAspect {
                     httpHeaders.add("Authorization", token);
                     HttpEntity<String> httpEntity = new HttpEntity(httpHeaders);
                     ResponseEntity<String> response = restTemplate.exchange(
-                        getUserByEmailUrl+principal, HttpMethod.GET, httpEntity, String.class);
+                        coreServiceUrl+"dega-users/email/"+principal, HttpMethod.GET, httpEntity, String.class);
                     String responseBody = response.getBody();
                     JSONParser parser = new JSONParser();
                     Object obj = parser.parse(responseBody);
