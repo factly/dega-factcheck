@@ -1,7 +1,7 @@
 [
 {
     "name" : "False", 
-    "numeric_value" : NumberInt(1), 
+    "numeric_value" : 1,
     "is_default" : true, 
     "client_id" : "All", 
     "slug" : "false", 
@@ -12,7 +12,7 @@
 },
 {
     "name" : "Misleading", 
-    "numeric_value" : NumberInt(2), 
+    "numeric_value" : 2,
     "is_default" : true, 
     "client_id" : "All", 
     "slug" : "misleading", 
@@ -23,7 +23,7 @@
 },
 {
     "name" : "Unverified", 
-    "numeric_value" : NumberInt(3), 
+    "numeric_value" : 3,
     "is_default" : true, 
     "client_id" : "All", 
     "slug" : "unverified", 
@@ -34,7 +34,7 @@
 },
 {
     "name" : "Partly True", 
-    "numeric_value" : NumberInt(4), 
+    "numeric_value" : 4,
     "is_default" : true, 
     "client_id" : "All", 
     "slug" : "partly-true", 
@@ -45,7 +45,7 @@
 },
 {
     "name" : "True", 
-    "numeric_value" : NumberInt(5), 
+    "numeric_value" : 5,
     "is_default" : true, 
     "client_id" : "All", 
     "slug" : "true", 

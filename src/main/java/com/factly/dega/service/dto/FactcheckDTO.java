@@ -17,7 +17,6 @@ public class FactcheckDTO implements Serializable {
     @NotNull
     private String title;
 
-    @NotNull
     private String clientId;
 
     private String introduction;
@@ -30,7 +29,6 @@ public class FactcheckDTO implements Serializable {
     @NotNull
     private ZonedDateTime publishedDate;
 
-    @NotNull
     private ZonedDateTime lastUpdatedDate;
 
     private Boolean featured;
@@ -48,7 +46,6 @@ public class FactcheckDTO implements Serializable {
 
     private String subTitle;
 
-    @NotNull
     private ZonedDateTime createdDate;
 
     private Set<ClaimDTO> claims = new HashSet<>();

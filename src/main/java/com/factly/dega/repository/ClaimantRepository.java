@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 /**
  * Spring Data MongoDB repository for the Claimant entity.
@@ -13,4 +15,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClaimantRepository extends MongoRepository<Claimant, String> {
 
+    Optional<Claimant> findByClientIdAndSlug(String clientId, String slug);
 }

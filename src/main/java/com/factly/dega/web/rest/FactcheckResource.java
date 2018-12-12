@@ -16,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -52,11 +54,18 @@ public class FactcheckResource {
      */
     @PostMapping("/factchecks")
     @Timed
-    public ResponseEntity<FactcheckDTO> createFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO) throws URISyntaxException {
+    public ResponseEntity<FactcheckDTO> createFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save Factcheck : {}", factcheckDTO);
         if (factcheckDTO.getId() != null) {
             throw new BadRequestAlertException("A new factcheck cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        Object obj = request.getAttribute("ClientID");
+        if (obj != null) {
+            factcheckDTO.setClientId((String) obj);
+        }
+        factcheckDTO.setCreatedDate(ZonedDateTime.now());
+        factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.created(new URI("/api/factchecks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -79,6 +88,7 @@ public class FactcheckResource {
         if (factcheckDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, factcheckDTO.getId().toString()))
@@ -149,6 +159,25 @@ public class FactcheckResource {
         Page<FactcheckDTO> page = factcheckService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/factchecks");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /factcheckbyslug/:slug : get the factcheck.
+     *
+     * @param slug the slug of the FactcheckDTO
+     * @return Optional<FactcheckDTO> factcheck by clientId and slug
+     */
+    @GetMapping("/factcheckbyslug/{slug}")
+    @Timed
+    public Optional<FactcheckDTO> getFactcheckBySlug(@PathVariable String slug, HttpServletRequest request) {
+        Object obj = request.getAttribute("ClientID");
+        String clientId = null;
+        if (obj != null) {
+            clientId = (String) obj;
+        }
+        log.debug("REST request to get Factcheck by clienId : {} and slug : {}", clientId, slug);
+        Optional<FactcheckDTO> factcheckDTO = factcheckService.findByClientIdAndSlug(clientId, slug);
+        return factcheckDTO;
     }
 
 }

@@ -25,4 +25,6 @@ public interface FactcheckRepository extends MongoRepository<Factcheck, String> 
     @Query("{'id': ?0}")
     Optional<Factcheck> findOneWithEagerRelationships(String id);
 
+    Optional<Factcheck> findByClientIdAndSlug(String clientId, String slug);
+
 }

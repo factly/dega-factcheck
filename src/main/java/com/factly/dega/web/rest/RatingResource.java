@@ -16,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -52,11 +54,18 @@ public class RatingResource {
      */
     @PostMapping("/ratings")
     @Timed
-    public ResponseEntity<RatingDTO> createRating(@Valid @RequestBody RatingDTO ratingDTO) throws URISyntaxException {
+    public ResponseEntity<RatingDTO> createRating(@Valid @RequestBody RatingDTO ratingDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save Rating : {}", ratingDTO);
         if (ratingDTO.getId() != null) {
             throw new BadRequestAlertException("A new rating cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        Object obj = request.getAttribute("ClientID");
+        if (obj != null) {
+            ratingDTO.setClientId((String) obj);
+        }
+        ratingDTO.setCreatedDate(ZonedDateTime.now());
+        ratingDTO.setLastUpdatedDate(ZonedDateTime.now());
         RatingDTO result = ratingService.save(ratingDTO);
         return ResponseEntity.created(new URI("/api/ratings/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -79,6 +88,7 @@ public class RatingResource {
         if (ratingDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        ratingDTO.setLastUpdatedDate(ZonedDateTime.now());
         RatingDTO result = ratingService.save(ratingDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, ratingDTO.getId().toString()))
@@ -143,6 +153,25 @@ public class RatingResource {
         Page<RatingDTO> page = ratingService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/ratings");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /ratingbyslug/:slug : get the rating.
+     *
+     * @param slug the slug of the RatingDTO
+     * @return Optional<RatingDTO> rating by clientId and slug
+     */
+    @GetMapping("/ratingbyslug/{slug}")
+    @Timed
+    public Optional<RatingDTO> getRatingBySlug(@PathVariable String slug, HttpServletRequest request) {
+        Object obj = request.getAttribute("ClientID");
+        String clientId = null;
+        if (obj != null) {
+            clientId = (String) obj;
+        }
+        log.debug("REST request to get Rating by clienId : {} and slug : {}", clientId, slug);
+        Optional<RatingDTO> ratingDTO = ratingService.findByClientIdAndSlug(clientId, slug);
+        return ratingDTO;
     }
 
 }

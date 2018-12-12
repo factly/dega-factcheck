@@ -115,4 +115,18 @@ public class FactcheckServiceImpl implements FactcheckService {
         return factcheckSearchRepository.search(queryStringQuery(query), pageable)
             .map(factcheckMapper::toDto);
     }
+
+    /**
+     * Get the factcheck by clientId and slug.
+     *
+     * @param clientId the clientId of the FactcheckDTO
+     * @param slug the slug of the FactcheckDTO
+     * @return Optional<FactcheckDTO> factcheck by clientId and slug
+     */
+    @Override
+    public Optional<FactcheckDTO> findByClientIdAndSlug(String clientId, String slug) {
+        log.debug("Request to get post  by clienId : {} and slug : {}", clientId, slug);
+        return factcheckRepository.findByClientIdAndSlug(clientId, slug)
+            .map(factcheckMapper::toDto);
+    }
 }

@@ -23,16 +23,13 @@ public class RatingDTO implements Serializable {
 
     private Boolean isDefault;
 
-    @NotNull
     private String clientId;
 
     @NotNull
     private String slug;
 
-    @NotNull
     private ZonedDateTime createdDate;
 
-    @NotNull
     private ZonedDateTime lastUpdatedDate;
 
     public String getId() {

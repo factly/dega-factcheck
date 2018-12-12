@@ -53,4 +53,13 @@ public interface RatingService {
      * @return the list of entities
      */
     Page<RatingDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get the rating by clientId and slug.
+     *
+     * @param clientId the clientId of the RatingDTO
+     * @param slug the slug of the RatingDTO
+     * @return Optional<RatingDTO> rating by clientId and slug
+     */
+    Optional<RatingDTO> findByClientIdAndSlug(String clientId, String slug);
 }

@@ -162,8 +162,8 @@ public class RatingResourceIntTest {
         assertThat(testRating.isIsDefault()).isEqualTo(DEFAULT_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testRating.getSlug()).isEqualTo(DEFAULT_SLUG);
-        assertThat(testRating.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testRating.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testRating.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
+        assertThat(testRating.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -275,10 +275,10 @@ public class RatingResourceIntTest {
         restRatingMockMvc.perform(post("/api/ratings")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Rating> ratingList = ratingRepository.findAll();
-        assertThat(ratingList).hasSize(databaseSizeBeforeTest);
+        assertThat(ratingList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -293,10 +293,10 @@ public class RatingResourceIntTest {
         restRatingMockMvc.perform(post("/api/ratings")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Rating> ratingList = ratingRepository.findAll();
-        assertThat(ratingList).hasSize(databaseSizeBeforeTest);
+        assertThat(ratingList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -381,8 +381,8 @@ public class RatingResourceIntTest {
         assertThat(testRating.isIsDefault()).isEqualTo(UPDATED_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
         assertThat(testRating.getSlug()).isEqualTo(UPDATED_SLUG);
-        assertThat(testRating.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testRating.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testRating.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
+        assertThat(testRating.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
