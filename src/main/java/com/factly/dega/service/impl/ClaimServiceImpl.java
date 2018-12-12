@@ -106,4 +106,18 @@ public class ClaimServiceImpl implements ClaimService {
         return claimSearchRepository.search(queryStringQuery(query), pageable)
             .map(claimMapper::toDto);
     }
+
+    /**
+     * Get the claim by clientId and slug.
+     *
+     * @param clientId the clientId of the ClaimDTO
+     * @param slug the slug of the ClaimDTO
+     * @return Optional<ClaimDTO> claim by clientId and slug
+     */
+    @Override
+    public Optional<ClaimDTO> findByClientIdAndSlug(String clientId, String slug) {
+        log.debug("Request to get post  by clienId : {} and slug : {}", clientId, slug);
+        return claimRepository.findByClientIdAndSlug(clientId, slug)
+            .map(claimMapper::toDto);
+    }
 }

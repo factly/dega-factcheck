@@ -35,16 +35,13 @@ public class ClaimDTO implements Serializable {
 
     private String reviewTagLine;
 
-    @NotNull
     private String clientId;
 
     @NotNull
     private String slug;
 
-    @NotNull
     private ZonedDateTime createdDate;
 
-    @NotNull
     private ZonedDateTime lastUpdatedDate;
 
     private String ratingId;

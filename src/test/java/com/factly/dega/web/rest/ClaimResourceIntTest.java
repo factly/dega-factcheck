@@ -193,8 +193,8 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getReviewTagLine()).isEqualTo(DEFAULT_REVIEW_TAG_LINE);
         assertThat(testClaim.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testClaim.getSlug()).isEqualTo(DEFAULT_SLUG);
-        assertThat(testClaim.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testClaim.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testClaim.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
+        assertThat(testClaim.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
         // Validate the Claim in Elasticsearch
         verify(mockClaimSearchRepository, times(1)).save(testClaim);
@@ -378,10 +378,10 @@ public class ClaimResourceIntTest {
         restClaimMockMvc.perform(post("/api/claims")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Claim> claimList = claimRepository.findAll();
-        assertThat(claimList).hasSize(databaseSizeBeforeTest);
+        assertThat(claimList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -396,10 +396,10 @@ public class ClaimResourceIntTest {
         restClaimMockMvc.perform(post("/api/claims")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
         List<Claim> claimList = claimRepository.findAll();
-        assertThat(claimList).hasSize(databaseSizeBeforeTest);
+        assertThat(claimList).hasSize(databaseSizeBeforeTest + 1);
     }
 
     @Test
@@ -500,8 +500,8 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getReviewTagLine()).isEqualTo(UPDATED_REVIEW_TAG_LINE);
         assertThat(testClaim.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
         assertThat(testClaim.getSlug()).isEqualTo(UPDATED_SLUG);
-        assertThat(testClaim.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testClaim.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testClaim.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
+        assertThat(testClaim.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
         // Validate the Claim in Elasticsearch
         verify(mockClaimSearchRepository, times(1)).save(testClaim);
