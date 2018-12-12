@@ -25,7 +25,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA', currentDate, currentDate);
+      elemDefault = new Rating('ID', 'AAAAAAA', 0, 'AAAAAAA', false, 'AAAAAAA', 'AAAAAAA', currentDate, currentDate, 'AAAAAAA');
     });
 
     describe('Service methods', async () => {
@@ -80,7 +80,8 @@ describe('Service Tests', () => {
             clientId: 'BBBBBB',
             slug: 'BBBBBB',
             createdDate: currentDate.format(DATE_TIME_FORMAT),
-            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT),
+            description: 'BBBBBB'
           },
           elemDefault
         );
@@ -110,7 +111,8 @@ describe('Service Tests', () => {
             clientId: 'BBBBBB',
             slug: 'BBBBBB',
             createdDate: currentDate.format(DATE_TIME_FORMAT),
-            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT)
+            lastUpdatedDate: currentDate.format(DATE_TIME_FORMAT),
+            description: 'BBBBBB'
           },
           elemDefault
         );

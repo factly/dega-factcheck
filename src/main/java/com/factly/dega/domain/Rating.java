@@ -56,6 +56,10 @@ public class Rating implements Serializable {
     @Field("last_updated_date")
     private ZonedDateTime lastUpdatedDate;
 
+    @NotNull
+    @Field("description")
+    private String description;
+
     @DBRef
     @Field("claim")
     private Set<Claim> claims = new HashSet<>();
@@ -172,6 +176,19 @@ public class Rating implements Serializable {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public Rating description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Set<Claim> getClaims() {
         return claims;
     }
@@ -230,6 +247,7 @@ public class Rating implements Serializable {
             ", slug='" + getSlug() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }
