@@ -75,6 +75,9 @@ public class RatingResourceIntTest {
     private static final ZonedDateTime DEFAULT_LAST_UPDATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_LAST_UPDATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     @Autowired
     private RatingRepository ratingRepository;
 
@@ -131,7 +134,8 @@ public class RatingResourceIntTest {
             .clientId(DEFAULT_CLIENT_ID)
             .slug(DEFAULT_SLUG)
             .createdDate(DEFAULT_CREATED_DATE)
-            .lastUpdatedDate(DEFAULT_LAST_UPDATED_DATE);
+            .lastUpdatedDate(DEFAULT_LAST_UPDATED_DATE)
+            .description(DEFAULT_DESCRIPTION);
         return rating;
     }
 
@@ -164,6 +168,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.getSlug()).isEqualTo(DEFAULT_SLUG);
         assertThat(testRating.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testRating.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testRating.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -300,6 +305,24 @@ public class RatingResourceIntTest {
     }
 
     @Test
+    public void checkDescriptionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = ratingRepository.findAll().size();
+        // set the field null
+        rating.setDescription(null);
+
+        // Create the Rating, which fails.
+        RatingDTO ratingDTO = ratingMapper.toDto(rating);
+
+        restRatingMockMvc.perform(post("/api/ratings")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Rating> ratingList = ratingRepository.findAll();
+        assertThat(ratingList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllRatings() throws Exception {
         // Initialize the database
         ratingRepository.save(rating);
@@ -316,7 +339,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
-            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
     
     @Test
@@ -336,7 +360,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
             .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
-            .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)));
+            .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
 
     @Test
@@ -363,7 +388,8 @@ public class RatingResourceIntTest {
             .clientId(UPDATED_CLIENT_ID)
             .slug(UPDATED_SLUG)
             .createdDate(UPDATED_CREATED_DATE)
-            .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE);
+            .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE)
+            .description(UPDATED_DESCRIPTION);
         RatingDTO ratingDTO = ratingMapper.toDto(updatedRating);
 
         restRatingMockMvc.perform(put("/api/ratings")
@@ -383,6 +409,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.getSlug()).isEqualTo(UPDATED_SLUG);
         assertThat(testRating.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
         assertThat(testRating.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testRating.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
 
         // Validate the Rating in Elasticsearch
         verify(mockRatingSearchRepository, times(1)).save(testRating);
@@ -447,7 +474,8 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.toString())))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
-            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
 
     @Test

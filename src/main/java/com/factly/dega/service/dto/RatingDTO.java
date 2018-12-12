@@ -35,6 +35,9 @@ public class RatingDTO implements Serializable {
     @NotNull
     private ZonedDateTime lastUpdatedDate;
 
+    @NotNull
+    private String description;
+
     public String getId() {
         return id;
     }
@@ -107,6 +110,14 @@ public class RatingDTO implements Serializable {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -140,6 +151,7 @@ public class RatingDTO implements Serializable {
             ", slug='" + getSlug() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }
