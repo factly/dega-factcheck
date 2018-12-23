@@ -5,6 +5,7 @@ import com.factly.dega.service.ClaimService;
 import com.factly.dega.service.FactcheckService;
 import com.factly.dega.service.dto.ClaimDTO;
 import com.factly.dega.web.rest.errors.BadRequestAlertException;
+import com.factly.dega.web.rest.util.CommonUtil;
 import com.factly.dega.web.rest.util.HeaderUtil;
 import com.factly.dega.web.rest.util.PaginationUtil;
 import com.factly.dega.service.dto.FactcheckDTO;
@@ -202,11 +203,13 @@ public class FactcheckResource {
         return factcheckDTO;
     }
 
-    //TODO: This needs to be moved to Common Util class and regex string should be static
     public String getSlug(String clientId, String claim){
-        int slugExtention = 0;
-        String tempSlug = claim.replaceAll("[^a-zA-Z0-9 ]" , "").replaceAll("\\s+", "-").toLowerCase();
-        return createSlug(clientId, tempSlug, tempSlug, slugExtention);
+        if(claim != null){
+            int slugExtention = 0;
+            String tempSlug = CommonUtil.removeSpecialCharsFromString(claim);
+            return createSlug(clientId, tempSlug, tempSlug, slugExtention);
+        }
+        return null;
     }
 
     public String createSlug(String clientId, String slug, String tempSlug, int slugExtention){
