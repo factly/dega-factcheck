@@ -47,11 +47,11 @@ public class FactcheckResource {
 
     private final FactcheckService factcheckService;
 
-    @Autowired
-    private ClaimService claimService;
+    private final ClaimService claimService;
 
-    public FactcheckResource(FactcheckService factcheckService) {
+    public FactcheckResource(FactcheckService factcheckService, ClaimService claimService) {
         this.factcheckService = factcheckService;
+        this.claimService = claimService;
     }
 
     /**
