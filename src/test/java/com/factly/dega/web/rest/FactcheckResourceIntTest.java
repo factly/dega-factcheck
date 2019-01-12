@@ -6,6 +6,7 @@ import com.factly.dega.domain.Factcheck;
 import com.factly.dega.domain.Claim;
 import com.factly.dega.repository.FactcheckRepository;
 import com.factly.dega.repository.search.FactcheckSearchRepository;
+import com.factly.dega.service.ClaimService;
 import com.factly.dega.service.FactcheckService;
 import com.factly.dega.service.dto.FactcheckDTO;
 import com.factly.dega.service.mapper.FactcheckMapper;
@@ -135,11 +136,12 @@ public class FactcheckResourceIntTest {
     private MockMvc restFactcheckMockMvc;
 
     private Factcheck factcheck;
+    private ClaimService claimService;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService);
+        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService, claimService);
         this.restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -394,7 +396,7 @@ public class FactcheckResourceIntTest {
     }
     
     public void getAllFactchecksWithEagerRelationshipsIsEnabled() throws Exception {
-        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock);
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService);
         when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
@@ -410,7 +412,7 @@ public class FactcheckResourceIntTest {
     }
 
     public void getAllFactchecksWithEagerRelationshipsIsNotEnabled() throws Exception {
-        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock);
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService);
             when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
