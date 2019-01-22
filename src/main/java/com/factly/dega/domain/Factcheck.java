@@ -80,6 +80,14 @@ public class Factcheck implements Serializable {
     @Field("claims")
     private Set<Claim> claims = new HashSet<>();
 
+    @DBRef(db="core")
+    @Field("tags")
+    private Set<Tag> tags = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("categories")
+    private Set<Category> categories = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -303,6 +311,22 @@ public class Factcheck implements Serializable {
         this.claims.remove(claim);
         claim.getFactchecks().remove(this);
         return this;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
     public void setClaims(Set<Claim> claims) {

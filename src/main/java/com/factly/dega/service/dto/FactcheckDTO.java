@@ -50,6 +50,10 @@ public class FactcheckDTO implements Serializable {
 
     private Set<ClaimDTO> claims = new HashSet<>();
 
+    private Set<TagDTO> tags = new HashSet<>();
+
+    private Set<CategoryDTO> categories = new HashSet<>();
+
     public String getId() {
         return id;
     }
@@ -184,6 +188,22 @@ public class FactcheckDTO implements Serializable {
 
     public void setClaims(Set<ClaimDTO> claims) {
         this.claims = claims;
+    }
+
+    public Set<TagDTO> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<TagDTO> tags) {
+        this.tags = tags;
+    }
+
+    public Set<CategoryDTO> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<CategoryDTO> categories) {
+        this.categories = categories;
     }
 
     @Override
