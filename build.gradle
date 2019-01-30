@@ -144,6 +144,9 @@ repositories {
     mavenCentral()
     jcenter()
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -214,6 +217,7 @@ dependencies {
     compile ("io.springfox:springfox-swagger2") {
         exclude module: 'mapstruct'
     }
+    compile name: "core-0.0.1-SNAPSHOT"
     compile "io.springfox:springfox-bean-validators"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
