@@ -145,7 +145,7 @@ repositories {
     jcenter()
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
     flatDir {
-        dirs 'libs'
+        dirs 'lib'
     }
 }
 
