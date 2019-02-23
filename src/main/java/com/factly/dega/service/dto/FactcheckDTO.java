@@ -26,7 +26,6 @@ public class FactcheckDTO implements Serializable {
 
     private String excerpt;
 
-    @NotNull
     private ZonedDateTime publishedDate;
 
     private ZonedDateTime lastUpdatedDate;
@@ -55,6 +54,10 @@ public class FactcheckDTO implements Serializable {
     private Set<CategoryDTO> categories = new HashSet<>();
 
     private Set<DegaUserDTO> degaUsers = new HashSet<>();
+
+    private String statusID;
+
+    private String statusName;
 
     public String getId() {
         return id;
@@ -213,8 +216,26 @@ public class FactcheckDTO implements Serializable {
     }
 
     public void setDegaUsers(Set<DegaUserDTO> degaUsers) {
+
         this.degaUsers = degaUsers;
     }
+
+    public String getStatusID() {
+        return statusID;
+    }
+
+    public void setStatusID(String statusID) {
+        this.statusID = statusID;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
 
     @Override
     public boolean equals(Object o) {

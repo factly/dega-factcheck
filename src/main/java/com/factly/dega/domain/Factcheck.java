@@ -1,5 +1,6 @@
 package com.factly.dega.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -42,7 +43,6 @@ public class Factcheck implements Serializable {
     @Field("excerpt")
     private String excerpt;
 
-    @NotNull
     @Field("published_date")
     private ZonedDateTime publishedDate;
 
@@ -72,7 +72,6 @@ public class Factcheck implements Serializable {
     @Field("sub_title")
     private String subTitle;
 
-    @NotNull
     @Field("created_date")
     private ZonedDateTime createdDate;
 
@@ -91,6 +90,10 @@ public class Factcheck implements Serializable {
     @DBRef(db="core")
     @Field("degaUsers")
     private Set<DegaUser> degaUsers = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("status")
+    private Status status;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -344,6 +347,14 @@ public class Factcheck implements Serializable {
 
     public void setDegaUsers(Set<DegaUser> degaUsers) {
         this.degaUsers = degaUsers;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
