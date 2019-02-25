@@ -127,3 +127,6 @@ jhipster:
 # ===================================================================
 
 # application:
+dega:
+    core:
+        url: http://localhost:8082/api/
