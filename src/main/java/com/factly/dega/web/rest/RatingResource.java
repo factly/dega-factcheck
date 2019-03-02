@@ -63,6 +63,11 @@ public class RatingResource {
 
         if (ratingDTO.isIsDefault()) {
             ratingDTO.setClientId(Constants.DEFAULT_CLIENTID);
+        } else if (ratingDTO.getClientId() != null) {
+            Object obj = request.getAttribute("ClientID");
+            if (obj != null) {
+                ratingDTO.setClientId((String) obj);
+            }
         }
         ratingDTO.setCreatedDate(ZonedDateTime.now());
         ratingDTO.setLastUpdatedDate(ZonedDateTime.now());
