@@ -12,10 +12,9 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableAspectJAutoProxy
-public class ClientDetailsAspectConfiguration {
+public class  ClientDetailsAspectConfiguration {
 
     @Bean
-    @Profile(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)
     public ClientDetailsAspect clientDetailsAspect(Environment env, RestTemplate restTemplate, @Value("${dega.core.url}") String coreServiceUrl) {
         return new ClientDetailsAspect(env, restTemplate, coreServiceUrl);
     }

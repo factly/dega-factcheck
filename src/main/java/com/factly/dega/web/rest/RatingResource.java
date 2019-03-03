@@ -62,13 +62,18 @@ public class RatingResource {
         }
 
         if (ratingDTO.isIsDefault()) {
+            log.info("IsDefault is enabled on this rating, setting client id to default");
             ratingDTO.setClientId(Constants.DEFAULT_CLIENTID);
-        } else if (ratingDTO.getClientId() != null) {
+        } else if (ratingDTO.getClientId() == null) {
             Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
             if (obj != null) {
+                log.info("Setting client id from session attribute");
                 ratingDTO.setClientId((String) obj);
             }
+        } else {
+            log.info("Setting client from the request body");
         }
+
         ratingDTO.setCreatedDate(ZonedDateTime.now());
         ratingDTO.setLastUpdatedDate(ZonedDateTime.now());
         RatingDTO result = ratingService.save(ratingDTO);
@@ -169,7 +174,7 @@ public class RatingResource {
     @GetMapping("/ratingbyslug/{slug}")
     @Timed
     public Optional<RatingDTO> getRatingBySlug(@PathVariable String slug, HttpServletRequest request) {
-        Object obj = request.getAttribute("ClientID");
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         String clientId = null;
         if (obj != null) {
             clientId = (String) obj;

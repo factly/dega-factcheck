@@ -1,5 +1,8 @@
 package com.factly.dega.aop.clientdetails;
 
+import com.factly.dega.config.Constants;
+import com.factly.dega.service.dto.DegaUserDTO;
+import com.factly.dega.service.dto.OrganizationDTO;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.json.simple.JSONArray;
@@ -14,10 +17,13 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import org.json.simple.parser.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 /**
@@ -31,9 +37,6 @@ public class ClientDetailsAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private Environment env;
-
-    @Autowired
-    private HttpServletRequest context;
 
     private final RestTemplate restTemplate;
 
@@ -69,64 +72,85 @@ public class ClientDetailsAspect {
      */
     @Before("applicationPackagePointcut() && springBeanPointcut()")
     public void retrieveClientID(JoinPoint joinPoint) throws Throwable {
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        HttpSession session = httpServletRequest.getSession();
         try {
-            if (context != null && context.getAttribute("ClientID") == null) {
-                OAuth2Authentication auth = (OAuth2Authentication) context.getUserPrincipal();
-                String principal = (String) auth.getPrincipal();
-
-                if (principal.startsWith("service-account-")) {
-                    // Request with API token
-                    String[] tokens = principal.split("service-account-");
-
-                    if (tokens.length == 2) {
-                        String clientID = tokens[1];
-                        context.setAttribute("ClientID", clientID);
-                    } else {
-                        log.warn("No client found with the principal {}, exiting", principal);
-                    }
-                } else {
-
-                    String token = "Bearer " + (OAuth2AuthenticationDetails.class.cast(auth.getDetails())).getTokenValue();
-                    HttpHeaders httpHeaders = new HttpHeaders();
-                    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-                    httpHeaders.add("Authorization", token);
-                    HttpEntity<String> httpEntity = new HttpEntity(httpHeaders);
-                    ResponseEntity<String> response = restTemplate.exchange(
-                        coreServiceUrl+"dega-users/email/"+principal, HttpMethod.GET, httpEntity, String.class);
-                    String responseBody = response.getBody();
-                    JSONParser parser = new JSONParser();
-                    Object obj = parser.parse(responseBody);
-                    JSONObject jo = (JSONObject) obj;
-                    String organizationCurrentId = (String) jo.get("organizationCurrentId");
-                    JSONArray organizationsArray = (JSONArray) jo.get("organizations");
-                    Iterator organizationsIterator = organizationsArray.iterator();
-                    String clientId = null;
-                    String tempClientId = null;
-                    String currentOrganizationId = null;
-                    while (organizationsIterator.hasNext())
-                    {
-                        Iterator<Map.Entry> itr1 = ((Map) organizationsIterator.next()).entrySet().iterator();
-                        while (itr1.hasNext()) {
-                            Map.Entry pair = itr1.next();
-                            if(pair.getKey().equals("id")){
-                                currentOrganizationId = (String)pair.getValue();
-                            }else if(pair.getKey().equals("clientId")){
-                                tempClientId = (String)pair.getValue();
-                            }
-                            if(tempClientId != null && currentOrganizationId != null && currentOrganizationId.equals(organizationCurrentId)){
-                                clientId = tempClientId;
-                                break;
-                            }
-                        }
-                    }
-                    if(clientId != null){
-                        context.setAttribute("ClientID", clientId);
-                    }else {
-                        log.warn("No org found with the default org id {}, exiting", organizationCurrentId);
-                    }
-                }
+            if (httpServletRequest == null) {
+                log.warn("Context undefined, exiting");
+                return;
             }
 
+            Object clientId = session.getAttribute(Constants.CLIENT_ID);
+            if (clientId != null) {
+                String cId = (String) clientId;
+                log.info("Client ID is already set to {} in the session attribute, returning", cId);
+                return;
+            }
+
+            // get user principal
+            OAuth2Authentication auth = (OAuth2Authentication) httpServletRequest.getUserPrincipal();
+            if(auth == null) {
+                log.info("User principal is undefined (probably because of the public media api), exiting");
+                return;
+            }
+
+            String principal = (String) auth.getPrincipal();
+            if (principal.startsWith("service-account-")) {
+                log.info("Service account login detected");
+                // Request with API token
+                String[] tokens = principal.split("service-account-");
+                if (tokens.length != 2) {
+                    log.warn("No client found with the principal {}, exiting", principal);
+                    return;
+                }
+
+                clientId = tokens[1];
+                log.info("Setting client id to {} and user id to {}", clientId, principal);
+                session.setAttribute(Constants.CLIENT_ID, clientId);
+                session.setAttribute(Constants.USER_ID, principal);
+                return;
+            }
+
+            String token = "Bearer " + (OAuth2AuthenticationDetails.class.cast(auth.getDetails())).getTokenValue();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            httpHeaders.add("Authorization", token);
+            HttpEntity<String> httpEntity = new HttpEntity(httpHeaders);
+            ResponseEntity<DegaUserDTO> result = restTemplate.exchange(
+                coreServiceUrl+"dega-users/email/"+principal, HttpMethod.GET, httpEntity, DegaUserDTO.class);
+
+            DegaUserDTO user = result.getBody();
+            String userId = principal;
+            if (user == null) {
+                String errorMsg = "No dega user found with the id "+userId+", exiting";
+                throw new Exception(errorMsg);
+            }
+
+            String orgId = (user.getOrganizationCurrentId() != null) ?
+                user.getOrganizationCurrentId() : user.getOrganizationDefaultId();
+            if (orgId == null) {
+                String errorMsg = "User with id "+userId+" is not associated with any organization, exiting";
+                log.error(errorMsg);
+                throw new Exception(errorMsg);
+            }
+
+            // get the organization
+            OrganizationDTO orgDTO = user
+                .getOrganizations()
+                .stream()
+                .filter(o -> o.getId().equals(orgId))
+                .findAny()
+                .orElse(null);
+            if (orgDTO == null) {
+                String errorMsg = "No organization found with the org id "+orgId+", exiting";
+                log.error(errorMsg);
+                throw new Exception(errorMsg);
+            }
+
+            clientId = orgDTO.getClientId();
+            log.info("Setting client id to {} and user id to {}", clientId, principal);
+            session.setAttribute(Constants.CLIENT_ID, clientId);
+            session.setAttribute(Constants.USER_ID, principal);
         } catch (IllegalArgumentException e) {
             log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
                 joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());

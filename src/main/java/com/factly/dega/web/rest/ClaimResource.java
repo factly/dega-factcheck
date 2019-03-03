@@ -1,6 +1,7 @@
 package com.factly.dega.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.factly.dega.config.Constants;
 import com.factly.dega.service.ClaimService;
 import com.factly.dega.web.rest.errors.BadRequestAlertException;
 import com.factly.dega.web.rest.util.HeaderUtil;
@@ -59,7 +60,7 @@ public class ClaimResource {
         if (claimDTO.getId() != null) {
             throw new BadRequestAlertException("A new claim cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Object obj = request.getAttribute("ClientID");
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             claimDTO.setClientId((String) obj);
         }
@@ -163,7 +164,7 @@ public class ClaimResource {
     @GetMapping("/claimbyslug/{slug}")
     @Timed
     public Optional<ClaimDTO> getClaimBySlug(@PathVariable String slug, HttpServletRequest request) {
-        Object obj = request.getAttribute("ClientID");
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         String clientId = null;
         if (obj != null) {
             clientId = (String) obj;

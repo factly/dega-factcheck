@@ -195,20 +195,20 @@ public class FactcheckDTO implements Serializable {
         this.claims = claims;
     }
 
-    public Set<CategoryDTO> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<CategoryDTO> categories) {
-        this.categories = categories;
-    }
-
     public Set<TagDTO> getTags() {
         return tags;
     }
 
     public void setTags(Set<TagDTO> tags) {
         this.tags = tags;
+    }
+
+    public Set<CategoryDTO> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<CategoryDTO> categories) {
+        this.categories = categories;
     }
 
     public Set<DegaUserDTO> getDegaUsers() {
@@ -235,7 +235,6 @@ public class FactcheckDTO implements Serializable {
     public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
-
 
     @Override
     public boolean equals(Object o) {
