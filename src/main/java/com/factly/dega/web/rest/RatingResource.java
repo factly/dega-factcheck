@@ -64,7 +64,7 @@ public class RatingResource {
         if (ratingDTO.isIsDefault()) {
             ratingDTO.setClientId(Constants.DEFAULT_CLIENTID);
         } else if (ratingDTO.getClientId() != null) {
-            Object obj = request.getAttribute("ClientID");
+            Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
             if (obj != null) {
                 ratingDTO.setClientId((String) obj);
             }
