@@ -76,8 +76,9 @@ public class FactcheckResource {
         }
 
         Optional<StatusDTO> statusDTO = getStatusDTO("Draft");
-
-        factcheckDTO.setStatusID(statusDTO.get().getId());
+        if(statusDTO != null && statusDTO.get() != null) {
+            factcheckDTO.setStatusID(statusDTO.get().getId());
+        }
 
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
@@ -127,7 +128,9 @@ public class FactcheckResource {
         }
 
        Optional<StatusDTO> statusDTO = getStatusDTO("Publish");
-        factcheckDTO.setStatusID(statusDTO.get().getId());
+        if(statusDTO != null && statusDTO.get() != null) {
+            factcheckDTO.setStatusID(statusDTO.get().getId());
+        }
 
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
@@ -163,6 +166,10 @@ public class FactcheckResource {
         log.debug("REST request to update Factcheck : {}", factcheckDTO);
         if (factcheckDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        Optional<StatusDTO> statusDTO = getStatusDTO(factcheckDTO.getStatusName());
+        if(statusDTO != null && statusDTO.get() != null) {
+            factcheckDTO.setStatusID(statusDTO.get().getId());
         }
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         FactcheckDTO result = factcheckService.save(factcheckDTO);
