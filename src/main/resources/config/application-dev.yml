@@ -113,9 +113,6 @@ jhipster:
             port: 5000
             queue-size: 512
 
-dega:
-    core:
-        url: http://localhost:8082/api/
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -126,3 +123,6 @@ dega:
 # ===================================================================
 
 # application:
+dega:
+    core:
+        url: http://localhost:8082/api/

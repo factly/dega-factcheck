@@ -1,6 +1,7 @@
 package com.factly.dega.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.factly.dega.config.Constants;
 import com.factly.dega.service.RatingService;
 import com.factly.dega.web.rest.errors.BadRequestAlertException;
 import com.factly.dega.web.rest.util.HeaderUtil;
@@ -60,9 +61,13 @@ public class RatingResource {
             throw new BadRequestAlertException("A new rating cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        Object obj = request.getAttribute("ClientID");
-        if (obj != null) {
-            ratingDTO.setClientId((String) obj);
+        if (ratingDTO.isIsDefault()) {
+            ratingDTO.setClientId(Constants.DEFAULT_CLIENTID);
+        } else if (ratingDTO.getClientId() != null) {
+            Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
+            if (obj != null) {
+                ratingDTO.setClientId((String) obj);
+            }
         }
         ratingDTO.setCreatedDate(ZonedDateTime.now());
         ratingDTO.setLastUpdatedDate(ZonedDateTime.now());
