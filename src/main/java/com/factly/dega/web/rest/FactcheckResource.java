@@ -1,6 +1,7 @@
 package com.factly.dega.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.factly.dega.config.Constants;
 import com.factly.dega.service.ClaimService;
 import com.factly.dega.service.FactcheckService;
 import com.factly.dega.service.dto.ClaimDTO;
@@ -13,7 +14,6 @@ import com.factly.dega.service.dto.FactcheckDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -32,9 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Factcheck.
@@ -82,7 +79,7 @@ public class FactcheckResource {
 
         factcheckDTO.setStatusID(statusDTO.get().getId());
 
-        Object obj = request.getAttribute("ClientID");
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             factcheckDTO.setClientId((String) obj);
         }
@@ -90,17 +87,8 @@ public class FactcheckResource {
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         Set<ClaimDTO> claimsSet = factcheckDTO.getClaims();
         Set<ClaimDTO> newClaimsSet = new HashSet<ClaimDTO>();
-        for(ClaimDTO claimDTO: claimsSet){
-            if(claimDTO.getId() != null){
-                newClaimsSet.add(claimDTO);
-            }else{
-                claimDTO.setSlug(getSlug((String) obj, claimDTO.getClaim()));
-                claimDTO.setCreatedDate(ZonedDateTime.now());
-                claimDTO.setLastUpdatedDate(ZonedDateTime.now());
-                claimDTO.setClientId((String) obj);
-                newClaimsSet.add(claimService.save(claimDTO));
-            }
-        }
+        getCopy(claimsSet, newClaimsSet, obj);
+
         factcheckDTO.setClaims(newClaimsSet);
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.created(new URI("/api/factchecks/" + result.getId()))
@@ -108,7 +96,20 @@ public class FactcheckResource {
             .body(result);
     }
 
-
+    private void getCopy(Set<ClaimDTO> claimsSet, Set<ClaimDTO> newClaimsSet, Object clientId) {
+        for(ClaimDTO claimDTO: claimsSet){
+            if(claimDTO.getId() != null){
+                newClaimsSet.add(claimDTO);
+            } else {
+                String cId = (clientId != null) ? (String) clientId : null;
+                claimDTO.setSlug(getSlug(cId, claimDTO.getClaim()));
+                claimDTO.setCreatedDate(ZonedDateTime.now());
+                claimDTO.setLastUpdatedDate(ZonedDateTime.now());
+                claimDTO.setClientId(cId);
+                newClaimsSet.add(claimService.save(claimDTO));
+            }
+        }
+    }
 
     /**
      * POST  /factchecks : Create a new factcheck.
@@ -128,7 +129,7 @@ public class FactcheckResource {
        Optional<StatusDTO> statusDTO = getStatusDTO("Publish");
         factcheckDTO.setStatusID(statusDTO.get().getId());
 
-        Object obj = request.getAttribute("ClientID");
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             factcheckDTO.setClientId((String) obj);
         }
@@ -137,17 +138,8 @@ public class FactcheckResource {
         factcheckDTO.setPublishedDate(ZonedDateTime.now());
         Set<ClaimDTO> claimsSet = factcheckDTO.getClaims();
         Set<ClaimDTO> newClaimsSet = new HashSet<ClaimDTO>();
-        for(ClaimDTO claimDTO: claimsSet){
-            if(claimDTO.getId() != null){
-                newClaimsSet.add(claimDTO);
-            }else{
-                claimDTO.setSlug(getSlug((String) obj, claimDTO.getClaim()));
-                claimDTO.setCreatedDate(ZonedDateTime.now());
-                claimDTO.setLastUpdatedDate(ZonedDateTime.now());
-                claimDTO.setClientId((String) obj);
-                newClaimsSet.add(claimService.save(claimDTO));
-            }
-        }
+        getCopy(claimsSet, newClaimsSet, obj);
+
         factcheckDTO.setClaims(newClaimsSet);
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.created(new URI("/api/factchecks/" + result.getId()))
@@ -254,7 +246,7 @@ public class FactcheckResource {
     @GetMapping("/factcheckbyslug/{slug}")
     @Timed
     public Optional<FactcheckDTO> getFactcheckBySlug(@PathVariable String slug, HttpServletRequest request) {
-        Object obj = request.getAttribute("ClientID");
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         String clientId = null;
         if (obj != null) {
             clientId = (String) obj;
