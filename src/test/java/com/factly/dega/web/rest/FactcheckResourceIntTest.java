@@ -6,6 +6,7 @@ import com.factly.dega.domain.Factcheck;
 import com.factly.dega.domain.Claim;
 import com.factly.dega.repository.FactcheckRepository;
 import com.factly.dega.repository.search.FactcheckSearchRepository;
+import com.factly.dega.service.ClaimService;
 import com.factly.dega.service.FactcheckService;
 import com.factly.dega.service.dto.FactcheckDTO;
 import com.factly.dega.service.mapper.FactcheckMapper;
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -107,7 +110,7 @@ public class FactcheckResourceIntTest {
 
     @Autowired
     private FactcheckMapper factcheckMapper;
-    
+
 
     @Mock
     private FactcheckService factcheckServiceMock;
@@ -135,11 +138,16 @@ public class FactcheckResourceIntTest {
     private MockMvc restFactcheckMockMvc;
 
     private Factcheck factcheck;
+    private ClaimService claimService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService);
+        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService, claimService, restTemplate, "");
         this.restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -392,9 +400,9 @@ public class FactcheckResourceIntTest {
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE.toString())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))));
     }
-    
+
     public void getAllFactchecksWithEagerRelationshipsIsEnabled() throws Exception {
-        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock);
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService, restTemplate, "");
         when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
@@ -410,7 +418,7 @@ public class FactcheckResourceIntTest {
     }
 
     public void getAllFactchecksWithEagerRelationshipsIsNotEnabled() throws Exception {
-        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock);
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService, restTemplate, "");
             when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

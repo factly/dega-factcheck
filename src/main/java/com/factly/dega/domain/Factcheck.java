@@ -1,5 +1,6 @@
 package com.factly.dega.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -42,7 +43,6 @@ public class Factcheck implements Serializable {
     @Field("excerpt")
     private String excerpt;
 
-    @NotNull
     @Field("published_date")
     private ZonedDateTime publishedDate;
 
@@ -72,13 +72,28 @@ public class Factcheck implements Serializable {
     @Field("sub_title")
     private String subTitle;
 
-    @NotNull
     @Field("created_date")
     private ZonedDateTime createdDate;
 
     @DBRef
     @Field("claims")
     private Set<Claim> claims = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("tags")
+    private Set<Tag> tags = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("categories")
+    private Set<Category> categories = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("degaUsers")
+    private Set<DegaUser> degaUsers = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("status")
+    private Status status;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -309,6 +324,38 @@ public class Factcheck implements Serializable {
         this.claims = claims;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<DegaUser> getDegaUsers() {
+        return degaUsers;
+    }
+
+    public void setDegaUsers(Set<DegaUser> degaUsers) {
+        this.degaUsers = degaUsers;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Override
     public boolean equals(Object o) {
