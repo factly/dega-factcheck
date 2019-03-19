@@ -37,7 +37,6 @@ public class ClaimDTO implements Serializable {
 
     private String clientId;
 
-    @NotNull
     private String slug;
 
     private ZonedDateTime createdDate;

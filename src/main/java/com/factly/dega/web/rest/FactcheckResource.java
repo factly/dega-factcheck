@@ -84,6 +84,7 @@ public class FactcheckResource {
         if (obj != null) {
             factcheckDTO.setClientId((String) obj);
         }
+        factcheckDTO.setSlug(getSlug(factcheckDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(factcheckDTO.getTitle())));
         factcheckDTO.setCreatedDate(ZonedDateTime.now());
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         Set<ClaimDTO> claimsSet = factcheckDTO.getClaims();
@@ -136,6 +137,7 @@ public class FactcheckResource {
         if (obj != null) {
             factcheckDTO.setClientId((String) obj);
         }
+        factcheckDTO.setSlug(getSlug(factcheckDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(factcheckDTO.getTitle())));
         factcheckDTO.setCreatedDate(ZonedDateTime.now());
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         factcheckDTO.setPublishedDate(ZonedDateTime.now());
@@ -264,7 +266,7 @@ public class FactcheckResource {
     }
 
     public String getSlug(String clientId, String claim){
-        if(claim != null){
+        if(clientId != null && claim != null){
             int slugExtention = 0;
             String tempSlug = CommonUtil.removeSpecialCharsFromString(claim);
             return createSlug(clientId, tempSlug, tempSlug, slugExtention);
