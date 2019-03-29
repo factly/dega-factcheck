@@ -20,7 +20,7 @@ public class FactcheckDTO implements Serializable {
     private String clientId;
 
     private String introduction;
-    
+
     private String summary;
 
     private String excerpt;
@@ -35,7 +35,6 @@ public class FactcheckDTO implements Serializable {
 
     private String updates;
 
-    @NotNull
     private String slug;
 
     private String password;

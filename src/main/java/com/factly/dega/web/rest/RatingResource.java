@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.factly.dega.config.Constants;
 import com.factly.dega.service.RatingService;
 import com.factly.dega.web.rest.errors.BadRequestAlertException;
+import com.factly.dega.web.rest.util.CommonUtil;
 import com.factly.dega.web.rest.util.HeaderUtil;
 import com.factly.dega.web.rest.util.PaginationUtil;
 import com.factly.dega.service.dto.RatingDTO;
@@ -74,6 +75,7 @@ public class RatingResource {
             log.info("Setting client from the request body");
         }
 
+        ratingDTO.setSlug(getSlug(ratingDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(ratingDTO.getName())));
         ratingDTO.setCreatedDate(ZonedDateTime.now());
         ratingDTO.setLastUpdatedDate(ZonedDateTime.now());
         RatingDTO result = ratingService.save(ratingDTO);
@@ -182,6 +184,24 @@ public class RatingResource {
         log.debug("REST request to get Rating by clienId : {} and slug : {}", clientId, slug);
         Optional<RatingDTO> ratingDTO = ratingService.findByClientIdAndSlug(clientId, slug);
         return ratingDTO;
+    }
+
+    public String getSlug(String clientId, String name){
+        if(clientId != null && name != null){
+            int slugExtention = 0;
+            return createSlug(clientId, name, name, slugExtention);
+        }
+        return null;
+    }
+
+    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention){
+        Optional<RatingDTO> ratingDTO = ratingService.findByClientIdAndSlug(clientId, slug);
+        if(ratingDTO.isPresent()){
+            slugExtention += 1;
+            slug = tempSlug + slugExtention;
+            return createSlug(clientId, slug, tempSlug, slugExtention);
+        }
+        return slug;
     }
 
 }

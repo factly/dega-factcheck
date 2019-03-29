@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.factly.dega.config.Constants;
 import com.factly.dega.service.ClaimService;
 import com.factly.dega.web.rest.errors.BadRequestAlertException;
+import com.factly.dega.web.rest.util.CommonUtil;
 import com.factly.dega.web.rest.util.HeaderUtil;
 import com.factly.dega.web.rest.util.PaginationUtil;
 import com.factly.dega.service.dto.ClaimDTO;
@@ -64,6 +65,7 @@ public class ClaimResource {
         if (obj != null) {
             claimDTO.setClientId((String) obj);
         }
+        claimDTO.setSlug(getSlug(claimDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(claimDTO.getClaim())));
         claimDTO.setCreatedDate(ZonedDateTime.now());
         claimDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimDTO result = claimService.save(claimDTO);
@@ -172,6 +174,24 @@ public class ClaimResource {
         log.debug("REST request to get Claim by clienId : {} and slug : {}", clientId, slug);
         Optional<ClaimDTO> claimDTO = claimService.findByClientIdAndSlug(clientId, slug);
         return claimDTO;
+    }
+
+    public String getSlug(String clientId, String claim){
+        if(clientId != null && claim != null){
+            int slugExtention = 0;
+            return createSlug(clientId, claim, claim, slugExtention);
+        }
+        return null;
+    }
+
+    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention){
+        Optional<ClaimDTO> claimDTO = claimService.findByClientIdAndSlug(clientId, slug);
+        if(claimDTO.isPresent()){
+            slugExtention += 1;
+            slug = tempSlug + slugExtention;
+            return createSlug(clientId, slug, tempSlug, slugExtention);
+        }
+        return slug;
     }
 
 }
