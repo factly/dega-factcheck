@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ClaimRepository extends MongoRepository<Claim, String> {
+public interface ClaimRepository extends DegaCustomRepository<Claim, String> {
 
     Optional<Claim> findByClientIdAndSlug(String clientId, String slug);
 

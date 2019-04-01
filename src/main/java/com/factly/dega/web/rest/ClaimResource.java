@@ -12,6 +12,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -105,9 +107,14 @@ public class ClaimResource {
      */
     @GetMapping("/claims")
     @Timed
-    public ResponseEntity<List<ClaimDTO>> getAllClaims(Pageable pageable) {
+    public ResponseEntity<List<ClaimDTO>> getAllClaims(Pageable pageable, HttpServletRequest request) {
         log.debug("REST request to get a page of Claims");
-        Page<ClaimDTO> page = claimService.findAll(pageable);
+        Page<ClaimDTO> page = new PageImpl<>(new ArrayList<>());
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
+        if (obj != null) {
+            String clientId = (String) obj;
+            page = claimService.findByClientId(clientId, pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/claims");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface FactcheckRepository extends MongoRepository<Factcheck, String> {
+public interface FactcheckRepository extends DegaCustomRepository<Factcheck, String> {
     @Query("{}")
     Page<Factcheck> findAllWithEagerRelationships(Pageable pageable);
 
