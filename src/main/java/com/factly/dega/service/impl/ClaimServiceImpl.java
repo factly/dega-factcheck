@@ -120,4 +120,16 @@ public class ClaimServiceImpl implements ClaimService {
         return claimRepository.findByClientIdAndSlug(clientId, slug)
             .map(claimMapper::toDto);
     }
+
+    /**
+     * Get all claims by clientId.
+     *
+     * @param clientId the client id of the entity
+     * @return the entity
+     */
+    @Override
+    public Page<ClaimDTO> findByClientId(String clientId, Pageable pageable) {
+        log.debug("Request to get Claims : {}", clientId);
+        return claimRepository.findByClientId(clientId, pageable).map(claimMapper::toDto);
+    }
 }

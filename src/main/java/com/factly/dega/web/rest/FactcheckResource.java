@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +29,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * REST controller for managing Factcheck.
@@ -189,13 +187,13 @@ public class FactcheckResource {
      */
     @GetMapping("/factchecks")
     @Timed
-    public ResponseEntity<List<FactcheckDTO>> getAllFactchecks(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public ResponseEntity<List<FactcheckDTO>> getAllFactchecks(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload, HttpServletRequest request) {
         log.debug("REST request to get a page of Factchecks");
-        Page<FactcheckDTO> page;
-        if (eagerload) {
-            page = factcheckService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = factcheckService.findAll(pageable);
+        Page<FactcheckDTO> page = new PageImpl<>(new ArrayList<>());
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
+        if (obj != null) {
+            String clientId = (String) obj;
+            page = factcheckService.findByClientId(clientId, pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/factchecks?eagerload=%b", eagerload));
         return ResponseEntity.ok().headers(headers).body(page.getContent());
