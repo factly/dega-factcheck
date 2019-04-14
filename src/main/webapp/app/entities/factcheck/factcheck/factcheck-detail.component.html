@@ -1,0 +1,89 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="factcheck">
+            <h2><span jhiTranslate="factcheckApp.factcheckFactcheck.detail.title">Factcheck</span> {{factcheck.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.title">Title</span></dt>
+                <dd>
+                    <span>{{factcheck.title}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.clientId">Client Id</span></dt>
+                <dd>
+                    <span>{{factcheck.clientId}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.introduction">Introduction</span></dt>
+                <dd>
+                    <span>{{factcheck.introduction}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.summary">Summary</span></dt>
+                <dd>
+                    <span>{{factcheck.summary}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.excerpt">Excerpt</span></dt>
+                <dd>
+                    <span>{{factcheck.excerpt}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.publishedDate">Published Date</span></dt>
+                <dd>
+                    <span>{{factcheck.publishedDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.lastUpdatedDate">Last Updated Date</span></dt>
+                <dd>
+                    <span>{{factcheck.lastUpdatedDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.featured">Featured</span></dt>
+                <dd>
+                    <span>{{factcheck.featured}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.sticky">Sticky</span></dt>
+                <dd>
+                    <span>{{factcheck.sticky}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.updates">Updates</span></dt>
+                <dd>
+                    <span>{{factcheck.updates}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.slug">Slug</span></dt>
+                <dd>
+                    <span>{{factcheck.slug}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.password">Password</span></dt>
+                <dd>
+                    <span>{{factcheck.password}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.featuredMedia">Featured Media</span></dt>
+                <dd>
+                    <span>{{factcheck.featuredMedia}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.subTitle">Sub Title</span></dt>
+                <dd>
+                    <span>{{factcheck.subTitle}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{factcheck.createdDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckFactcheck.claim">Claim</span></dt>
+                <dd>
+                    <span *ngFor="let claim of factcheck.claims; let last = last">
+                        <a [routerLink]="['/claim', claim?.id, 'view' ]">{{claim.claim}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/factcheck', factcheck.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="claim">
+            <h2><span jhiTranslate="factcheckApp.factcheckClaim.detail.title">Claim</span> {{claim.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.claim">Claim</span></dt>
+                <dd>
+                    <span>{{claim.claim}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.description">Description</span></dt>
+                <dd>
+                    <span>{{claim.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.claimDate">Claim Date</span></dt>
+                <dd>
+                    <span>{{claim.claimDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.claimSource">Claim Source</span></dt>
+                <dd>
+                    <span>{{claim.claimSource}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.checkedDate">Checked Date</span></dt>
+                <dd>
+                    <span>{{claim.checkedDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.reviewSources">Review Sources</span></dt>
+                <dd>
+                    <span>{{claim.reviewSources}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.review">Review</span></dt>
+                <dd>
+                    <span>{{claim.review}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.reviewTagLine">Review Tag Line</span></dt>
+                <dd>
+                    <span>{{claim.reviewTagLine}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.clientId">Client Id</span></dt>
+                <dd>
+                    <span>{{claim.clientId}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.slug">Slug</span></dt>
+                <dd>
+                    <span>{{claim.slug}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{claim.createdDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.lastUpdatedDate">Last Updated Date</span></dt>
+                <dd>
+                    <span>{{claim.lastUpdatedDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.rating">Rating</span></dt>
+                <dd>
+                    <div *ngIf="claim.ratingId">
+                        <a [routerLink]="['/rating', claim.ratingId, 'view']">{{claim.ratingName}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="factcheckApp.factcheckClaim.claimant">Claimant</span></dt>
+                <dd>
+                    <div *ngIf="claim.claimantId">
+                        <a [routerLink]="['/claimant', claim.claimantId, 'view']">{{claim.claimantName}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/claim', claim.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+[
+{
+    "name" : "Narendra Modi", 
+    "tag_line" : "Prime Minister of India", 
+    "client_id" : "factly", 
+    "slug" : "narendra-modi", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Claimant"
+},
+{
+    "name" : "Rahul Gandhi", 
+    "tag_line" : "President of the Indian National Congress", 
+    "client_id" : "factly", 
+    "slug" : "rahul-gandhi", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Claimant"
+},
+{
+    "name" : "Amit Shah", 
+    "tag_line" : "President of the Bharatiya Janata Party ", 
+    "client_id" : "factly", 
+    "slug" : "amit-shah", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Claimant"
+}
+]

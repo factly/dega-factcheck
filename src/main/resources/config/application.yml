@@ -99,7 +99,7 @@ security:
             client-id: internal
             client-secret: internal
         resource:
-            user-info-uri: http://localhost:9080/auth/realms/jhipster/protocol/openid-connect/userinfo
+            user-info-uri: http://localhost:9080/auth/realms/dega/protocol/openid-connect/userinfo
 
 server:
     servlet:
@@ -144,9 +144,6 @@ jhipster:
         contact-email:
         license:
         license-url:
-
-logging:
-    file: build/factcheck.log
 
 # ===================================================================
 # Application specific properties

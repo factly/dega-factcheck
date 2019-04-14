@@ -1,0 +1,37 @@
+{
+  "factcheckApp": {
+    "factcheckFactcheck": {
+      "home": {
+        "title": "Factchecks",
+        "createLabel": "नया Factcheck बनाएँ",
+        "createOrEditLabel": "Factcheck बनाएँ या संपादित करें",
+        "search": "Factcheck खोजें"
+      },
+      "created": "एक नया Factcheck [identifier: {{ param }}] तैयार है",
+      "updated": "एक Factcheck [identifier: {{ param }}] का अद्यतन हुआ है",
+      "deleted": "Factcheck [identifier: {{ param }}] हटा दिया है",
+      "delete": {
+        "question": "Factcheck [id: {{ id }}] हटाने की पुष्टि करें"
+      },
+      "detail": {
+        "title": "Factcheck"
+      },
+      "title": "Title",
+      "clientId": "Client Id",
+      "introduction": "Introduction",
+      "summary": "Summary",
+      "excerpt": "Excerpt",
+      "publishedDate": "Published Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "featured": "Featured",
+      "sticky": "Sticky",
+      "updates": "Updates",
+      "slug": "Slug",
+      "password": "Password",
+      "featuredMedia": "Featured Media",
+      "subTitle": "Sub Title",
+      "createdDate": "Created Date",
+      "claim": "Claim"
+    }
+  }
+}

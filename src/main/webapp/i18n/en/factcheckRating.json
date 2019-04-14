@@ -1,0 +1,31 @@
+{
+  "factcheckApp": {
+    "factcheckRating": {
+      "home": {
+        "title": "Ratings",
+        "createLabel": "Create a new Rating",
+        "createOrEditLabel": "Create or edit a Rating",
+        "search": "Search for Rating"
+      },
+      "created": "A new Rating is created with identifier {{ param }}",
+      "updated": "A Rating is updated with identifier {{ param }}",
+      "deleted": "A Rating is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rating {{ id }}?"
+      },
+      "detail": {
+        "title": "Rating"
+      },
+      "name": "Name",
+      "numericValue": "Numeric Value",
+      "iconURL": "Icon URL",
+      "isDefault": "Is Default",
+      "clientId": "Client Id",
+      "slug": "Slug",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "description": "Description",
+      "claim": "Claim"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+[
+{
+    "name" : "False", 
+    "numeric_value" : 1,
+    "is_default" : true, 
+    "client_id" : "All", 
+    "slug" : "false", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Rating"
+},
+{
+    "name" : "Misleading", 
+    "numeric_value" : 2,
+    "is_default" : true, 
+    "client_id" : "All", 
+    "slug" : "misleading", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Rating"
+},
+{
+    "name" : "Unverified", 
+    "numeric_value" : 3,
+    "is_default" : true, 
+    "client_id" : "All", 
+    "slug" : "unverified", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Rating"
+},
+{
+    "name" : "Partly True", 
+    "numeric_value" : 4,
+    "is_default" : true, 
+    "client_id" : "All", 
+    "slug" : "partly-true", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Rating"
+},
+{
+    "name" : "True", 
+    "numeric_value" : 5,
+    "is_default" : true, 
+    "client_id" : "All", 
+    "slug" : "true", 
+    "claim" : [
+
+    ], 
+    "_class" : "com.factly.dega.domain.Rating"
+}
+]
