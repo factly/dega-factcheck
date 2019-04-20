@@ -34,12 +34,7 @@
       "cucumber"
     ],
     "jhiPrefix": "jhi",
-    "otherModules": [
-      {
-        "name": "generator-jhipster-audit-helper",
-        "version": "1.0.3"
-      }
-    ],
+    "otherModules": [],
     "clientPackageManager": "npm",
     "nativeLanguage": "en",
     "skipClient": true,
