@@ -126,23 +126,10 @@ public class ClientDetailsAspect {
                 throw new Exception(errorMsg);
             }
 
-            String orgId = (user.getOrganizationCurrentId() != null) ?
-                user.getOrganizationCurrentId() : user.getOrganizationDefaultId();
-            if (orgId == null) {
-                String errorMsg = "User with id "+userId+" is not associated with any organization, exiting";
-                log.error(errorMsg);
-                throw new Exception(errorMsg);
-            }
-
             // get the organization
-            OrganizationDTO orgDTO = user
-                .getOrganizations()
-                .stream()
-                .filter(o -> o.getId().equals(orgId))
-                .findAny()
-                .orElse(null);
+            OrganizationDTO orgDTO = user.getOrganizationCurrent();
             if (orgDTO == null) {
-                String errorMsg = "No organization found with the org id "+orgId+", exiting";
+                String errorMsg = "No current organization mapped to the user, exiting";
                 log.error(errorMsg);
                 throw new Exception(errorMsg);
             }

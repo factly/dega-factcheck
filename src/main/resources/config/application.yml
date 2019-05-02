@@ -73,6 +73,9 @@ spring:
             enabled: false
     thymeleaf:
         mode: HTML
+    output:
+        ansi:
+            enabled: ALWAYS
 
 # ===================================================================
 # OpenID Connect Settings. Default settings are for Keycloak in Docker.
