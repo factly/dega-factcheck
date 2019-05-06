@@ -266,8 +266,7 @@ public class FactcheckResource {
     public String getSlug(String clientId, String claim){
         if(clientId != null && claim != null){
             int slugExtention = 0;
-            String tempSlug = CommonUtil.removeSpecialCharsFromString(claim);
-            return createSlug(clientId, tempSlug, tempSlug, slugExtention);
+            return createSlug(clientId, claim, claim, slugExtention);
         }
         return null;
     }
