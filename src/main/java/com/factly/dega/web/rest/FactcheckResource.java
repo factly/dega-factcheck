@@ -73,7 +73,7 @@ public class FactcheckResource {
             throw new BadRequestAlertException("A new factcheck cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        Optional<StatusDTO> statusDTO = getStatusDTO("Draft");
+        Optional<StatusDTO> statusDTO = getStatusDTO(factcheckDTO.getStatusName());
         if(statusDTO != null && statusDTO.get() != null) {
             factcheckDTO.setStatusID(statusDTO.get().getId());
         }
@@ -109,45 +109,6 @@ public class FactcheckResource {
                 newClaimsSet.add(claimService.save(claimDTO));
             }
         }
-    }
-
-    /**
-     * POST  /factchecks : Create a new factcheck.
-     *
-     * @param factcheckDTO the factcheckDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new factcheckDTO, or with status 400 (Bad Request) if the factcheck has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/publish")
-    @Timed
-    public ResponseEntity<FactcheckDTO> publishFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO, HttpServletRequest request) throws URISyntaxException {
-        log.debug("REST request to save Factcheck : {}", factcheckDTO);
-        if (factcheckDTO.getId() != null) {
-            throw new BadRequestAlertException("A new factcheck cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-
-       Optional<StatusDTO> statusDTO = getStatusDTO("Publish");
-        if(statusDTO != null && statusDTO.get() != null) {
-            factcheckDTO.setStatusID(statusDTO.get().getId());
-        }
-
-        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
-        if (obj != null) {
-            factcheckDTO.setClientId((String) obj);
-        }
-        factcheckDTO.setSlug(getSlug(factcheckDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(factcheckDTO.getTitle())));
-        factcheckDTO.setCreatedDate(ZonedDateTime.now());
-        factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
-        factcheckDTO.setPublishedDate(ZonedDateTime.now());
-        Set<ClaimDTO> claimsSet = factcheckDTO.getClaims();
-        Set<ClaimDTO> newClaimsSet = new HashSet<ClaimDTO>();
-        getCopy(claimsSet, newClaimsSet, obj);
-
-        factcheckDTO.setClaims(newClaimsSet);
-        FactcheckDTO result = factcheckService.save(factcheckDTO);
-        return ResponseEntity.created(new URI("/api/factchecks/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
     }
 
 
