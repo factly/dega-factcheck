@@ -85,6 +85,9 @@ public class FactcheckResource {
         factcheckDTO.setSlug(getSlug(factcheckDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(factcheckDTO.getTitle())));
         factcheckDTO.setCreatedDate(ZonedDateTime.now());
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
+        if (factcheckDTO.getStatusName().equalsIgnoreCase("publish")) {
+            factcheckDTO.setPublishedDate(ZonedDateTime.now());
+        }
         Set<ClaimDTO> claimsSet = factcheckDTO.getClaims();
         Set<ClaimDTO> newClaimsSet = new HashSet<ClaimDTO>();
         getCopy(claimsSet, newClaimsSet, obj);
