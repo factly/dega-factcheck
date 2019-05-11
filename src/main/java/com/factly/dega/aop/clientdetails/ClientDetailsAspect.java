@@ -111,6 +111,16 @@ public class ClientDetailsAspect {
                 return;
             }
 
+            //if we are here, it means the login is user based
+            // request with user login
+            log.info("User account login detected");
+            String userId = principal;
+            // ignore admin login as this is the first time
+            if (userId.equals("admin")) {
+                log.info("Logged as admin, returning to the api");
+                return;
+            }
+
             String token = "Bearer " + (OAuth2AuthenticationDetails.class.cast(auth.getDetails())).getTokenValue();
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -120,7 +130,6 @@ public class ClientDetailsAspect {
                 coreServiceUrl+"dega-users/email/"+principal, HttpMethod.GET, httpEntity, DegaUserDTO.class);
 
             DegaUserDTO user = result.getBody();
-            String userId = principal;
             if (user == null) {
                 String errorMsg = "No dega user found with the id "+userId+", exiting";
                 throw new Exception(errorMsg);
