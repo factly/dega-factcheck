@@ -157,4 +157,7 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+dega:
+    claimsearch:
+        url: https://factchecktools.googleapis.com/v1alpha1/claims:search
+        apikey: AIzaSyDrv6ojSZEmigcSHACIDfqapJEeSdIMOOs
