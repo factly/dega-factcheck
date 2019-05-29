@@ -135,6 +135,7 @@ public class FactcheckResource {
         if(statusDTO != null && statusDTO.get() != null) {
             factcheckDTO.setStatusID(statusDTO.get().getId());
         }
+        factcheckDTO.setPublishedDate(ZonedDateTime.now());
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.ok()
