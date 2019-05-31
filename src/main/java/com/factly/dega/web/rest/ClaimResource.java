@@ -63,6 +63,7 @@ public class ClaimResource {
         if (claimDTO.getId() != null) {
             throw new BadRequestAlertException("A new claim cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        claimDTO.setClientId(null);
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             claimDTO.setClientId((String) obj);
@@ -87,10 +88,15 @@ public class ClaimResource {
      */
     @PutMapping("/claims")
     @Timed
-    public ResponseEntity<ClaimDTO> updateClaim(@Valid @RequestBody ClaimDTO claimDTO) throws URISyntaxException {
+    public ResponseEntity<ClaimDTO> updateClaim(@Valid @RequestBody ClaimDTO claimDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to update Claim : {}", claimDTO);
         if (claimDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        claimDTO.setClientId(null);
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
+        if (obj != null) {
+            claimDTO.setClientId((String) obj);
         }
         claimDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimDTO result = claimService.save(claimDTO);

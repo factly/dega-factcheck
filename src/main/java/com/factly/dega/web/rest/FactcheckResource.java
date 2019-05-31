@@ -77,7 +77,7 @@ public class FactcheckResource {
         if(statusDTO != null && statusDTO.get() != null) {
             factcheckDTO.setStatusID(statusDTO.get().getId());
         }
-
+        factcheckDTO.setClientId(null);
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             factcheckDTO.setClientId((String) obj);
@@ -126,7 +126,7 @@ public class FactcheckResource {
      */
     @PutMapping("/factchecks")
     @Timed
-    public ResponseEntity<FactcheckDTO> updateFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO) throws URISyntaxException {
+    public ResponseEntity<FactcheckDTO> updateFactcheck(@Valid @RequestBody FactcheckDTO factcheckDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to update Factcheck : {}", factcheckDTO);
         if (factcheckDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -135,7 +135,11 @@ public class FactcheckResource {
         if(statusDTO != null && statusDTO.get() != null) {
             factcheckDTO.setStatusID(statusDTO.get().getId());
         }
-        factcheckDTO.setPublishedDate(ZonedDateTime.now());
+        factcheckDTO.setClientId(null);
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
+        if (obj != null) {
+            factcheckDTO.setClientId((String) obj);
+        }
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.ok()
