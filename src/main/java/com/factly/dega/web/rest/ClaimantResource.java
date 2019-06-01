@@ -63,6 +63,7 @@ public class ClaimantResource {
         if (claimantDTO.getId() != null) {
             throw new BadRequestAlertException("A new claimant cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        claimantDTO.setClientId(null);
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             claimantDTO.setClientId((String) obj);
@@ -87,10 +88,15 @@ public class ClaimantResource {
      */
     @PutMapping("/claimants")
     @Timed
-    public ResponseEntity<ClaimantDTO> updateClaimant(@Valid @RequestBody ClaimantDTO claimantDTO) throws URISyntaxException {
+    public ResponseEntity<ClaimantDTO> updateClaimant(@Valid @RequestBody ClaimantDTO claimantDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to update Claimant : {}", claimantDTO);
         if (claimantDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        claimantDTO.setClientId(null);
+        Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
+        if (obj != null) {
+            claimantDTO.setClientId((String) obj);
         }
         claimantDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimantDTO result = claimantService.save(claimantDTO);
