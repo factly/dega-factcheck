@@ -12,6 +12,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -170,11 +172,17 @@ public class RatingResource {
      */
     @GetMapping("/_search/ratings")
     @Timed
-    public ResponseEntity<List<RatingDTO>> searchRatings(@RequestParam String query, Pageable pageable) {
+    public ResponseEntity<List<RatingDTO>> searchRatings(@RequestParam String query, Pageable pageable, HttpServletRequest request) {
         log.debug("REST request to search for a page of Ratings for query {}", query);
+        String clientId = (String) request.getSession().getAttribute(Constants.CLIENT_ID);
         Page<RatingDTO> page = ratingService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/ratings");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<RatingDTO> ratingDTOList = page.getContent()
+            .stream()
+            .filter(ratingDTO -> ratingDTO.getClientId().equals(clientId) || ratingDTO.getClientId().equals(Constants.DEFAULT_CLIENTID))
+            .collect(Collectors.toList());
+        Page<RatingDTO> ratingDTOPage = new PageImpl<>(ratingDTOList, pageable, ratingDTOList.size());
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, ratingDTOPage, "/api/_search/ratings");
+        return new ResponseEntity<>(ratingDTOPage.getContent(), headers, HttpStatus.OK);
     }
 
     /**
