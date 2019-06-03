@@ -30,6 +30,7 @@ import java.net.URISyntaxException;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Factcheck.
@@ -206,11 +207,14 @@ public class FactcheckResource {
      */
     @GetMapping("/_search/factchecks")
     @Timed
-    public ResponseEntity<List<FactcheckDTO>> searchFactchecks(@RequestParam String query, Pageable pageable) {
+    public ResponseEntity<List<FactcheckDTO>> searchFactchecks(@RequestParam String query, Pageable pageable, HttpServletRequest request) {
         log.debug("REST request to search for a page of Factchecks for query {}", query);
+        String clientId = (String) request.getSession().getAttribute(Constants.CLIENT_ID);
         Page<FactcheckDTO> page = factcheckService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/factchecks");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<FactcheckDTO> factcheckDTOList = page.getContent().stream().filter(factcheckDTO -> factcheckDTO.getClientId().equals(clientId)).collect(Collectors.toList());
+        Page<FactcheckDTO> factcheckDTOPage = new PageImpl<>(factcheckDTOList, pageable, factcheckDTOList.size());
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, factcheckDTOPage, "/api/_search/factchecks");
+        return new ResponseEntity<>(factcheckDTOPage.getContent(), headers, HttpStatus.OK);
     }
 
     /**
