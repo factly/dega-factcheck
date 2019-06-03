@@ -28,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -163,11 +164,14 @@ public class ClaimantResource {
      */
     @GetMapping("/_search/claimants")
     @Timed
-    public ResponseEntity<List<ClaimantDTO>> searchClaimants(@RequestParam String query, Pageable pageable) {
+    public ResponseEntity<List<ClaimantDTO>> searchClaimants(@RequestParam String query, Pageable pageable, HttpServletRequest request) {
         log.debug("REST request to search for a page of Claimants for query {}", query);
+        String clientId = (String) request.getSession().getAttribute(Constants.CLIENT_ID);
         Page<ClaimantDTO> page = claimantService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/claimants");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        List<ClaimantDTO> claimantDTOList = page.getContent().stream().filter(claimantDTO -> claimantDTO.getClientId().equals(clientId)).collect(Collectors.toList());
+        Page<ClaimantDTO> claimantDTOPage = new PageImpl<>(claimantDTOList, pageable, claimantDTOList.size());
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, claimantDTOPage, "/api/_search/claimants");
+        return new ResponseEntity<>(claimantDTOPage.getContent(), headers, HttpStatus.OK);
     }
 
     /**
