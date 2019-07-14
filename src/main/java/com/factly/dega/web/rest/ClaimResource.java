@@ -99,7 +99,7 @@ public class ClaimResource {
         Optional<ClaimDTO> savedClaimData = claimService.findOne(claimDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (savedClaimData.isPresent()) {
-            if (savedClaimData.get().getClientId() != obj){
+            if (savedClaimData.get().getClientId() != obj) {
                 throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
             }
             claimDTO.setClientId(savedClaimData.get().getClientId());
@@ -172,7 +172,7 @@ public class ClaimResource {
      * SEARCH  /_search/claims?query=:query : search for the claim corresponding
      * to the query.
      *
-     * @param query the query of the claim search
+     * @param query    the query of the claim search
      * @param pageable the pagination information
      * @return the result of the search
      */
@@ -207,17 +207,17 @@ public class ClaimResource {
         return claimDTO;
     }
 
-    public String getSlug(String clientId, String claim){
-        if(clientId != null && claim != null){
+    public String getSlug(String clientId, String claim) {
+        if (clientId != null && claim != null) {
             int slugExtention = 0;
             return createSlug(clientId, claim, claim, slugExtention);
         }
         return null;
     }
 
-    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention){
+    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention) {
         Optional<ClaimDTO> claimDTO = claimService.findByClientIdAndSlug(clientId, slug);
-        if(claimDTO.isPresent()){
+        if (claimDTO.isPresent()) {
             slugExtention += 1;
             slug = tempSlug + slugExtention;
             return createSlug(clientId, slug, tempSlug, slugExtention);
