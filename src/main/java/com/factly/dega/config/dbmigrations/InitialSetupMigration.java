@@ -22,7 +22,25 @@ public class InitialSetupMigration {
         adminAuthority.setName(AuthoritiesConstants.ADMIN);
         Authority userAuthority = new Authority();
         userAuthority.setName(AuthoritiesConstants.USER);
+        Authority superAdminAuthority = new Authority();
+        superAdminAuthority.setName(AuthoritiesConstants.SUPERADMIN);
+        Authority administratorAuthority = new Authority();
+        administratorAuthority.setName(AuthoritiesConstants.ADMINISTRATOR);
+        Authority editorAuthority = new Authority();
+        editorAuthority.setName(AuthoritiesConstants.EDITOR);
+        Authority authorAuthority = new Authority();
+        authorAuthority.setName(AuthoritiesConstants.AUTHOR);
+        Authority contributorAuthority = new Authority();
+        contributorAuthority.setName(AuthoritiesConstants.CONTRIBUTOR);
+        Authority subscriberAuthority = new Authority();
+        subscriberAuthority.setName(AuthoritiesConstants.SUBSCRIBER);
         mongoTemplate.save(adminAuthority);
         mongoTemplate.save(userAuthority);
+        mongoTemplate.save(superAdminAuthority);
+        mongoTemplate.save(administratorAuthority);
+        mongoTemplate.save(editorAuthority);
+        mongoTemplate.save(authorAuthority);
+        mongoTemplate.save(contributorAuthority);
+        mongoTemplate.save(subscriberAuthority);
     }
 }
