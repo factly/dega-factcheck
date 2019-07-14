@@ -75,13 +75,17 @@ public class FactcheckResource {
         }
 
         Optional<StatusDTO> statusDTO = getStatusDTO(factcheckDTO.getStatusName());
-        if(statusDTO != null && statusDTO.get() != null) {
+        if(statusDTO.isPresent()) {
             factcheckDTO.setStatusID(statusDTO.get().getId());
+        } else {
+            throw new BadRequestAlertException("Invalid Status", ENTITY_NAME, "statusnull");
         }
-        factcheckDTO.setClientId(null);
+
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             factcheckDTO.setClientId((String) obj);
+        } else {
+            throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
         }
         factcheckDTO.setSlug(getSlug(factcheckDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(factcheckDTO.getTitle())));
         factcheckDTO.setCreatedDate(ZonedDateTime.now());
@@ -147,7 +151,7 @@ public class FactcheckResource {
             }
             factcheckDTO.setClientId(savedFactCheckData.get().getClientId());
         } else {
-            throw new BadRequestAlertException("Post does not exist", ENTITY_NAME, "invalidpost");
+            throw new BadRequestAlertException("Fact Check does not exist", ENTITY_NAME, "invalidfactcheck");
         }
 
         // If a slug is updated from client.

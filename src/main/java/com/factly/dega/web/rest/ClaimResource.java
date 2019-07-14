@@ -64,10 +64,11 @@ public class ClaimResource {
         if (claimDTO.getId() != null) {
             throw new BadRequestAlertException("A new claim cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        claimDTO.setClientId(null);
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             claimDTO.setClientId((String) obj);
+        } else {
+            throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
         }
         claimDTO.setSlug(getSlug(claimDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(claimDTO.getClaim())));
         claimDTO.setCreatedDate(ZonedDateTime.now());
@@ -94,11 +95,24 @@ public class ClaimResource {
         if (claimDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        claimDTO.setClientId(null);
+
+        Optional<ClaimDTO> savedClaimData = claimService.findOne(claimDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
-        if (obj != null) {
-            claimDTO.setClientId((String) obj);
+        if (savedClaimData.isPresent()) {
+            if (savedClaimData.get().getClientId() != obj){
+                throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
+            }
+            claimDTO.setClientId(savedClaimData.get().getClientId());
+        } else {
+            throw new BadRequestAlertException("Claim does not exist", ENTITY_NAME, "invalidclaim");
         }
+
+        // If a slug is updated from client.
+        if (!claimDTO.getSlug().equals(savedClaimData.get().getSlug())) {
+            // Slug needs to be verified in db, if a slug exists with the same text then add auto extension of digit.
+            claimDTO.setSlug(getSlug((String) obj, CommonUtil.removeSpecialCharsFromString(claimDTO.getSlug())));
+        }
+
         claimDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimDTO result = claimService.save(claimDTO);
         return ResponseEntity.ok()
