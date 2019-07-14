@@ -64,10 +64,11 @@ public class ClaimantResource {
         if (claimantDTO.getId() != null) {
             throw new BadRequestAlertException("A new claimant cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        claimantDTO.setClientId(null);
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             claimantDTO.setClientId((String) obj);
+        } else {
+            throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
         }
         claimantDTO.setSlug(getSlug((String) obj, CommonUtil.removeSpecialCharsFromString(claimantDTO.getName())));
         claimantDTO.setCreatedDate(ZonedDateTime.now());
@@ -94,11 +95,25 @@ public class ClaimantResource {
         if (claimantDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        claimantDTO.setClientId(null);
+
+        Optional<ClaimantDTO> savedClaimantData = claimantService.findOne(claimantDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
-        if (obj != null) {
-            claimantDTO.setClientId((String) obj);
+        if (savedClaimantData.isPresent()) {
+            if (savedClaimantData.get().getClientId() != obj) {
+                throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
+            }
+            claimantDTO.setClientId(savedClaimantData.get().getClientId());
+        } else {
+            throw new BadRequestAlertException("Claimant does not exist", ENTITY_NAME, "invalidclaimant");
         }
+
+        // If a slug is updated from client.
+        if (!claimantDTO.getSlug().equals(savedClaimantData.get().getSlug())) {
+            // Slug needs to be verified in db, if a slug exists with the same text then add auto extension of digit.
+            claimantDTO.setSlug(getSlug((String) obj, CommonUtil.removeSpecialCharsFromString(claimantDTO.getSlug())));
+        }
+
+
         claimantDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimantDTO result = claimantService.save(claimantDTO);
         return ResponseEntity.ok()
@@ -158,7 +173,7 @@ public class ClaimantResource {
      * SEARCH  /_search/claimants?query=:query : search for the claimant corresponding
      * to the query.
      *
-     * @param query the query of the claimant search
+     * @param query    the query of the claimant search
      * @param pageable the pagination information
      * @return the result of the search
      */
@@ -193,17 +208,17 @@ public class ClaimantResource {
         return claimantDTO;
     }
 
-    public String getSlug(String clientId, String name){
-        if(clientId != null && name != null){
+    public String getSlug(String clientId, String name) {
+        if (clientId != null && name != null) {
             int slugExtention = 0;
             return createSlug(clientId, name, name, slugExtention);
         }
         return null;
     }
 
-    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention){
+    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention) {
         Optional<ClaimantDTO> claimantDTO = claimantService.findByClientIdAndSlug(clientId, slug);
-        if(claimantDTO.isPresent()){
+        if (claimantDTO.isPresent()) {
             slugExtention += 1;
             slug = tempSlug + slugExtention;
             return createSlug(clientId, slug, tempSlug, slugExtention);

@@ -64,10 +64,11 @@ public class ClaimResource {
         if (claimDTO.getId() != null) {
             throw new BadRequestAlertException("A new claim cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        claimDTO.setClientId(null);
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (obj != null) {
             claimDTO.setClientId((String) obj);
+        } else {
+            throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
         }
         claimDTO.setSlug(getSlug(claimDTO.getClientId(), CommonUtil.removeSpecialCharsFromString(claimDTO.getClaim())));
         claimDTO.setCreatedDate(ZonedDateTime.now());
@@ -94,11 +95,24 @@ public class ClaimResource {
         if (claimDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        claimDTO.setClientId(null);
+
+        Optional<ClaimDTO> savedClaimData = claimService.findOne(claimDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
-        if (obj != null) {
-            claimDTO.setClientId((String) obj);
+        if (savedClaimData.isPresent()) {
+            if (savedClaimData.get().getClientId() != obj) {
+                throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
+            }
+            claimDTO.setClientId(savedClaimData.get().getClientId());
+        } else {
+            throw new BadRequestAlertException("Claim does not exist", ENTITY_NAME, "invalidclaim");
         }
+
+        // If a slug is updated from client.
+        if (!claimDTO.getSlug().equals(savedClaimData.get().getSlug())) {
+            // Slug needs to be verified in db, if a slug exists with the same text then add auto extension of digit.
+            claimDTO.setSlug(getSlug((String) obj, CommonUtil.removeSpecialCharsFromString(claimDTO.getSlug())));
+        }
+
         claimDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClaimDTO result = claimService.save(claimDTO);
         return ResponseEntity.ok()
@@ -158,7 +172,7 @@ public class ClaimResource {
      * SEARCH  /_search/claims?query=:query : search for the claim corresponding
      * to the query.
      *
-     * @param query the query of the claim search
+     * @param query    the query of the claim search
      * @param pageable the pagination information
      * @return the result of the search
      */
@@ -193,17 +207,17 @@ public class ClaimResource {
         return claimDTO;
     }
 
-    public String getSlug(String clientId, String claim){
-        if(clientId != null && claim != null){
+    public String getSlug(String clientId, String claim) {
+        if (clientId != null && claim != null) {
             int slugExtention = 0;
             return createSlug(clientId, claim, claim, slugExtention);
         }
         return null;
     }
 
-    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention){
+    public String createSlug(String clientId, String slug, String tempSlug, int slugExtention) {
         Optional<ClaimDTO> claimDTO = claimService.findByClientIdAndSlug(clientId, slug);
-        if(claimDTO.isPresent()){
+        if (claimDTO.isPresent()) {
             slugExtention += 1;
             slug = tempSlug + slugExtention;
             return createSlug(clientId, slug, tempSlug, slugExtention);
