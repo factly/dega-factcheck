@@ -133,14 +133,29 @@ public class FactcheckResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Optional<StatusDTO> statusDTO = getStatusDTO(factcheckDTO.getStatusName());
-        if(statusDTO != null && statusDTO.get() != null) {
+        if(statusDTO.isPresent()) {
             factcheckDTO.setStatusID(statusDTO.get().getId());
+        } else {
+            throw new BadRequestAlertException("Invalid Status", ENTITY_NAME, "statusnull");
         }
-        factcheckDTO.setClientId(null);
+
+        Optional<FactcheckDTO> savedFactCheckData = factcheckService.findOne(factcheckDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
-        if (obj != null) {
-            factcheckDTO.setClientId((String) obj);
+        if (savedFactCheckData.isPresent()) {
+            if (savedFactCheckData.get().getClientId() != obj){
+                throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
+            }
+            factcheckDTO.setClientId(savedFactCheckData.get().getClientId());
+        } else {
+            throw new BadRequestAlertException("Post does not exist", ENTITY_NAME, "invalidpost");
         }
+
+        // If a slug is updated from client.
+        if (!factcheckDTO.getSlug().equals(savedFactCheckData.get().getSlug())) {
+            // Slug needs to be verified in db, if a slug exists with the same text then add auto extension of digit.
+            factcheckDTO.setSlug(getSlug((String) obj, CommonUtil.removeSpecialCharsFromString(factcheckDTO.getSlug())));
+        }
+
         factcheckDTO.setLastUpdatedDate(ZonedDateTime.now());
         FactcheckDTO result = factcheckService.save(factcheckDTO);
         return ResponseEntity.ok()
