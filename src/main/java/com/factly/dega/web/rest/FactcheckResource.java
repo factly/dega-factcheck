@@ -146,7 +146,7 @@ public class FactcheckResource {
         Optional<FactcheckDTO> savedFactCheckData = factcheckService.findOne(factcheckDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (savedFactCheckData.isPresent()) {
-            if (savedFactCheckData.get().getClientId() != obj){
+            if (!savedFactCheckData.get().getClientId().equals(obj)) {
                 throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
             }
             factcheckDTO.setClientId(savedFactCheckData.get().getClientId());

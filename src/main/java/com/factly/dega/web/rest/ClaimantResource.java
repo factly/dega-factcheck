@@ -99,7 +99,7 @@ public class ClaimantResource {
         Optional<ClaimantDTO> savedClaimantData = claimantService.findOne(claimantDTO.getId());
         Object obj = request.getSession().getAttribute(Constants.CLIENT_ID);
         if (savedClaimantData.isPresent()) {
-            if (savedClaimantData.get().getClientId() != obj) {
+            if (!savedClaimantData.get().getClientId().equals(obj)) {
                 throw new BadRequestAlertException("You are not allowed to update this client entries", ENTITY_NAME, "invalidclient");
             }
             claimantDTO.setClientId(savedClaimantData.get().getClientId());
