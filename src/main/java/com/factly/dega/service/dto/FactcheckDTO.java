@@ -57,7 +57,7 @@ public class FactcheckDTO implements Serializable {
 
     private String statusName;
 
-    private MediaDTO mediaDTO;
+    private String mediaId;
 
     public String getId() {
         return id;
@@ -236,12 +236,12 @@ public class FactcheckDTO implements Serializable {
         this.statusName = statusName;
     }
 
-    public MediaDTO getMediaDTO() {
-        return mediaDTO;
+    public String getMediaId() {
+        return mediaId;
     }
 
-    public void setMediaDTO(MediaDTO mediaDTO) {
-        this.mediaDTO = mediaDTO;
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
     }
 
     @Override

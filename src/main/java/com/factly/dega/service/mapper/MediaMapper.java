@@ -10,13 +10,13 @@ import org.mapstruct.*;
  * Mapper for the entity Media and its DTO MediaDTO.
  */
 @Mapper(componentModel = "spring", uses = {})
-public interface MediaMapper extends EntityMapper<MediaDTO, FactcheckMedia> {
+public interface MediaMapper extends EntityMapper<MediaDTO, Media> {
 
-    default FactcheckMedia fromId(String id) {
+    default Media fromId(String id) {
         if (id == null) {
             return null;
         }
-        FactcheckMedia media = new FactcheckMedia();
+        Media media = new Media();
         media.setId(id);
         return media;
     }
