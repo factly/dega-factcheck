@@ -8,7 +8,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Factcheck and its DTO FactcheckDTO.
  */
-@Mapper(componentModel = "spring", uses = {ClaimMapper.class, StatusMapper.class})
+@Mapper(componentModel = "spring", uses = {ClaimMapper.class, StatusMapper.class, MediaMapper.class})
 public interface FactcheckMapper extends EntityMapper<FactcheckDTO, Factcheck> {
 
     @Mapping(source = "status.id", target = "statusID")
@@ -16,6 +16,7 @@ public interface FactcheckMapper extends EntityMapper<FactcheckDTO, Factcheck> {
     FactcheckDTO toDto(Factcheck factcheck);
 
     @Mapping(source = "statusID", target = "status")
+    @Mapping(source = "mediaId", target = "media")
     Factcheck toEntity(FactcheckDTO factcheckDTO);
 
     default Factcheck fromId(String id) {
