@@ -8,7 +8,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Factcheck and its DTO FactcheckDTO.
  */
-@Mapper(componentModel = "spring", uses = {ClaimMapper.class, StatusMapper.class})
+@Mapper(componentModel = "spring", uses = {ClaimMapper.class, StatusMapper.class, MediaMapper.class})
 public interface FactcheckMapper extends EntityMapper<FactcheckDTO, Factcheck> {
 
     @Mapping(source = "status.id", target = "statusID")

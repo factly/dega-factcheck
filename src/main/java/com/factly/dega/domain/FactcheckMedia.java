@@ -62,9 +62,6 @@ public class FactcheckMedia {
     @Field("source_url")
     private String sourceURL;
 
-    public FactcheckMedia() {
-    }
-
     public String getId() {
         return this.id;
     }
