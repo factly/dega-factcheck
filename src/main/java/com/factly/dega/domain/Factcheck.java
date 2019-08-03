@@ -93,6 +93,10 @@ public class Factcheck implements Serializable {
     @Field("status")
     private Status status;
 
+    @DBRef(db="core")
+    @Field("media")
+    private Media media;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -353,6 +357,14 @@ public class Factcheck implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Media getMedia() {
+        return media;
+    }
+
+    public void setMedia(Media media) {
+        this.media = media;
     }
 
     @Override
