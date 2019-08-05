@@ -23,7 +23,7 @@ public class InitialSetupMigration {
         Authority userAuthority = new Authority();
         userAuthority.setName(AuthoritiesConstants.USER);
         Authority superAdminAuthority = new Authority();
-        superAdminAuthority.setName(AuthoritiesConstants.SUPERADMIN);
+        superAdminAuthority.setName(AuthoritiesConstants.SUPER_ADMIN);
         Authority administratorAuthority = new Authority();
         administratorAuthority.setName(AuthoritiesConstants.ADMINISTRATOR);
         Authority editorAuthority = new Authority();
