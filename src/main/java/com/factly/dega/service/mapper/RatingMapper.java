@@ -13,8 +13,11 @@ public interface RatingMapper extends EntityMapper<RatingDTO, Rating> {
 
 
     @Mapping(target = "claims", ignore = true)
-    @Mapping(source = "mediaId", target = "media")
+    @Mapping(source = "mediaDTO.id", target = "media")
     Rating toEntity(RatingDTO ratingDTO);
+
+    @Mapping(source = "media", target = "mediaDTO")
+    RatingDTO toDto(Rating rating);
 
     default Rating fromId(String id) {
         if (id == null) {
