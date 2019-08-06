@@ -34,6 +34,8 @@ public class RatingDTO implements Serializable {
     @NotNull
     private String description;
 
+    private String mediaId;
+
     public String getId() {
         return id;
     }
@@ -112,6 +114,14 @@ public class RatingDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
     }
 
     @Override
