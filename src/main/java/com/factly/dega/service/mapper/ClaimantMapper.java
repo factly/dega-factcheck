@@ -8,12 +8,16 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Claimant and its DTO ClaimantDTO.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {MediaMapper.class})
 public interface ClaimantMapper extends EntityMapper<ClaimantDTO, Claimant> {
 
 
     @Mapping(target = "claims", ignore = true)
+    @Mapping(source = "mediaDTO.id", target = "media")
     Claimant toEntity(ClaimantDTO claimantDTO);
+
+    @Mapping(source = "media", target = "mediaDTO")
+    ClaimantDTO toDto(Claimant claimant);
 
     default Claimant fromId(String id) {
         if (id == null) {

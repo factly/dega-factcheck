@@ -8,12 +8,16 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Rating and its DTO RatingDTO.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {MediaMapper.class})
 public interface RatingMapper extends EntityMapper<RatingDTO, Rating> {
 
 
     @Mapping(target = "claims", ignore = true)
+    @Mapping(source = "mediaDTO.id", target = "media")
     Rating toEntity(RatingDTO ratingDTO);
+
+    @Mapping(source = "media", target = "mediaDTO")
+    RatingDTO toDto(Rating rating);
 
     default Rating fromId(String id) {
         if (id == null) {

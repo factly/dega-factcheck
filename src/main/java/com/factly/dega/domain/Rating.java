@@ -63,6 +63,11 @@ public class Rating implements Serializable {
     @DBRef
     @Field("claim")
     private Set<Claim> claims = new HashSet<>();
+
+    @DBRef(db="core")
+    @Field("media")
+    private Media media;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -213,6 +218,15 @@ public class Rating implements Serializable {
     public void setClaims(Set<Claim> claims) {
         this.claims = claims;
     }
+
+    public Media getMedia() {
+        return media;
+    }
+
+    public void setMedia(Media media) {
+        this.media = media;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
