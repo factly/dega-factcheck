@@ -61,7 +61,9 @@ public class FactcheckServiceImpl implements FactcheckService {
         Factcheck factcheck = factcheckMapper.toEntity(factcheckDTO);
         factcheck = factcheckRepository.save(factcheck);
         FactcheckDTO result = factcheckMapper.toDto(factcheck);
-        result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        if(result.getMediaDTO() != null && !result.getMediaDTO().getId().isEmpty()){
+            result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        }
         factcheckSearchRepository.save(factcheck);
         return result;
     }
@@ -87,7 +89,7 @@ public class FactcheckServiceImpl implements FactcheckService {
     public Page<FactcheckDTO> findAllWithEagerRelationships(Pageable pageable) {
         return factcheckRepository.findAllWithEagerRelationships(pageable).map(factcheckMapper::toDto);
     }
-    
+
 
     /**
      * Get one factcheck by id.
