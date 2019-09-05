@@ -5,13 +5,17 @@ import com.factly.dega.domain.Factcheck;
 import com.factly.dega.repository.FactcheckRepository;
 import com.factly.dega.repository.search.FactcheckSearchRepository;
 import com.factly.dega.service.dto.FactcheckDTO;
+import com.factly.dega.service.dto.MediaDTO;
 import com.factly.dega.service.mapper.FactcheckMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -31,10 +35,17 @@ public class FactcheckServiceImpl implements FactcheckService {
 
     private final FactcheckSearchRepository factcheckSearchRepository;
 
-    public FactcheckServiceImpl(FactcheckRepository factcheckRepository, FactcheckMapper factcheckMapper, FactcheckSearchRepository factcheckSearchRepository) {
+    private final RestTemplate restTemplate;
+
+    private final String coreServiceUrl;
+
+    public FactcheckServiceImpl(FactcheckRepository factcheckRepository, FactcheckMapper factcheckMapper, FactcheckSearchRepository factcheckSearchRepository,
+             RestTemplate restTemplate, @Value("${dega.core.url}") String coreServiceUrl) {
         this.factcheckRepository = factcheckRepository;
         this.factcheckMapper = factcheckMapper;
         this.factcheckSearchRepository = factcheckSearchRepository;
+        this.restTemplate = restTemplate;
+        this.coreServiceUrl = coreServiceUrl;
     }
 
     /**
@@ -50,6 +61,7 @@ public class FactcheckServiceImpl implements FactcheckService {
         Factcheck factcheck = factcheckMapper.toEntity(factcheckDTO);
         factcheck = factcheckRepository.save(factcheck);
         FactcheckDTO result = factcheckMapper.toDto(factcheck);
+        result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
         factcheckSearchRepository.save(factcheck);
         return result;
     }
@@ -140,5 +152,15 @@ public class FactcheckServiceImpl implements FactcheckService {
     public Page<FactcheckDTO> findByClientId(String clientId, Pageable pageable) {
         log.debug("Request to get Factchecks : {}", clientId);
         return factcheckRepository.findByClientId(clientId, pageable).map(factcheckMapper::toDto);
+    }
+
+    private MediaDTO getMediaDTO(String mediaId) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity = new HttpEntity(httpHeaders);
+
+        ResponseEntity<MediaDTO> response = restTemplate.exchange(
+            coreServiceUrl+"/media/"+ mediaId, HttpMethod.GET, httpEntity, MediaDTO.class);
+        return response.getBody();
     }
 }
