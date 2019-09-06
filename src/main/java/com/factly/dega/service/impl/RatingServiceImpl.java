@@ -4,14 +4,18 @@ import com.factly.dega.service.RatingService;
 import com.factly.dega.domain.Rating;
 import com.factly.dega.repository.RatingRepository;
 import com.factly.dega.repository.search.RatingSearchRepository;
+import com.factly.dega.service.dto.MediaDTO;
 import com.factly.dega.service.dto.RatingDTO;
 import com.factly.dega.service.mapper.RatingMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -31,10 +35,17 @@ public class RatingServiceImpl implements RatingService {
 
     private final RatingSearchRepository ratingSearchRepository;
 
-    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, RatingSearchRepository ratingSearchRepository) {
+    private final RestTemplate restTemplate;
+
+    private final String coreServiceUrl;
+
+    public RatingServiceImpl(RatingRepository ratingRepository, RatingMapper ratingMapper, RatingSearchRepository ratingSearchRepository,
+                             RestTemplate restTemplate, @Value("${dega.core.url}") String coreServiceUrl) {
         this.ratingRepository = ratingRepository;
         this.ratingMapper = ratingMapper;
         this.ratingSearchRepository = ratingSearchRepository;
+        this.restTemplate = restTemplate;
+        this.coreServiceUrl = coreServiceUrl;
     }
 
     /**
@@ -50,6 +61,9 @@ public class RatingServiceImpl implements RatingService {
         Rating rating = ratingMapper.toEntity(ratingDTO);
         rating = ratingRepository.save(rating);
         RatingDTO result = ratingMapper.toDto(rating);
+        if(result.getMediaDTO() != null && !result.getMediaDTO().getId().isEmpty()) {
+            result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        }
         ratingSearchRepository.save(rating);
         return result;
     }
@@ -119,5 +133,15 @@ public class RatingServiceImpl implements RatingService {
         log.debug("Request to get post  by clienId : {} and slug : {}", clientId, slug);
         return ratingRepository.findByClientIdAndSlug(clientId, slug)
             .map(ratingMapper::toDto);
+    }
+
+    private MediaDTO getMediaDTO(String mediaId) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity = new HttpEntity(httpHeaders);
+
+        ResponseEntity<MediaDTO> response = restTemplate.exchange(
+            coreServiceUrl+"/media/"+ mediaId, HttpMethod.GET, httpEntity, MediaDTO.class);
+        return response.getBody();
     }
 }
