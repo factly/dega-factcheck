@@ -5,13 +5,17 @@ import com.factly.dega.domain.Claimant;
 import com.factly.dega.repository.ClaimantRepository;
 import com.factly.dega.repository.search.ClaimantSearchRepository;
 import com.factly.dega.service.dto.ClaimantDTO;
+import com.factly.dega.service.dto.MediaDTO;
 import com.factly.dega.service.mapper.ClaimantMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -31,10 +35,17 @@ public class ClaimantServiceImpl implements ClaimantService {
 
     private final ClaimantSearchRepository claimantSearchRepository;
 
-    public ClaimantServiceImpl(ClaimantRepository claimantRepository, ClaimantMapper claimantMapper, ClaimantSearchRepository claimantSearchRepository) {
+    private final RestTemplate restTemplate;
+
+    private final String coreServiceUrl;
+
+    public ClaimantServiceImpl(ClaimantRepository claimantRepository, ClaimantMapper claimantMapper, ClaimantSearchRepository claimantSearchRepository,
+                               RestTemplate restTemplate, @Value("${dega.core.url}") String coreServiceUrl) {
         this.claimantRepository = claimantRepository;
         this.claimantMapper = claimantMapper;
         this.claimantSearchRepository = claimantSearchRepository;
+        this.restTemplate = restTemplate;
+        this.coreServiceUrl = coreServiceUrl;
     }
 
     /**
@@ -50,6 +61,9 @@ public class ClaimantServiceImpl implements ClaimantService {
         Claimant claimant = claimantMapper.toEntity(claimantDTO);
         claimant = claimantRepository.save(claimant);
         ClaimantDTO result = claimantMapper.toDto(claimant);
+        if(result.getMediaDTO() != null && !result.getMediaDTO().getId().isEmpty()){
+            result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        }
         claimantSearchRepository.save(claimant);
         return result;
     }
@@ -131,5 +145,15 @@ public class ClaimantServiceImpl implements ClaimantService {
     public Page<ClaimantDTO> findByClientId(String clientId, Pageable pageable) {
         log.debug("Request to get Claimants : {}", clientId);
         return claimantRepository.findByClientId(clientId, pageable).map(claimantMapper::toDto);
+    }
+
+    private MediaDTO getMediaDTO(String mediaId) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity = new HttpEntity(httpHeaders);
+
+        ResponseEntity<MediaDTO> response = restTemplate.exchange(
+            coreServiceUrl+"/media/"+ mediaId, HttpMethod.GET, httpEntity, MediaDTO.class);
+        return response.getBody();
     }
 }
