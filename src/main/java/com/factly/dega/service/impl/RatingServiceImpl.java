@@ -61,8 +61,8 @@ public class RatingServiceImpl implements RatingService {
         Rating rating = ratingMapper.toEntity(ratingDTO);
         rating = ratingRepository.save(rating);
         RatingDTO result = ratingMapper.toDto(rating);
-        if(result.getMediaDTO() != null && !result.getMediaDTO().getId().isEmpty()) {
-            result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        if(result.getMedia() != null && !result.getMedia().getId().isEmpty()) {
+            result.setMedia(getMediaDTO(result.getMedia().getId()));
         }
         ratingSearchRepository.save(rating);
         return result;
