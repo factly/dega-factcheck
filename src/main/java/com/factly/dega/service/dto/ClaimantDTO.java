@@ -29,7 +29,7 @@ public class ClaimantDTO implements Serializable {
 
     private ZonedDateTime lastUpdatedDate;
 
-    private MediaDTO mediaDTO;
+    private MediaDTO media;
 
     public String getId() {
         return id;
@@ -103,12 +103,12 @@ public class ClaimantDTO implements Serializable {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
-    public MediaDTO getMediaDTO() {
-        return mediaDTO;
+    public MediaDTO getMedia() {
+        return media;
     }
 
-    public void setMediaDTO(MediaDTO mediaDTO) {
-        this.mediaDTO = mediaDTO;
+    public void setMedia(MediaDTO media) {
+        this.media = media;
     }
 
     @Override

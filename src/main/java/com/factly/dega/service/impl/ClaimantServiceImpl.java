@@ -61,8 +61,8 @@ public class ClaimantServiceImpl implements ClaimantService {
         Claimant claimant = claimantMapper.toEntity(claimantDTO);
         claimant = claimantRepository.save(claimant);
         ClaimantDTO result = claimantMapper.toDto(claimant);
-        if(result.getMediaDTO() != null && !result.getMediaDTO().getId().isEmpty()){
-            result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        if(result.getMedia() != null && !result.getMedia().getId().isEmpty()){
+            result.setMedia(getMediaDTO(result.getMedia().getId()));
         }
         claimantSearchRepository.save(claimant);
         return result;

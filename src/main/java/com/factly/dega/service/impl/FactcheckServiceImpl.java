@@ -61,8 +61,8 @@ public class FactcheckServiceImpl implements FactcheckService {
         Factcheck factcheck = factcheckMapper.toEntity(factcheckDTO);
         factcheck = factcheckRepository.save(factcheck);
         FactcheckDTO result = factcheckMapper.toDto(factcheck);
-        if(result.getMediaDTO() != null && !result.getMediaDTO().getId().isEmpty()){
-            result.setMediaDTO(getMediaDTO(result.getMediaDTO().getId()));
+        if(result.getMedia() != null && !result.getMedia().getId().isEmpty()){
+            result.setMedia(getMediaDTO(result.getMedia().getId()));
         }
         factcheckSearchRepository.save(factcheck);
         return result;

@@ -13,10 +13,10 @@ public interface ClaimantMapper extends EntityMapper<ClaimantDTO, Claimant> {
 
 
     @Mapping(target = "claims", ignore = true)
-    @Mapping(source = "mediaDTO.id", target = "media")
+    @Mapping(source = "media.id", target = "media")
     Claimant toEntity(ClaimantDTO claimantDTO);
 
-    @Mapping(source = "media", target = "mediaDTO")
+    @Mapping(source = "media", target = "media")
     ClaimantDTO toDto(Claimant claimant);
 
     default Claimant fromId(String id) {

@@ -13,11 +13,11 @@ public interface FactcheckMapper extends EntityMapper<FactcheckDTO, Factcheck> {
 
     @Mapping(source = "status.id", target = "statusID")
     @Mapping(source = "status.name", target = "statusName")
-    @Mapping(source = "media", target = "mediaDTO")
+    @Mapping(source = "media", target = "media")
     FactcheckDTO toDto(Factcheck factcheck);
 
     @Mapping(source = "statusID", target = "status")
-    @Mapping(source = "mediaDTO.id", target = "media")
+    @Mapping(source = "media.id", target = "media")
     Factcheck toEntity(FactcheckDTO factcheckDTO);
 
     default Factcheck fromId(String id) {
