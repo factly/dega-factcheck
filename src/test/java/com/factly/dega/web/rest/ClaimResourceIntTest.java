@@ -35,7 +35,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-
+import static com.factly.dega.web.rest.TestUtil.clientIDSessionAttributes;
 import static com.factly.dega.web.rest.TestUtil.sameInstant;
 import static com.factly.dega.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,7 +95,7 @@ public class ClaimResourceIntTest {
 
     @Autowired
     private ClaimMapper claimMapper;
-    
+
     @Autowired
     private ClaimService claimService;
 
@@ -174,7 +174,7 @@ public class ClaimResourceIntTest {
 
         // Create the Claim
         ClaimDTO claimDTO = claimMapper.toDto(claim);
-        restClaimMockMvc.perform(post("/api/claims")
+        restClaimMockMvc.perform(post("/api/claims").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
             .andExpect(status().isCreated());
@@ -192,7 +192,7 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getReview()).isEqualTo(DEFAULT_REVIEW);
         assertThat(testClaim.getReviewTagLine()).isEqualTo(DEFAULT_REVIEW_TAG_LINE);
         assertThat(testClaim.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
-        assertThat(testClaim.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testClaim.getSlug()).isEqualToIgnoringCase(DEFAULT_SLUG);
         assertThat(testClaim.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
         assertThat(testClaim.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
@@ -375,7 +375,7 @@ public class ClaimResourceIntTest {
         // Create the Claim, which fails.
         ClaimDTO claimDTO = claimMapper.toDto(claim);
 
-        restClaimMockMvc.perform(post("/api/claims")
+        restClaimMockMvc.perform(post("/api/claims").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
             .andExpect(status().isCreated());
@@ -393,7 +393,7 @@ public class ClaimResourceIntTest {
         // Create the Claim, which fails.
         ClaimDTO claimDTO = claimMapper.toDto(claim);
 
-        restClaimMockMvc.perform(post("/api/claims")
+        restClaimMockMvc.perform(post("/api/claims").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
             .andExpect(status().isCreated());
@@ -408,7 +408,7 @@ public class ClaimResourceIntTest {
         claimRepository.save(claim);
 
         // Get all the claimList
-        restClaimMockMvc.perform(get("/api/claims?sort=id,desc"))
+        restClaimMockMvc.perform(get("/api/claims?sort=id,desc").sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(claim.getId())))
@@ -425,7 +425,7 @@ public class ClaimResourceIntTest {
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
     }
-    
+
     @Test
     public void getClaim() throws Exception {
         // Initialize the database
@@ -481,7 +481,7 @@ public class ClaimResourceIntTest {
             .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE);
         ClaimDTO claimDTO = claimMapper.toDto(updatedClaim);
 
-        restClaimMockMvc.perform(put("/api/claims")
+        restClaimMockMvc.perform(put("/api/claims").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimDTO)))
             .andExpect(status().isOk());
@@ -498,8 +498,8 @@ public class ClaimResourceIntTest {
         assertThat(testClaim.getReviewSources()).isEqualTo(UPDATED_REVIEW_SOURCES);
         assertThat(testClaim.getReview()).isEqualTo(UPDATED_REVIEW);
         assertThat(testClaim.getReviewTagLine()).isEqualTo(UPDATED_REVIEW_TAG_LINE);
-        assertThat(testClaim.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
-        assertThat(testClaim.getSlug()).isEqualTo(UPDATED_SLUG);
+        assertThat(testClaim.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
+        assertThat(testClaim.getSlug()).isEqualToIgnoringCase(UPDATED_SLUG);
         assertThat(testClaim.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
         assertThat(testClaim.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
@@ -555,7 +555,7 @@ public class ClaimResourceIntTest {
         when(mockClaimSearchRepository.search(queryStringQuery("id:" + claim.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(claim), PageRequest.of(0, 1), 1));
         // Search the claim
-        restClaimMockMvc.perform(get("/api/_search/claims?query=id:" + claim.getId()))
+        restClaimMockMvc.perform(get("/api/_search/claims?query=id:" + claim.getId()).sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(claim.getId())))

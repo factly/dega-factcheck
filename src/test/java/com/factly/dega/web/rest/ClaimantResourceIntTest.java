@@ -32,7 +32,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-
+import static com.factly.dega.web.rest.TestUtil.clientIDSessionAttributes;
 import static com.factly.dega.web.rest.TestUtil.sameInstant;
 import static com.factly.dega.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,7 +80,7 @@ public class ClaimantResourceIntTest {
 
     @Autowired
     private ClaimantMapper claimantMapper;
-    
+
     @Autowired
     private ClaimantService claimantService;
 
@@ -147,7 +147,7 @@ public class ClaimantResourceIntTest {
 
         // Create the Claimant
         ClaimantDTO claimantDTO = claimantMapper.toDto(claimant);
-        restClaimantMockMvc.perform(post("/api/claimants")
+        restClaimantMockMvc.perform(post("/api/claimants").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
             .andExpect(status().isCreated());
@@ -161,7 +161,7 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testClaimant.getImageURL()).isEqualTo(DEFAULT_IMAGE_URL);
         assertThat(testClaimant.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
-        assertThat(testClaimant.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testClaimant.getSlug()).isEqualToIgnoringCase(DEFAULT_SLUG);
         assertThat(testClaimant.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
         assertThat(testClaimant.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
@@ -254,7 +254,7 @@ public class ClaimantResourceIntTest {
         // Create the Claimant, which fails.
         ClaimantDTO claimantDTO = claimantMapper.toDto(claimant);
 
-        restClaimantMockMvc.perform(post("/api/claimants")
+        restClaimantMockMvc.perform(post("/api/claimants").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
             .andExpect(status().isCreated());
@@ -272,7 +272,7 @@ public class ClaimantResourceIntTest {
         // Create the Claimant, which fails.
         ClaimantDTO claimantDTO = claimantMapper.toDto(claimant);
 
-        restClaimantMockMvc.perform(post("/api/claimants")
+        restClaimantMockMvc.perform(post("/api/claimants").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
             .andExpect(status().isCreated());
@@ -287,7 +287,7 @@ public class ClaimantResourceIntTest {
         claimantRepository.save(claimant);
 
         // Get all the claimantList
-        restClaimantMockMvc.perform(get("/api/claimants?sort=id,desc"))
+        restClaimantMockMvc.perform(get("/api/claimants?sort=id,desc").sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(claimant.getId())))
@@ -300,7 +300,7 @@ public class ClaimantResourceIntTest {
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))));
     }
-    
+
     @Test
     public void getClaimant() throws Exception {
         // Initialize the database
@@ -348,7 +348,7 @@ public class ClaimantResourceIntTest {
             .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE);
         ClaimantDTO claimantDTO = claimantMapper.toDto(updatedClaimant);
 
-        restClaimantMockMvc.perform(put("/api/claimants")
+        restClaimantMockMvc.perform(put("/api/claimants").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(claimantDTO)))
             .andExpect(status().isOk());
@@ -361,8 +361,8 @@ public class ClaimantResourceIntTest {
         assertThat(testClaimant.getTagLine()).isEqualTo(UPDATED_TAG_LINE);
         assertThat(testClaimant.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testClaimant.getImageURL()).isEqualTo(UPDATED_IMAGE_URL);
-        assertThat(testClaimant.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
-        assertThat(testClaimant.getSlug()).isEqualTo(UPDATED_SLUG);
+        assertThat(testClaimant.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
+        assertThat(testClaimant.getSlug()).isEqualToIgnoringCase(UPDATED_SLUG);
         assertThat(testClaimant.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
         assertThat(testClaimant.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
 
@@ -418,7 +418,7 @@ public class ClaimantResourceIntTest {
         when(mockClaimantSearchRepository.search(queryStringQuery("id:" + claimant.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(claimant), PageRequest.of(0, 1), 1));
         // Search the claimant
-        restClaimantMockMvc.perform(get("/api/_search/claimants?query=id:" + claimant.getId()))
+        restClaimantMockMvc.perform(get("/api/_search/claimants?query=id:" + claimant.getId()).sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(claimant.getId())))

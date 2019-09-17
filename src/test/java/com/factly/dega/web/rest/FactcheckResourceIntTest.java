@@ -1,17 +1,17 @@
 package com.factly.dega.web.rest;
 
 import com.factly.dega.FactcheckApp;
-
-import com.factly.dega.domain.Factcheck;
 import com.factly.dega.domain.Claim;
+import com.factly.dega.domain.Factcheck;
+import com.factly.dega.domain.Status;
 import com.factly.dega.repository.FactcheckRepository;
 import com.factly.dega.repository.search.FactcheckSearchRepository;
 import com.factly.dega.service.ClaimService;
 import com.factly.dega.service.FactcheckService;
 import com.factly.dega.service.dto.FactcheckDTO;
+import com.factly.dega.service.dto.StatusDTO;
 import com.factly.dega.service.mapper.FactcheckMapper;
 import com.factly.dega.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,33 +20,47 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-
-import static com.factly.dega.web.rest.TestUtil.sameInstant;
+import static com.factly.dega.web.rest.TestUtil.clientIDSessionAttributes;
 import static com.factly.dega.web.rest.TestUtil.createFormattingConversionService;
+import static com.factly.dega.web.rest.TestUtil.sameInstant;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the FactcheckResource REST controller.
@@ -111,7 +125,6 @@ public class FactcheckResourceIntTest {
     @Autowired
     private FactcheckMapper factcheckMapper;
 
-
     @Mock
     private FactcheckService factcheckServiceMock;
 
@@ -138,16 +151,20 @@ public class FactcheckResourceIntTest {
     private MockMvc restFactcheckMockMvc;
 
     private Factcheck factcheck;
-    private ClaimService claimService;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private ClaimService claimService;
 
+    @MockBean
+    private OAuth2RestTemplate restTemplate;
+
+    @Value("${dega.core.url}")
+    private String coreUrl;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService, claimService, restTemplate, "");
+        final FactcheckResource factcheckResource = new FactcheckResource(factcheckService, claimService, restTemplate, coreUrl);
         this.restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -178,6 +195,10 @@ public class FactcheckResourceIntTest {
             .featuredMedia(DEFAULT_FEATURED_MEDIA)
             .subTitle(DEFAULT_SUB_TITLE)
             .createdDate(DEFAULT_CREATED_DATE);
+
+        final Status status = new Status().name("status");
+        status.setId("id");
+        factcheck.setStatus(status);
         // Add required entity
         Claim claim = ClaimResourceIntTest.createEntity();
         claim.setId("fixed-id-for-tests");
@@ -197,7 +218,9 @@ public class FactcheckResourceIntTest {
 
         // Create the Factcheck
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
-        restFactcheckMockMvc.perform(post("/api/factchecks")
+        mockStatusCheckInCoreService(factcheckDTO);
+
+        restFactcheckMockMvc.perform(post("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isCreated());
@@ -216,7 +239,7 @@ public class FactcheckResourceIntTest {
         assertThat(testFactcheck.isFeatured()).isEqualTo(DEFAULT_FEATURED);
         assertThat(testFactcheck.isSticky()).isEqualTo(DEFAULT_STICKY);
         assertThat(testFactcheck.getUpdates()).isEqualTo(DEFAULT_UPDATES);
-        assertThat(testFactcheck.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testFactcheck.getSlug()).isEqualToIgnoringCase(DEFAULT_SLUG);
         assertThat(testFactcheck.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testFactcheck.getFeaturedMedia()).isEqualTo(DEFAULT_FEATURED_MEDIA);
         assertThat(testFactcheck.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
@@ -274,6 +297,7 @@ public class FactcheckResourceIntTest {
 
         // Create the Factcheck, which fails.
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        mockStatusCheckInCoreService(factcheckDTO);
 
         restFactcheckMockMvc.perform(post("/api/factchecks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -292,14 +316,22 @@ public class FactcheckResourceIntTest {
 
         // Create the Factcheck, which fails.
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        mockStatusCheckInCoreService(factcheckDTO);
 
-        restFactcheckMockMvc.perform(post("/api/factchecks")
+        restFactcheckMockMvc.perform(post("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
 
         List<Factcheck> factcheckList = factcheckRepository.findAll();
         assertThat(factcheckList).hasSize(databaseSizeBeforeTest);
+    }
+
+    private StatusDTO getStatusDTO(FactcheckDTO factcheckDTO) {
+        final StatusDTO statusDTO = new StatusDTO();
+        statusDTO.setName(factcheckDTO.getStatusName());
+        statusDTO.setId("id");
+        return statusDTO;
     }
 
     @Test
@@ -310,8 +342,9 @@ public class FactcheckResourceIntTest {
 
         // Create the Factcheck, which fails.
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        mockStatusCheckInCoreService(factcheckDTO);
 
-        restFactcheckMockMvc.perform(post("/api/factchecks")
+        restFactcheckMockMvc.perform(post("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
@@ -328,8 +361,9 @@ public class FactcheckResourceIntTest {
 
         // Create the Factcheck, which fails.
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        mockStatusCheckInCoreService(factcheckDTO);
 
-        restFactcheckMockMvc.perform(post("/api/factchecks")
+        restFactcheckMockMvc.perform(post("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isCreated());
@@ -343,11 +377,13 @@ public class FactcheckResourceIntTest {
         int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
         factcheck.setSlug(null);
+        factcheck.setTitle(null);
 
         // Create the Factcheck, which fails.
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        mockStatusCheckInCoreService(factcheckDTO);
 
-        restFactcheckMockMvc.perform(post("/api/factchecks")
+        restFactcheckMockMvc.perform(post("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isBadRequest());
@@ -364,8 +400,9 @@ public class FactcheckResourceIntTest {
 
         // Create the Factcheck, which fails.
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(factcheck);
+        mockStatusCheckInCoreService(factcheckDTO);
 
-        restFactcheckMockMvc.perform(post("/api/factchecks")
+        restFactcheckMockMvc.perform(post("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isCreated());
@@ -380,7 +417,7 @@ public class FactcheckResourceIntTest {
         factcheckRepository.save(factcheck);
 
         // Get all the factcheckList
-        restFactcheckMockMvc.perform(get("/api/factchecks?sort=id,desc"))
+        restFactcheckMockMvc.perform(get("/api/factchecks?sort=id,desc").sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(factcheck.getId())))
@@ -402,7 +439,8 @@ public class FactcheckResourceIntTest {
     }
 
     public void getAllFactchecksWithEagerRelationshipsIsEnabled() throws Exception {
-        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService, restTemplate, "");
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService, restTemplate,
+            "");
         when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
@@ -418,9 +456,10 @@ public class FactcheckResourceIntTest {
     }
 
     public void getAllFactchecksWithEagerRelationshipsIsNotEnabled() throws Exception {
-        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService, restTemplate, "");
-            when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-            MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
+        FactcheckResource factcheckResource = new FactcheckResource(factcheckServiceMock, claimService, restTemplate,
+            "");
+        when(factcheckServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        MockMvc restFactcheckMockMvc = MockMvcBuilders.standaloneSetup(factcheckResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -429,7 +468,7 @@ public class FactcheckResourceIntTest {
         restFactcheckMockMvc.perform(get("/api/factchecks?eagerload=true"))
         .andExpect(status().isOk());
 
-            verify(factcheckServiceMock, times(1)).findAllWithEagerRelationships(any());
+        verify(factcheckServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -491,9 +530,16 @@ public class FactcheckResourceIntTest {
             .featuredMedia(UPDATED_FEATURED_MEDIA)
             .subTitle(UPDATED_SUB_TITLE)
             .createdDate(UPDATED_CREATED_DATE);
+        final Status status = new Status();
+        status.setId("id");
+        status.setName("status");
+        updatedFactcheck.setStatus(status);
+
         FactcheckDTO factcheckDTO = factcheckMapper.toDto(updatedFactcheck);
 
-        restFactcheckMockMvc.perform(put("/api/factchecks")
+        mockStatusCheckInCoreService(factcheckDTO);
+
+        restFactcheckMockMvc.perform(put("/api/factchecks").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(factcheckDTO)))
             .andExpect(status().isOk());
@@ -503,7 +549,7 @@ public class FactcheckResourceIntTest {
         assertThat(factcheckList).hasSize(databaseSizeBeforeUpdate);
         Factcheck testFactcheck = factcheckList.get(factcheckList.size() - 1);
         assertThat(testFactcheck.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testFactcheck.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
+        assertThat(testFactcheck.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
         assertThat(testFactcheck.getIntroduction()).isEqualTo(UPDATED_INTRODUCTION);
         assertThat(testFactcheck.getSummary()).isEqualTo(UPDATED_SUMMARY);
         assertThat(testFactcheck.getExcerpt()).isEqualTo(UPDATED_EXCERPT);
@@ -512,7 +558,7 @@ public class FactcheckResourceIntTest {
         assertThat(testFactcheck.isFeatured()).isEqualTo(UPDATED_FEATURED);
         assertThat(testFactcheck.isSticky()).isEqualTo(UPDATED_STICKY);
         assertThat(testFactcheck.getUpdates()).isEqualTo(UPDATED_UPDATES);
-        assertThat(testFactcheck.getSlug()).isEqualTo(UPDATED_SLUG);
+        assertThat(testFactcheck.getSlug()).isEqualToIgnoringCase(UPDATED_SLUG);
         assertThat(testFactcheck.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testFactcheck.getFeaturedMedia()).isEqualTo(UPDATED_FEATURED_MEDIA);
         assertThat(testFactcheck.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
@@ -568,9 +614,9 @@ public class FactcheckResourceIntTest {
         // Initialize the database
         factcheckRepository.save(factcheck);
         when(mockFactcheckSearchRepository.search(queryStringQuery("id:" + factcheck.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(factcheck), PageRequest.of(0, 1), 1));
+            .thenReturn(new PageImpl<>(singletonList(factcheck), PageRequest.of(0, 1), 1));
         // Search the factcheck
-        restFactcheckMockMvc.perform(get("/api/_search/factchecks?query=id:" + factcheck.getId()))
+        restFactcheckMockMvc.perform(get("/api/_search/factchecks?query=id:" + factcheck.getId()).sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(factcheck.getId())))
@@ -618,5 +664,12 @@ public class FactcheckResourceIntTest {
         assertThat(factcheckDTO1).isNotEqualTo(factcheckDTO2);
         factcheckDTO1.setId(null);
         assertThat(factcheckDTO1).isNotEqualTo(factcheckDTO2);
+    }
+
+    private void mockStatusCheckInCoreService(FactcheckDTO factcheckDTO) {
+        StatusDTO statusDTO = getStatusDTO(factcheckDTO);
+
+        when(restTemplate.exchange(eq(coreUrl + "/statuses"), eq(HttpMethod.GET), any(HttpEntity.class),
+            any(ParameterizedTypeReference.class))).thenReturn(ResponseEntity.ok(singletonList(statusDTO)));
     }
 }
