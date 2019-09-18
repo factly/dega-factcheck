@@ -35,6 +35,7 @@ public class Factcheck implements Serializable {
     @Field("introduction")
     private String introduction;
 
+    @NotNull
     @Field("summary")
     private String summary;
 

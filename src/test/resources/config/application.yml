@@ -91,3 +91,9 @@ jhipster:
 # ===================================================================
 
 # application:
+dega:
+    claimsearch:
+        url: testclaimsearchurl.com
+        apikey: testapikey
+    core:
+        url: http://testcoreurl.com

@@ -26,21 +26,29 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-
-import static com.factly.dega.web.rest.TestUtil.sameInstant;
+import static com.factly.dega.config.Constants.DEFAULT_CLIENTID;
+import static com.factly.dega.web.rest.TestUtil.clientIDSessionAttributes;
 import static com.factly.dega.web.rest.TestUtil.createFormattingConversionService;
+import static com.factly.dega.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the RatingResource REST controller.
@@ -83,7 +91,7 @@ public class RatingResourceIntTest {
 
     @Autowired
     private RatingMapper ratingMapper;
-    
+
     @Autowired
     private RatingService ratingService;
 
@@ -151,7 +159,7 @@ public class RatingResourceIntTest {
 
         // Create the Rating
         RatingDTO ratingDTO = ratingMapper.toDto(rating);
-        restRatingMockMvc.perform(post("/api/ratings")
+        restRatingMockMvc.perform(post("/api/ratings").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
             .andExpect(status().isCreated());
@@ -165,7 +173,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.getIconURL()).isEqualTo(DEFAULT_ICON_URL);
         assertThat(testRating.isIsDefault()).isEqualTo(DEFAULT_IS_DEFAULT);
         assertThat(testRating.getClientId()).isEqualTo(DEFAULT_CLIENT_ID);
-        assertThat(testRating.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testRating.getSlug()).isEqualToIgnoringCase(DEFAULT_SLUG);
         assertThat(testRating.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testRating.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
         assertThat(testRating.getLastUpdatedDate().toLocalDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE.toLocalDate());
@@ -277,7 +285,7 @@ public class RatingResourceIntTest {
         // Create the Rating, which fails.
         RatingDTO ratingDTO = ratingMapper.toDto(rating);
 
-        restRatingMockMvc.perform(post("/api/ratings")
+        restRatingMockMvc.perform(post("/api/ratings").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
             .andExpect(status().isCreated());
@@ -295,7 +303,7 @@ public class RatingResourceIntTest {
         // Create the Rating, which fails.
         RatingDTO ratingDTO = ratingMapper.toDto(rating);
 
-        restRatingMockMvc.perform(post("/api/ratings")
+        restRatingMockMvc.perform(post("/api/ratings").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
             .andExpect(status().isCreated());
@@ -342,7 +350,7 @@ public class RatingResourceIntTest {
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
-    
+
     @Test
     public void getRating() throws Exception {
         // Initialize the database
@@ -392,7 +400,7 @@ public class RatingResourceIntTest {
             .description(UPDATED_DESCRIPTION);
         RatingDTO ratingDTO = ratingMapper.toDto(updatedRating);
 
-        restRatingMockMvc.perform(put("/api/ratings")
+        restRatingMockMvc.perform(put("/api/ratings").sessionAttrs(clientIDSessionAttributes())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ratingDTO)))
             .andExpect(status().isOk());
@@ -405,7 +413,7 @@ public class RatingResourceIntTest {
         assertThat(testRating.getNumericValue()).isEqualTo(UPDATED_NUMERIC_VALUE);
         assertThat(testRating.getIconURL()).isEqualTo(UPDATED_ICON_URL);
         assertThat(testRating.isIsDefault()).isEqualTo(UPDATED_IS_DEFAULT);
-        assertThat(testRating.getClientId()).isEqualTo(UPDATED_CLIENT_ID);
+        assertThat(testRating.getClientId()).isEqualTo(DEFAULT_CLIENTID);
         assertThat(testRating.getSlug()).isEqualTo(UPDATED_SLUG);
         assertThat(testRating.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testRating.getCreatedDate().toLocalDate()).isEqualTo(UPDATED_CREATED_DATE.toLocalDate());
@@ -463,7 +471,7 @@ public class RatingResourceIntTest {
         when(mockRatingSearchRepository.search(queryStringQuery("id:" + rating.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(rating), PageRequest.of(0, 1), 1));
         // Search the rating
-        restRatingMockMvc.perform(get("/api/_search/ratings?query=id:" + rating.getId()))
+        restRatingMockMvc.perform(get("/api/_search/ratings?query=id:" + rating.getId()).sessionAttrs(clientIDSessionAttributes()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(rating.getId())))

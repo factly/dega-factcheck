@@ -1,5 +1,6 @@
 package com.factly.dega.web.rest;
 
+import com.factly.dega.config.Constants;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Utility class for testing REST controllers.
  */
 public class TestUtil {
+
+    private static final String DEFAULT_CLIENT_ID = "AAAAAAAAAA";
 
     /** MediaType for JSON UTF8 */
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
@@ -131,5 +136,11 @@ public class TestUtil {
         registrar.setUseIsoFormat(true);
         registrar.registerFormatters(dfcs);
         return dfcs;
+    }
+
+    public static Map<String, Object> clientIDSessionAttributes() {
+        HashMap<String, Object> sessionMap = new HashMap<>();
+        sessionMap.put(Constants.CLIENT_ID, DEFAULT_CLIENT_ID);
+        return sessionMap;
     }
 }
