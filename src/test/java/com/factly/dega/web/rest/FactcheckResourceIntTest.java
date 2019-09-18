@@ -13,6 +13,7 @@ import com.factly.dega.service.dto.StatusDTO;
 import com.factly.dega.service.mapper.FactcheckMapper;
 import com.factly.dega.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -335,6 +336,7 @@ public class FactcheckResourceIntTest {
     }
 
     @Test
+    @Ignore("Published date is nullable for draft fact checks")
     public void checkPublishedDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = factcheckRepository.findAll().size();
         // set the field null
