@@ -42,6 +42,7 @@ public class Factcheck implements Serializable {
     @Field("excerpt")
     private String excerpt;
     
+    @NotNull
     @Field("published_date")
     private ZonedDateTime publishedDate;
 
